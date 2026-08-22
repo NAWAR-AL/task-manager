@@ -1,5 +1,3 @@
-
-
 import 'package:taskmanger/core/features/tasks/domain/entities/task_entity.dart';
 
 abstract class TaskRepository {

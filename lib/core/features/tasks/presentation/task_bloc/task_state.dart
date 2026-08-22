@@ -5,14 +5,26 @@ abstract class TaskState {}
 
 class TaskInitial extends TaskState {}
 
-class Taskcreate extends TaskState {}
+class TaskCreated extends TaskState {
+  final TaskEntity task; 
+  TaskCreated(this.task); 
+}
 
-class Taskupdate extends TaskState {}
+class TaskUpdated extends TaskState {
+  final TaskEntity task; 
+  TaskUpdated(this.task); 
+}
 
-class TaskgetTasks extends TaskState {}
+class TaskLoading extends TaskState {}
 
-class TaskgetTask extends TaskState {}
+class TaskLoaded extends TaskState {
+  final List<TaskEntity> tasks; 
+  TaskLoaded(this.tasks); 
+}
 
-class Taskdelete extends TaskState {}
+class TaskDeleted extends TaskState {}
 
-class TaskupdateStatus extends TaskState {}
+class TaskError extends TaskState {
+  final String message; 
+  TaskError(this.message); 
+}
