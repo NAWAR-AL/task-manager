@@ -1,4 +1,5 @@
 import 'package:get_it/get_it.dart';
+import 'package:task_manager/core/di/task_injection.dart';
 
 import 'register_injection.dart';
 import 'login_injection.dart';
@@ -13,4 +14,5 @@ Future<void> init() async {
   initRegister();
   initLogin();
   logoutInjection();
+  initTask();
 }

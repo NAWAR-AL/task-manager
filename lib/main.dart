@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:task_manager/core/features/tasks/presentation/screens/task_screen.dart';
+import 'package:task_manager/core/features/tasks/presentation/task_bloc/task_bloc.dart';
 
 import 'core/di/injection_container.dart';
 import 'core/features/auth/presentation/cubit/register_cubit.dart';
@@ -22,20 +24,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<RegisterCubit>(
-          create: (_) => sl<RegisterCubit>(),
-        ),
-        BlocProvider<LoginCubit>(
-          create: (_) => sl<LoginCubit>(),
-        ),
-        BlocProvider<LogoutCubit>(
-          create: (_) => sl<LogoutCubit>(),
-        ),
+        BlocProvider<RegisterCubit>(create: (_) => sl<RegisterCubit>()),
+        BlocProvider<LoginCubit>(create: (_) => sl<LoginCubit>()),
+        BlocProvider<LogoutCubit>(create: (_) => sl<LogoutCubit>()),
+        BlocProvider<TaskBloc>(create: (_) => sl<TaskBloc>()),
       ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: RegisterPage(),
-      ),
+      child: MaterialApp(debugShowCheckedModeBanner: false, home: TaskScreen()),
     );
   }
 }
