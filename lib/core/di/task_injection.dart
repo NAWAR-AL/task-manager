@@ -1,5 +1,3 @@
-import 'package:dio/dio.dart';
-import 'package:get_it/get_it.dart';
 import 'package:task_manager/core/di/injection_container.dart';
 import 'package:task_manager/core/features/tasks/data/datasources/task_remote_datasource.dart';
 import 'package:task_manager/core/features/tasks/data/datasources/task_remote_datasource_impl.dart';

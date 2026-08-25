@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_manager/core/features/tasks/presentation/task_bloc/task_bloc.dart';
+import 'package:task_manager/core/features/tasks/presentation/widgets/drawer.dart';
 import 'package:task_manager/core/features/tasks/presentation/widgets/navigation_bar.dart';
 import 'package:task_manager/core/features/tasks/presentation/widgets/task_list.dart';
 
@@ -40,6 +41,7 @@ class _TaskScreenState extends State<TaskScreen> {
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
           ),
         ),
+        drawer: DrawerHome(),
         body: Padding(
           padding: const EdgeInsets.only(left: 8, right: 8),
           child: Column(

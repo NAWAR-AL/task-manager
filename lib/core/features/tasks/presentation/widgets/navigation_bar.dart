@@ -6,6 +6,10 @@ class TaskBottomBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
+      // onTap: (){},
+      unselectedItemColor: Colors.grey,
+      unselectedLabelStyle: TextStyle(color: Colors.grey),
+      showUnselectedLabels: true,
       selectedItemColor: Colors.lightBlue,
       items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(
@@ -13,10 +17,7 @@ class TaskBottomBar extends StatelessWidget {
           label: "Scheduel",
         ),
         BottomNavigationBarItem(icon: Icon(Icons.task), label: "Tasks"),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.note_add_outlined),
-          label: "Projects",
-        ),
+        BottomNavigationBarItem(icon: Icon(Icons.favorite), label: "Favorite"),
         BottomNavigationBarItem(icon: Icon(Icons.comment), label: "Comments"),
       ],
     );
