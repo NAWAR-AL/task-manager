@@ -16,3 +16,4 @@ class LogoutRepositoryImpl implements LogoutRepository {
     );
   }
 }
+

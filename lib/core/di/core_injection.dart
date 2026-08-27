@@ -10,6 +10,6 @@ Future<void> initCore() async {
 
   // ApiClient
   sl.registerLazySingleton<ApiClient>(
-    () => ApiClient(),
+    () => ApiClient(sl()),
   );
 }

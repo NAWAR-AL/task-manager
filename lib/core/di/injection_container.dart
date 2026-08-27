@@ -8,9 +8,9 @@ import 'logout_injection.dart';
 final sl = GetIt.instance;
 
 Future<void> init() async {
-  await initCore();
-
+  initCore();
   initRegister();
   initLogin();
   logoutInjection();
 }
+
