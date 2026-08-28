@@ -6,9 +6,15 @@ import 'injection_container.dart';
 Future<void> initCore() async {
   // Dio
   sl.registerLazySingleton<Dio>(
-    () => Dio(BaseOptions(baseUrl: ApiConstants.baseUrl)),
+    () => Dio(
+      BaseOptions(
+        baseUrl: ApiConstants.baseUrl,
+      ),
+    ),
   );
 
   // ApiClient
-  sl.registerLazySingleton<ApiClient>(() => ApiClient());
+  sl.registerLazySingleton<ApiClient>(
+    () => ApiClient(sl()),
+  );
 }
