@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_manager/core/features/tasks/presentation/task_bloc/task_bloc.dart';
 import 'package:task_manager/core/features/tasks/presentation/widgets/drawer.dart';
-import 'package:task_manager/core/features/tasks/presentation/widgets/navigation_bar.dart';
 import 'package:task_manager/core/features/tasks/presentation/widgets/task_list.dart';
+import 'package:task_manager/core/permission/role.dart';
 
 class TaskScreen extends StatefulWidget {
   TaskScreen({super.key});
@@ -21,6 +21,7 @@ class _TaskScreenState extends State<TaskScreen> {
     return DefaultTabController(
       length: 4,
       child: Scaffold(
+        backgroundColor: Colors.white,
         // drawer: Drawer(child: ListView(children: [
         //   UserAccountsDrawerHeader(accountName: Text("data"), accountEmail: Text("data")),
 
@@ -41,7 +42,7 @@ class _TaskScreenState extends State<TaskScreen> {
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
           ),
         ),
-        drawer: DrawerHome(),
+        drawer: DrawerHome(role: UserRole.editor),
         body: Padding(
           padding: const EdgeInsets.only(left: 8, right: 8),
           child: Column(
@@ -95,7 +96,7 @@ class _TaskScreenState extends State<TaskScreen> {
           onPressed: () {},
           child: Icon(Icons.add, color: Colors.white),
         ),
-        bottomNavigationBar: TaskBottomBar(),
+        // bottomNavigationBar: TaskBottomBar(),
       ),
     );
   }

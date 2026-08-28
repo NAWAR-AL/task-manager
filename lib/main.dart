@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_manager/core/features/dashboard/presentation/screens/dash.dart';
 import 'package:task_manager/core/features/tasks/presentation/screens/task_screen.dart';
 import 'package:task_manager/core/features/tasks/presentation/task_bloc/task_bloc.dart';
+import 'package:task_manager/core/features/tasks/presentation/widgets/navigation_bar.dart';
 import 'core/di/injection_container.dart';
 import 'core/features/auth/presentation/cubit/register_cubit.dart';
 import 'core/features/auth/presentation/cubit/login_cubit.dart';
@@ -31,7 +32,8 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: DashBoardScreen(),
+        home: TaskBottomBar(),
+        // home: DashBoardScreen(),
 
         // TaskScreen()
       ),
