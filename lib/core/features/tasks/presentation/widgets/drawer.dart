@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:task_manager/core/features/dashboard/presentation/screens/dash.dart';
-import 'package:task_manager/core/features/project_management/presentation/screens/project_screen.dart';
+import 'package:task_manager/core/features/project_management/presentation/pages/create_project_page.dart';
 import 'package:task_manager/core/features/settings/screens/setting_screen.dart';
 import 'package:task_manager/core/features/users_mangment/presentation/user.dart';
 import 'package:task_manager/core/permission/permission.dart';
@@ -19,7 +19,8 @@ class DrawerHome extends StatelessWidget {
         children: [
           UserAccountsDrawerHeader(
             currentAccountPicture: const CircleAvatar(
-              child: Icon(Icons.person, size: 40, color: Colors.lightBlue),
+              backgroundColor: Colors.white,
+              child: Icon(Icons.person, size: 36, color: Colors.blueGrey),
             ),
             margin: const EdgeInsets.only(bottom: 20),
             accountEmail: Text("${role.name}@Orbit.com"),
@@ -29,74 +30,85 @@ class DrawerHome extends StatelessWidget {
             ),
             decoration: const BoxDecoration(color: Colors.blueGrey),
           ),
-          ListTile(
-            title: Text("DashBoard"),
-            leading: Icon(Icons.dashboard_outlined, color: Colors.lightBlue),
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (_) => DashBoardScreen()),
-              );
+
+          drawerItem(
+            icon: Icons.dashboard_outlined,
+            title: 'Dashboard',
+            ontap: () {
+              navigateToScreen(context, DashBoardScreen());
             },
           ),
+
           if (PermissionManager.can(role, Permission.readProject))
-            ListTile(
-              title: Text("Project"),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (_) => ProjectScreen()),
-                );
+            drawerItem(
+              icon: Icons.folder_outlined,
+              title: 'Projects',
+              ontap: () {
+                navigateToScreen(context, CreateProjectPage());
               },
-              leading: Icon(Icons.folder_outlined, color: Colors.lightBlue),
             ),
+
           if (PermissionManager.can(role, Permission.readUser))
-            ListTile(
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (_) => UserScreen()),
-                );
+            drawerItem(
+              icon: Icons.people_outline,
+              title: 'Users',
+              ontap: () {
+                navigateToScreen(context, UserScreen());
               },
-              title: Text("Users"),
-              leading: Icon(Icons.people_outline, color: Colors.lightBlue),
             ),
-          const Divider(),
-          ListTile(
-            title: Text("Calender"),
-            onTap: () {},
-            leading: Icon(
-              Icons.calendar_month_outlined,
-              color: Colors.lightBlue,
-            ),
+
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: const Divider(),
           ),
-          ListTile(
-            onTap: () {
+          drawerItem(
+            icon: Icons.calendar_month_outlined,
+            title: 'Calender',
+            ontap: () {
               Navigator.pop(context);
-              // Navigator.pushReplacement(
-              //   context,
-              //   MaterialPageRoute(builder: (_) => SettingsScreen()),
-              // );
             },
-            title: Text("Reports"),
-            leading: Icon(Icons.report_outlined, color: Colors.lightBlue),
           ),
-          ListTile(
-            onTap: () {
+
+          drawerItem(
+            icon: Icons.report_outlined,
+            title: 'Reports',
+            ontap: () {
               Navigator.pop(context);
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (_) => SettingsScreen()),
-              );
             },
-            title: Text("Settings"),
-            leading: Icon(Icons.settings_outlined, color: Colors.lightBlue),
+          ),
+          drawerItem(
+            icon: Icons.settings_outlined,
+            title: 'Settings',
+            ontap: () {
+              navigateToScreen(context, SettingsScreen());
+            },
           ),
         ],
       ),
     );
   }
+}
+
+Widget drawerItem({
+  required IconData icon,
+  required String title,
+  required VoidCallback ontap,
+}) {
+  return ListTile(
+    title: Text(
+      title,
+      style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+    ),
+    leading: Icon(icon, color: Colors.lightBlue),
+    onTap: ontap,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadiusGeometry.circular(8),
+    ),
+    contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 2),
+  );
+}
+
+void navigateToScreen(BuildContext context, Widget screen) {
+  Navigator.pop(context);
+  Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => screen));
 }

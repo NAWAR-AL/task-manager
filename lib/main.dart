@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_manager/core/features/dashboard/presentation/screens/dash.dart';
+import 'package:task_manager/core/features/project_management/presentation/cubit/project_cubit.dart';
 import 'package:task_manager/core/features/tasks/presentation/screens/task_screen.dart';
 import 'package:task_manager/core/features/tasks/presentation/task_bloc/task_bloc.dart';
 import 'package:task_manager/core/features/tasks/presentation/widgets/navigation_bar.dart';
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<LoginCubit>(create: (_) => sl<LoginCubit>()),
         BlocProvider<LogoutCubit>(create: (_) => sl<LogoutCubit>()),
         BlocProvider<TaskBloc>(create: (_) => sl<TaskBloc>()),
+        BlocProvider<ProjectCubit>(create: (_) => sl<ProjectCubit>()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
