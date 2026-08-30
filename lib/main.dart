@@ -34,8 +34,8 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: TaskBottomBar(),
-        // home: DashBoardScreen(),
+        // home: TaskBottomBar(),
+         home: DashBoardScreen(),
 
         // TaskScreen()
       ),

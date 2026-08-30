@@ -8,7 +8,8 @@ class UserScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      backgroundColor: Colors.white,
+      appBar: AppBar(title: Text('Hello ')),
       drawer: DrawerHome(role: UserRole.developer),
       body: Center(child: Text("Users Magement")),
     );

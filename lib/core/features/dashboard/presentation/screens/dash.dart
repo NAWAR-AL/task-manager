@@ -10,6 +10,7 @@ import 'package:task_manager/core/features/project_management/presentation/cubit
 import 'package:task_manager/core/features/project_management/presentation/cubit/projects_state.dart';
 import 'package:task_manager/core/features/tasks/presentation/task_bloc/task_bloc.dart';
 import 'package:task_manager/core/features/tasks/presentation/widgets/drawer.dart';
+import 'package:task_manager/core/features/tasks/presentation/widgets/navigation_bar.dart';
 import 'package:task_manager/core/permission/role.dart';
 
 class DashBoardScreen extends StatefulWidget {
@@ -190,6 +191,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                               ),
                             ),
                           );
+                          return null;
                         },
                       );
                     }
@@ -273,6 +275,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
             ),
           ),
         ),
+        bottomNavigationBar: TaskBottomBar(),
       ),
     );
   }

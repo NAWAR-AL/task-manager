@@ -110,5 +110,5 @@ Widget drawerItem({
 
 void navigateToScreen(BuildContext context, Widget screen) {
   Navigator.pop(context);
-  Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => screen));
+  Navigator.push(context, MaterialPageRoute(builder: (_) => screen));
 }
