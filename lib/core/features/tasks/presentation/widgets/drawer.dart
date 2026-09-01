@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:task_manager/core/features/dashboard/presentation/screens/dash.dart';
 import 'package:task_manager/core/features/project_management/presentation/pages/create_project_page.dart';
 import 'package:task_manager/core/features/settings/screens/setting_screen.dart';
+import 'package:task_manager/core/features/tasks/presentation/widgets/navigation_bar.dart';
 import 'package:task_manager/core/features/users_mangment/presentation/user.dart';
 import 'package:task_manager/core/permission/permission.dart';
 import 'package:task_manager/core/permission/permission_manger.dart';
@@ -35,7 +35,7 @@ class DrawerHome extends StatelessWidget {
             icon: Icons.dashboard_outlined,
             title: 'Dashboard',
             ontap: () {
-              navigateToScreen(context, DashBoardScreen());
+              navigateToScreen(context, TaskBottomBar(role: UserRole.admin));
             },
           ),
 

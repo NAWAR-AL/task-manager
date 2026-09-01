@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:task_manager/core/features/tasks/presentation/widgets/drawer.dart';
-
-import 'package:task_manager/core/permission/role.dart';
-
 class CommentScreen extends StatefulWidget {
   CommentScreen({super.key});
 

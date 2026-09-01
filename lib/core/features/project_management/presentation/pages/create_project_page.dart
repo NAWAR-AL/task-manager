@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:gap/gap.dart';
-import 'package:task_manager/core/features/project_management/presentation/pages/update_project_page.dart';
 import 'package:task_manager/core/features/tasks/presentation/widgets/drawer.dart';
 import 'package:task_manager/core/permission/role.dart';
-import '../../domain/entities/project.dart';
-import '../../presentation/cubit/project_cubit.dart';
 
 class CreateProjectPage extends StatefulWidget {
   const CreateProjectPage({super.key});

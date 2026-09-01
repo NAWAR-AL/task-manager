@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_manager/core/features/tasks/presentation/task_bloc/task_bloc.dart';
-import 'package:task_manager/core/features/tasks/presentation/widgets/drawer.dart';
 import 'package:task_manager/core/features/tasks/presentation/widgets/task_list.dart';
-import 'package:task_manager/core/permission/role.dart';
 
 class Task extends StatefulWidget {
   Task({super.key});

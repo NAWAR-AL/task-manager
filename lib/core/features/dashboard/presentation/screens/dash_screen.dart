@@ -8,6 +8,7 @@ import 'package:task_manager/core/features/project_management/domain/usecases/ge
 import 'package:task_manager/core/features/project_management/domain/usecases/update_project_usecases.dart';
 import 'package:task_manager/core/features/project_management/presentation/cubit/project_cubit.dart';
 import 'package:task_manager/core/features/project_management/presentation/cubit/projects_state.dart';
+import 'package:task_manager/core/features/project_management/presentation/pages/create_project_page.dart';
 import 'package:task_manager/core/features/tasks/presentation/task_bloc/task_bloc.dart';
 
 class DashScreen extends StatefulWidget {
@@ -168,9 +169,19 @@ class _DashScreenState extends State<DashScreen> {
                     );
                   }
                   return Center(
-                    child: Text(
-                      "No Projects created yet",
-                      style: TextStyle(color: Colors.blueAccent),
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => CreateProjectPage(),
+                          ),
+                        );
+                      },
+                      child: Text(
+                        "No Projects yet, Create from here",
+                        style: TextStyle(color: Colors.blueAccent),
+                      ),
                     ),
                   );
                 },

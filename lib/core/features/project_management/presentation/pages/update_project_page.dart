@@ -133,7 +133,7 @@ class _UpdateProjectPageState extends State<UpdateProjectPage> {
           ),
         ),
       ),
-      bottomNavigationBar: TaskBottomBar(),
+      bottomNavigationBar: TaskBottomBar(role: UserRole.admin),
     );
   }
 }

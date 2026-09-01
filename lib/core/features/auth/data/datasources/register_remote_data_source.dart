@@ -11,7 +11,6 @@ class RegisterRemoteDatasource {
       "https://fakestoreapi.com/users",
       data: register.toJson(),
     );
-    // print(response.statusCode);
-    
+    print(response.statusCode);
   }
-} 
+}

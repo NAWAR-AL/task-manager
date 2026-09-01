@@ -11,6 +11,7 @@ class UserScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: AppBar(title: Text('Hello ')),
       drawer: DrawerHome(role: UserRole.developer),
+      // bottomNavigationBar: TaskBottomBar(role: UserRole.developer),
       body: Center(child: Text("Users Magement")),
     );
   }
