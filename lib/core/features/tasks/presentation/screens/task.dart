@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:task_manager/core/features/tasks/presentation/screens/create_task.dart';
 import 'package:task_manager/core/features/tasks/presentation/task_bloc/task_bloc.dart';
 import 'package:task_manager/core/features/tasks/presentation/widgets/task_list.dart';
+import 'package:task_manager/core/features/tasks/presentation/widgets/task_page.dart';
 
 class Task extends StatefulWidget {
   Task({super.key});
@@ -11,9 +13,6 @@ class Task extends StatefulWidget {
 }
 
 class _TaskState extends State<Task> {
-  int id = 0;
-  final TextEditingController searchController = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -50,7 +49,7 @@ class _TaskState extends State<Task> {
                 if (state is TaskLoaded) {
                   final tasks = state.tasks;
                   final newTasks = tasks
-                      .where((task) => task.status == "pending")
+                      .where((task) => task.status == "todo")
                       .toList();
                   final inProgressTasks = tasks
                       .where((task) => task.status == "in_progress")
@@ -63,22 +62,31 @@ class _TaskState extends State<Task> {
                       .toList();
                   return TabBarView(
                     children: [
-                      TaskList(tasks: newTasks),
+                      buildNewTasksTab(context, tasks, 1),
+                      // TaskList(tasks: newTasks),
                       TaskList(tasks: inProgressTasks),
                       TaskList(tasks: completedTasks),
                       TaskList(tasks: scheduleTasks),
                     ],
                   );
                 }
-                return Center(child: Text("No Tasks Yet"));
+                return TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => CreatetaskPage()),
+                    );
+                  },
+                  child: Text("No Tasks Yet , Create new Task"),
+                );
               },
-              listener: ((context, state) {
+              listener: (context, state) {
                 if (state is TaskError) {
                   ScaffoldMessenger(
                     child: SnackBar(content: Text(state.message)),
                   );
                 }
-              }),
+              },
             ),
           ),
         ],

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-import 'package:task_manager/core/features/tasks/presentation/widgets/navigation_bar.dart';
+import 'package:task_manager/core/features/app_widgets/navigation_bar.dart';
 import 'package:task_manager/core/permission/role.dart';
 
-import '../../../tasks/presentation/widgets/drawer.dart';
+import '../../../app_widgets/drawer.dart';
 import '../../domain/entities/project.dart';
 import '../../presentation/cubit/project_cubit.dart';
 import '../../presentation/cubit/projects_state.dart';

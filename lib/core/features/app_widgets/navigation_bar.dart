@@ -3,7 +3,7 @@ import 'package:task_manager/core/features/comments/presentation/screens/comment
 import 'package:task_manager/core/features/dashboard/presentation/screens/dash_screen.dart';
 import 'package:task_manager/core/features/profile/presentation/screens/profile_screen.dart';
 import 'package:task_manager/core/features/tasks/presentation/screens/task.dart';
-import 'package:task_manager/core/features/tasks/presentation/widgets/drawer.dart';
+import 'package:task_manager/core/features/app_widgets/drawer.dart';
 import 'package:task_manager/core/permission/role.dart';
 
 class TaskBottomBar extends StatefulWidget {

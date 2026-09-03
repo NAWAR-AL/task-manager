@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:task_manager/core/features/project_management/presentation/cubit/project_cubit.dart';
 import 'package:task_manager/core/features/tasks/presentation/task_bloc/task_bloc.dart';
-import 'package:task_manager/core/features/tasks/presentation/widgets/navigation_bar.dart';
+import 'package:task_manager/core/features/app_widgets/navigation_bar.dart';
 import 'package:task_manager/core/permission/role.dart';
 import 'core/di/injection_container.dart';
 import 'core/features/auth/presentation/cubit/register_cubit.dart';

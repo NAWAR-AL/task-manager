@@ -9,12 +9,12 @@ Future<void> initCore() async {
     () => Dio(
       BaseOptions(
         baseUrl: ApiConstants.baseUrl,
+        connectTimeout: Duration(seconds: 10),
+        receiveTimeout: Duration(seconds: 10),
       ),
     ),
   );
 
   // ApiClient
-  sl.registerLazySingleton<ApiClient>(
-    () => ApiClient(sl()),
-  );
+  sl.registerLazySingleton<ApiClient>(() => ApiClient(sl()));
 }

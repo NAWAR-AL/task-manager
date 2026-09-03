@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:gap/gap.dart';
-import 'package:task_manager/core/features/tasks/presentation/widgets/drawer.dart';
+import 'package:task_manager/core/features/app_widgets/drawer.dart';
 import 'package:task_manager/core/permission/role.dart';
 
 class CreateProjectPage extends StatefulWidget {
