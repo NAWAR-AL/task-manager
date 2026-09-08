@@ -9,7 +9,7 @@ import 'package:task_manager/core/permission/role.dart';
 
 class DrawerHome extends StatelessWidget {
   final UserRole role;
-  DrawerHome({super.key, required this.role});
+  const DrawerHome({super.key, required this.role});
 
   @override
   Widget build(BuildContext context) {

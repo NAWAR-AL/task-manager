@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CommentScreen extends StatefulWidget {
-  CommentScreen({super.key});
+  const CommentScreen({super.key});
 
   @override
   State<CommentScreen> createState() => _CommentScreenState();

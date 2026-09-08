@@ -62,7 +62,7 @@ class _CreateProjectPageState extends State<CreateProjectPage> {
               ),
 
               DropdownButtonFormField<String>(
-                value: selectedStatus,
+                initialValue: selectedStatus,
                 decoration: InputDecoration(labelText: 'Status'),
                 items: [
                   DropdownMenuItem(value: 'active', child: Text('Active')),

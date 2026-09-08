@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:task_manager/core/features/comments/presentation/screens/comment_screen.dart';
 import 'package:task_manager/core/features/dashboard/presentation/screens/dash_screen.dart';
-import 'package:task_manager/core/features/profile/presentation/screens/profile_screen.dart';
 import 'package:task_manager/core/features/tasks/presentation/screens/task.dart';
 import 'package:task_manager/core/features/app_widgets/drawer.dart';
 import 'package:task_manager/core/permission/role.dart';
@@ -16,7 +15,11 @@ class TaskBottomBar extends StatefulWidget {
 
 class _TaskBottomBarState extends State<TaskBottomBar> {
   int _selectedIndex = 0;
-  List<Widget> pages = [DashScreen(), Task(), CommentScreen(), ProfileScreen()];
+  List<Widget> pages = [
+    DashScreen(), Task(), CommentScreen(),
+
+    // ProfileScreen()
+  ];
 
   @override
   Widget build(BuildContext context) {

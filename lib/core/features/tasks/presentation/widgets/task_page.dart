@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:task_manager/core/features/profile/presentation/profile_bloc/task_bloc.dart';
+import 'package:task_manager/core/features/tasks/presentation/task_bloc/task_bloc.dart';
 
 TextEditingController taskName = TextEditingController();
 TextEditingController projectName = TextEditingController();
@@ -106,7 +106,7 @@ Widget buildNewTasksTab(BuildContext context, List tasks, int index) {
                 const SizedBox(height: 20),
                 GestureDetector(
                   onTap: () {
-                    context.read<TaskBloc>().add(CreateTask(tasks[index]));
+                    context.read<TaskBloc>().add(CreateTaskEvent(tasks[index]));
                   },
                   child: Container(
                     height: 60,

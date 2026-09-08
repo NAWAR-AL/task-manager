@@ -12,7 +12,7 @@ import 'package:task_manager/core/features/project_management/presentation/pages
 import 'package:task_manager/core/features/tasks/presentation/task_bloc/task_bloc.dart';
 
 class DashScreen extends StatefulWidget {
-  DashScreen({super.key});
+  const DashScreen({super.key});
 
   @override
   State<DashScreen> createState() => _DashScreenState();

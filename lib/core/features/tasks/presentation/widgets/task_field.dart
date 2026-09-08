@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class TaskField extends StatelessWidget {
   final TextEditingController fieldController;
   final String fieldLabel;
-  TaskField({
+  const TaskField({
     super.key,
     required this.fieldController,
     required this.fieldLabel,
