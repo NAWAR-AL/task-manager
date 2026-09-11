@@ -15,7 +15,7 @@ class RegisterModel {
 
   factory RegisterModel.fromJson(Map<String, dynamic> json) {
     return RegisterModel(
-      username: json["usernamr"],
+      username: json["username"],
       email: json["email"],
       password: json["password"],
     );

@@ -8,7 +8,7 @@ class RegisterRemoteDatasource {
 
   Future<void> register(RegisterModel register) async {
     final response = await apiClient.dio.post(
-      "https://fakestoreapi.com/users",
+      "https://taskback.orbit-eng.net/api/register",
       data: register.toJson(),
     );
     // print(response.statusCode);

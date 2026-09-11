@@ -40,7 +40,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (_) => const LoginPage()),
+            MaterialPageRoute(builder: (_) =>  LoginPage()),
           );
         }
 
@@ -69,87 +69,92 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                     ),
                     Gap(6),
-                    Text(
-                      "Sign up to continue shopping.",
-                      style: TextStyle(fontSize: 16, color: Colors.grey),
-                    ),
+                    // Text(
+                    //   "Sign up to continue shopping.",
+                    //   style: TextStyle(fontSize: 16, color: Colors.grey),
+                    // ),
 
                     Gap(85),
 
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text("UserName"),
-                    ),
-                    TextField(
-                      controller: userNameController,
-                      decoration: InputDecoration(
-                        floatingLabelBehavior: FloatingLabelBehavior.never,
-                        prefixIcon: Icon(Icons.person),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(16),
-                          borderSide: const BorderSide(
-                            color: Colors.black87,
-                            width: 2,
-                          ),
-                        ),
-
-                        labelText: "Username",
+                    Padding(
+                      padding:  EdgeInsets.only(left: 10, right: 10),
+                      child: Column(children: [
+                        Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text("UserName"),
                       ),
-                    ),
-
-                    Gap(20),
-
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text("Email"),
-                    ),
-                    TextField(
-                      controller: emailController,
-                      decoration: InputDecoration(
-                        floatingLabelBehavior: FloatingLabelBehavior.never,
-                        prefixIcon: Icon(Icons.email_outlined),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(16),
-                          borderSide: const BorderSide(
-                            color: Colors.black87,
-                            width: 2,
+                      TextField(
+                        controller: userNameController,
+                        decoration: InputDecoration(
+                          floatingLabelBehavior: FloatingLabelBehavior.never,
+                          prefixIcon: Icon(Icons.person),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(16),
                           ),
-                        ),
-                        labelText: "Email",
-                      ),
-                    ),
-
-                    Gap(20),
-
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text("Password"),
-                    ),
-                    TextField(
-                      controller: passwordController,
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        floatingLabelBehavior: FloatingLabelBehavior.never,
-                        prefixIcon: Icon(Icons.password),
-
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(16),
-                          borderSide: const BorderSide(
-                            color: Colors.black87,
-                            width: 2,
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(16),
+                            borderSide: const BorderSide(
+                              color: Colors.black87,
+                              width: 2,
+                            ),
                           ),
+                      
+                          labelText: "Username",
                         ),
-                        labelText: "Password",
                       ),
+                      
+                      Gap(20),
+                      
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text("Email"),
+                      ),
+                      TextField(
+                        controller: emailController,
+                        decoration: InputDecoration(
+                          floatingLabelBehavior: FloatingLabelBehavior.never,
+                          prefixIcon: Icon(Icons.email_outlined),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(16),
+                            borderSide: const BorderSide(
+                              color: Colors.black87,
+                              width: 2,
+                            ),
+                          ),
+                          labelText: "Email",
+                        ),
+                      ),
+                      
+                      Gap(20),
+                      
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text("Password"),
+                      ),
+                      TextField(
+                        controller: passwordController,
+                        obscureText: true,
+                        decoration: InputDecoration(
+                          floatingLabelBehavior: FloatingLabelBehavior.never,
+                          prefixIcon: Icon(Icons.password),
+                      
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(16),
+                            borderSide: const BorderSide(
+                              color: Colors.black87,
+                              width: 2,
+                            ),
+                          ),
+                          labelText: "Password",
+                        ),
+                      ),
+                      ],),
                     ),
 
                     Gap(30),
@@ -175,8 +180,8 @@ class _RegisterPageState extends State<RegisterPage> {
                               },
                         child: state is RegisterLoading
                             ? SizedBox(
-                                height: 20,
-                                width: 20,
+                                height: 30,
+                                width: 30,
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2,
                                 ),

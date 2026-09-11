@@ -1,3 +1,3 @@
 class ApiConstants {
-  static const String baseUrl = "https://fakestoreapi.com/docs";
+  static const String baseUrl = "https://taskback.orbit-eng.net/api";
 }

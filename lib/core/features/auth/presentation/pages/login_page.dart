@@ -46,9 +46,7 @@ class _LoginPageState extends State<LoginPage> {
 
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (_) => const Test(),
-                ),
+                MaterialPageRoute(builder: (_) => const Test()),
               );
             }
 
@@ -88,15 +86,13 @@ class _LoginPageState extends State<LoginPage> {
       child: BlocBuilder<LoginCubit, LoginState>(
         builder: (context, state) {
           return Scaffold(
-            appBar: AppBar(
-              title: const Text("Login Page"),
-            ),
+            appBar: AppBar(title: const Text("Login Page")),
 
             body: Center(
               child: Padding(
-                padding: const EdgeInsets.all(15),
+                padding: EdgeInsets.all(15),
                 child: Padding(
-                  padding: const EdgeInsets.all(50),
+                  padding: EdgeInsets.all(40),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -108,72 +104,81 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
 
-                      const Gap(85),
+                      Gap(85),
 
-                      const Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text("UserName"),
-                      ),
-
-                      TextField(
-                        controller: userNameController,
-                        decoration: InputDecoration(
-                          floatingLabelBehavior:
-                              FloatingLabelBehavior.never,
-                          labelText: "Username",
-                          prefixIcon: const Icon(Icons.person),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16),
-                            borderSide: const BorderSide(
-                              color: Colors.black87,
-                              width: 2,
+                      Padding(
+                        padding: EdgeInsets.only(left: 20, right: 20),
+                        child: Column(
+                          children: [
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text("UserName"),
                             ),
-                          ),
+
+                            TextField(
+                              controller: userNameController,
+                              decoration: InputDecoration(
+                                floatingLabelBehavior:
+                                    FloatingLabelBehavior.never,
+                                labelText: "Username",
+                                prefixIcon: Icon(Icons.person),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                  borderSide: BorderSide(
+                                    color: Colors.black87,
+                                    width: 2,
+                                  ),
+                                ),
+                              ),
+                            ),
+
+                            Gap(30),
+
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text("Password"),
+                            ),
+
+                            TextField(
+                              controller: passwordController,
+                              obscureText: true,
+                              decoration: InputDecoration(
+                                floatingLabelBehavior:
+                                    FloatingLabelBehavior.never,
+                                labelText: "Password",
+                                prefixIcon: Icon(Icons.password),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                  borderSide: BorderSide(
+                                    color: Colors.black87,
+                                    width: 2,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
 
-                      const Gap(30),
-
-                      const Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text("Password"),
-                      ),
-
-                      TextField(
-                        controller: passwordController,
-                        obscureText: true,
-                        decoration: InputDecoration(
-                          floatingLabelBehavior:
-                              FloatingLabelBehavior.never,
-                          labelText: "Password",
-                          prefixIcon: const Icon(Icons.password),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16),
-                            borderSide: const BorderSide(
-                              color: Colors.black87,
-                              width: 2,
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      const Gap(35),
+                      Gap(35),
 
                       SizedBox(
                         width: 250,
                         height: 50,
                         child: ElevatedButton(
-                          style: const ButtonStyle(
-                            backgroundColor:
-                                WidgetStatePropertyAll(Colors.blue),
-                            foregroundColor:
-                                WidgetStatePropertyAll(Colors.white),
+                          style: ButtonStyle(
+                            backgroundColor: WidgetStatePropertyAll(
+                              Colors.blue,
+                            ),
+                            foregroundColor: WidgetStatePropertyAll(
+                              Colors.white,
+                            ),
                           ),
                           onPressed: state is LoginLaoding
                               ? null
@@ -183,12 +188,10 @@ class _LoginPageState extends State<LoginPage> {
                                     passwordController.text,
                                   );
 
-                                  context
-                                      .read<LoginCubit>()
-                                      .login(login);
+                                  context.read<LoginCubit>().login(login);
                                 },
                           child: state is LoginLaoding
-                              ? const SizedBox(
+                              ? SizedBox(
                                   width: 20,
                                   height: 20,
                                   child: CircularProgressIndicator(
@@ -196,45 +199,43 @@ class _LoginPageState extends State<LoginPage> {
                                     color: Colors.white,
                                   ),
                                 )
-                              : const Text("LogIn"),
+                              : Text("LogIn"),
                         ),
                       ),
 
-                      const Gap(20),
+                      Gap(20),
 
                       TextButton(
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(
-                              builder: (_) => RegisterPage(),
-                            ),
+                            MaterialPageRoute(builder: (_) => RegisterPage()),
                           );
                         },
-                        child: const Text(
+                        child: Text(
                           "Don't have an account? Sign Up",
-                          style: TextStyle(
-                            color: Colors.black,
-                          ),
+                          style: TextStyle(color: Colors.black),
                         ),
                       ),
 
-                      const Gap(10),
+                      Gap(10),
 
                       SizedBox(
-                        width: 250,
-                        height: 50,
+                        width: 100,
+                        height: 40,
                         child: ElevatedButton(
-                          style: const ButtonStyle(
-                            backgroundColor:
-                                WidgetStatePropertyAll(Color.fromARGB(255, 243, 112, 103)),
-                            foregroundColor:
-                                WidgetStatePropertyAll(Colors.white),
+                          style: ButtonStyle(
+                            backgroundColor: WidgetStatePropertyAll(
+                              Color.fromARGB(255, 243, 112, 103),
+                            ),
+                            foregroundColor: WidgetStatePropertyAll(
+                              Colors.white,
+                            ),
                           ),
                           onPressed: () {
                             context.read<LogoutCubit>().logout();
                           },
-                          child: const Text("Logout"),
+                          child: Text("Logout"),
                         ),
                       ),
                     ],
