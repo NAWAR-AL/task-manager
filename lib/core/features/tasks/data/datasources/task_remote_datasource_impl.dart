@@ -1,4 +1,3 @@
-
 import 'package:task_manager/core/features/tasks/data/datasources/task_remote_datasource.dart';
 import 'package:task_manager/core/features/tasks/data/model/task_model.dart';
 import 'package:task_manager/core/network/api_client.dart';
@@ -36,7 +35,8 @@ class TaskRemoteDatasourceImpl extends TaskRemoteDatasource {
   @override
   Future<TaskModel> updateTask(TaskModel task) async {
     final response = await apiClient.dio.put(
-      '/task/${task.id},data:task.tojson()',
+      '/task/${task.id}',
+      data: task.toJson(),
     );
     return TaskModel.fromJson(response.data);
   }

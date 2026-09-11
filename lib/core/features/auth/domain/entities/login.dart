@@ -1,6 +1,6 @@
 class Login {
-  final String username;
+  final String email;
   final String password;
 
-  Login(this.username, this.password);
+  Login(this.email, this.password);
 }

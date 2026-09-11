@@ -12,10 +12,12 @@ class ProjectRepositoryImpl implements ProjectRepository {
   Future<List<Project>> getProjects() async {
     return await remote.getProjects();
   }
+
   @override
   Future<Project> getProject(int id) async {
     return await remote.getProject(id);
   }
+
   @override
   Future<void> createProject(Project project) async {
     final model = ProjectModel(
@@ -29,6 +31,7 @@ class ProjectRepositoryImpl implements ProjectRepository {
     );
     await remote.createdProject(model);
   }
+
   @override
   Future<void> updateProject(Project project) async {
     final model = ProjectModel(
@@ -42,9 +45,9 @@ class ProjectRepositoryImpl implements ProjectRepository {
     );
     await remote.updateProject(model);
   }
+
   @override
   Future<void> deleteProject(int id) async {
     await remote.deleteProject(id);
   }
-
 }

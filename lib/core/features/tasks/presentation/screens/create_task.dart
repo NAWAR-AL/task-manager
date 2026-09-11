@@ -33,8 +33,6 @@ class _CreatetaskPageState extends State<CreatetaskPage> {
   String? selectedStatus;
   ProjectModel? selectedProject;
   final List<int> selectedDeveloperIds = [];
-  // final developers = users.where((user) => user.role == 'developer').toList();
-  // final List<String> allDevelopers = [];
 
   Future<void> pickDueDate() async {
     final DateTime? picked = await showDatePicker(

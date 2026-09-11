@@ -19,12 +19,12 @@ class DashScreen extends StatefulWidget {
 }
 
 class _DashScreenState extends State<DashScreen> {
-  final TextEditingController searchController = TextEditingController();
-  @override
-  void dispose() {
-    searchController.dispose();
-    super.dispose();
-  }
+  // final TextEditingController searchController = TextEditingController();
+  // @override
+  // void dispose() {
+  //   searchController.dispose();
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -41,30 +41,30 @@ class _DashScreenState extends State<DashScreen> {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
-              SizedBox(
-                width: MediaQuery.of(context).size.width / 2,
-                height: MediaQuery.of(context).size.height / 16,
-                child: TextFormField(
-                  controller: searchController,
-                  onChanged: (value) {
-                    // context.read<TaskBloc>().searchProducts(value);
-                  },
-                  decoration: InputDecoration(
-                    prefixIcon: Icon(
-                      Icons.search,
-                      color: Colors.lightBlueAccent,
-                    ),
-                    hintText: 'Search Now',
+              // SizedBox(
+              //   width: MediaQuery.of(context).size.width / 2,
+              //   height: MediaQuery.of(context).size.height / 16,
+              //   child: TextFormField(
+              //     controller: searchController,
+              //     onChanged: (value) {
+              //       // context.read<TaskBloc>().searchProducts(value);
+              //     },
+              //     decoration: InputDecoration(
+              //       prefixIcon: Icon(
+              //         Icons.search,
+              //         color: Colors.lightBlueAccent,
+              //       ),
+              //       hintText: 'Search Now',
 
-                    filled: true,
-                    // fillColor: Colors.lightBlue.shade100,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide.none,
-                    ),
-                  ),
-                ),
-              ),
+              //       filled: true,
+              //       // fillColor: Colors.lightBlue.shade100,
+              //       border: OutlineInputBorder(
+              //         borderRadius: BorderRadius.circular(12),
+              //         borderSide: BorderSide.none,
+              //       ),
+              //     ),
+              //   ),
+              // ),
               SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -131,7 +131,7 @@ class _DashScreenState extends State<DashScreen> {
                                       child: Icon(
                                         Icons.folder_outlined,
 
-                                        color: Colors.lightBlue,
+                                        color: Colors.purpleAccent,
                                       ),
                                     ),
                                     Text(
@@ -155,7 +155,7 @@ class _DashScreenState extends State<DashScreen> {
                                 ),
 
                                 Text(
-                                  project.createdAt.timeZoneName,
+                                  project.createdAt!.timeZoneName,
                                   style: TextStyle(fontSize: 12),
                                 ),
                                 SizedBox(height: 20),

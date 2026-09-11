@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:task_manager/core/features/app_widgets/navigation_bar.dart';
 
 import 'package:task_manager/core/features/auth/domain/entities/login.dart';
 import 'package:task_manager/core/features/auth/presentation/cubit/login_cubit.dart';
@@ -8,6 +9,8 @@ import 'package:task_manager/core/features/auth/presentation/cubit/login_state.d
 
 import 'package:task_manager/core/features/auth/presentation/cubit/logout_cubit.dart';
 import 'package:task_manager/core/features/auth/presentation/cubit/logout_state.dart';
+import 'package:task_manager/core/features/tasks/presentation/screens/task.dart';
+import 'package:task_manager/core/permission/role.dart';
 
 import 'test.dart';
 import 'register_page.dart';
@@ -20,12 +23,12 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final userNameController = TextEditingController();
+  final emialController = TextEditingController();
   final passwordController = TextEditingController();
 
   @override
   void dispose() {
-    userNameController.dispose();
+    emialController.dispose();
     passwordController.dispose();
     super.dispose();
   }
@@ -47,7 +50,7 @@ class _LoginPageState extends State<LoginPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (_) => const Test(),
+                  builder: (_) => TaskBottomBar(role: UserRole.admin),
                 ),
               );
             }
@@ -88,9 +91,7 @@ class _LoginPageState extends State<LoginPage> {
       child: BlocBuilder<LoginCubit, LoginState>(
         builder: (context, state) {
           return Scaffold(
-            appBar: AppBar(
-              title: const Text("Login Page"),
-            ),
+            appBar: AppBar(title: const Text("Login Page")),
 
             body: Center(
               child: Padding(
@@ -112,15 +113,14 @@ class _LoginPageState extends State<LoginPage> {
 
                       const Align(
                         alignment: Alignment.centerLeft,
-                        child: Text("UserName"),
+                        child: Text("Email"),
                       ),
 
                       TextField(
-                        controller: userNameController,
+                        controller: emialController,
                         decoration: InputDecoration(
-                          floatingLabelBehavior:
-                              FloatingLabelBehavior.never,
-                          labelText: "Username",
+                          floatingLabelBehavior: FloatingLabelBehavior.never,
+                          labelText: "Emial",
                           prefixIcon: const Icon(Icons.person),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(16),
@@ -135,7 +135,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
 
-                      const Gap(30),
+                      const Gap(10),
 
                       const Align(
                         alignment: Alignment.centerLeft,
@@ -146,8 +146,7 @@ class _LoginPageState extends State<LoginPage> {
                         controller: passwordController,
                         obscureText: true,
                         decoration: InputDecoration(
-                          floatingLabelBehavior:
-                              FloatingLabelBehavior.never,
+                          floatingLabelBehavior: FloatingLabelBehavior.never,
                           labelText: "Password",
                           prefixIcon: const Icon(Icons.password),
                           border: OutlineInputBorder(
@@ -163,29 +162,29 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
 
-                      const Gap(35),
+                      const Gap(10),
 
                       SizedBox(
                         width: 250,
                         height: 50,
                         child: ElevatedButton(
                           style: const ButtonStyle(
-                            backgroundColor:
-                                WidgetStatePropertyAll(Colors.blue),
-                            foregroundColor:
-                                WidgetStatePropertyAll(Colors.white),
+                            backgroundColor: WidgetStatePropertyAll(
+                              Colors.blue,
+                            ),
+                            foregroundColor: WidgetStatePropertyAll(
+                              Colors.white,
+                            ),
                           ),
                           onPressed: state is LoginLaoding
                               ? null
                               : () {
                                   final login = Login(
-                                    userNameController.text,
+                                    emialController.text,
                                     passwordController.text,
                                   );
 
-                                  context
-                                      .read<LoginCubit>()
-                                      .login(login);
+                                  context.read<LoginCubit>().login(login);
                                 },
                           child: state is LoginLaoding
                               ? const SizedBox(
@@ -200,22 +199,18 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
 
-                      const Gap(20),
+                      const Gap(10),
 
                       TextButton(
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(
-                              builder: (_) => RegisterPage(),
-                            ),
+                            MaterialPageRoute(builder: (_) => RegisterPage()),
                           );
                         },
                         child: const Text(
                           "Don't have an account? Sign Up",
-                          style: TextStyle(
-                            color: Colors.black,
-                          ),
+                          style: TextStyle(color: Colors.black),
                         ),
                       ),
 
@@ -226,10 +221,12 @@ class _LoginPageState extends State<LoginPage> {
                         height: 50,
                         child: ElevatedButton(
                           style: const ButtonStyle(
-                            backgroundColor:
-                                WidgetStatePropertyAll(Color.fromARGB(255, 243, 112, 103)),
-                            foregroundColor:
-                                WidgetStatePropertyAll(Colors.white),
+                            backgroundColor: WidgetStatePropertyAll(
+                              Color.fromARGB(255, 243, 112, 103),
+                            ),
+                            foregroundColor: WidgetStatePropertyAll(
+                              Colors.white,
+                            ),
                           ),
                           onPressed: () {
                             context.read<LogoutCubit>().logout();

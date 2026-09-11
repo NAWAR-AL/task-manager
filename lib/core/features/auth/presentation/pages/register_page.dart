@@ -74,7 +74,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       style: TextStyle(fontSize: 16, color: Colors.grey),
                     ),
 
-                    Gap(85),
+                    Gap(40),
 
                     Align(
                       alignment: Alignment.centerLeft,
@@ -100,7 +100,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                     ),
 
-                    Gap(20),
+                    Gap(10),
 
                     Align(
                       alignment: Alignment.centerLeft,

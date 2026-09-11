@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:task_manager/core/features/tasks/presentation/screens/create_task.dart';
 import 'package:task_manager/core/features/tasks/presentation/task_bloc/task_bloc.dart';
 import 'package:task_manager/core/features/tasks/presentation/widgets/task_list.dart';
 import 'package:task_manager/core/features/tasks/presentation/widgets/task_page.dart';
 
 class Task extends StatefulWidget {
-  Task({super.key});
+  const Task({super.key});
 
   @override
   State<Task> createState() => _TaskState();
@@ -16,10 +15,11 @@ class _TaskState extends State<Task> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 4,
+      length: 3,
       child: Column(
         // crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+        
           Container(
             color: Colors.white,
             child: TabBar(
@@ -32,7 +32,7 @@ class _TaskState extends State<Task> {
               isScrollable: true,
               tabAlignment: TabAlignment.start,
               tabs: [
-                Tab(text: "New Task"),
+                // Tab(text: "New Task"),
                 Tab(text: "In Progress"),
                 Tab(text: "Completed"),
                 Tab(text: "Scheduled"),
@@ -62,7 +62,7 @@ class _TaskState extends State<Task> {
                       .toList();
                   return TabBarView(
                     children: [
-                      buildNewTasksTab(context, tasks, 1),
+                      buildNewTasksTab(context, tasks, 2),
                       // TaskList(tasks: newTasks),
                       TaskList(tasks: inProgressTasks),
                       TaskList(tasks: completedTasks),
@@ -70,14 +70,8 @@ class _TaskState extends State<Task> {
                     ],
                   );
                 }
-                return TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => CreatetaskPage()),
-                    );
-                  },
-                  child: Text("No Tasks Yet , Create new Task"),
+                return Center(
+                  child: Text("Please check Your Internet conection"),
                 );
               },
               listener: (context, state) {

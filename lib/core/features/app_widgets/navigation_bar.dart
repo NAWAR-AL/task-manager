@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:task_manager/core/features/comments/presentation/screens/comment_screen.dart';
 import 'package:task_manager/core/features/dashboard/presentation/screens/dash_screen.dart';
+import 'package:task_manager/core/features/tasks/presentation/screens/create_task.dart';
 import 'package:task_manager/core/features/tasks/presentation/screens/task.dart';
 import 'package:task_manager/core/features/app_widgets/drawer.dart';
+import 'package:task_manager/core/features/users_mangment/presentation/user_profile.dart';
 import 'package:task_manager/core/permission/role.dart';
 
 class TaskBottomBar extends StatefulWidget {
@@ -16,7 +18,7 @@ class TaskBottomBar extends StatefulWidget {
 class _TaskBottomBarState extends State<TaskBottomBar> {
   int _selectedIndex = 0;
   List<Widget> pages = [
-    DashScreen(), Task(), CommentScreen(),
+    DashScreen(), Task(), CommentScreen(), UserProfile(),
 
     // ProfileScreen()
   ];
@@ -68,6 +70,22 @@ class _TaskBottomBarState extends State<TaskBottomBar> {
           BottomNavigationBarItem(icon: Icon(Icons.comment), label: "Comments"),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
         ],
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => CreatetaskPage()),
+          );
+        },
+        backgroundColor: Colors.lightBlue,
+        elevation: 10.02,
+        tooltip: 'New Task',
+        label: Text(
+          'New TAsk',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+        icon: Icon(Icons.add_task, color: Colors.white),
       ),
     );
   }

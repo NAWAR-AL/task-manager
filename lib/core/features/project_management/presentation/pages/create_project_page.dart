@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:task_manager/core/features/app_widgets/drawer.dart';
+import 'package:task_manager/core/features/project_management/domain/entities/project.dart';
+import 'package:task_manager/core/features/project_management/presentation/cubit/project_cubit.dart';
+import 'package:task_manager/core/features/project_management/presentation/pages/update_project_page.dart';
 import 'package:task_manager/core/permission/role.dart';
 
 class CreateProjectPage extends StatefulWidget {
@@ -35,12 +38,10 @@ class _CreateProjectPageState extends State<CreateProjectPage> {
             onPressed: () {
               // Navigator.push(
               //   context,
-              //   MaterialPageRoute(
-              //     builder: (_) => UpdateProjectPage(project: ,),
-              //   ),
+              //   MaterialPageRoute(builder: (_) => UpdateProjectPage(project: null,)),
               // );
             },
-            icon: Icon(Icons.edit_attributes_outlined, color: Colors.lightBlue),
+            icon: Icon(Icons.edit, color: Colors.lightBlue),
           ),
         ],
       ),
@@ -83,7 +84,14 @@ class _CreateProjectPageState extends State<CreateProjectPage> {
 
               Gap(30),
 
-              ElevatedButton(onPressed: () {}, child: Text('Create Project')),
+              ElevatedButton(
+                onPressed: () {
+                  // context.read<ProjectCubit>().createProject(
+
+                  // );
+                },
+                child: Text('Create Project'),
+              ),
             ],
           ),
         ),
