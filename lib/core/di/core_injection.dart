@@ -1,7 +1,7 @@
-import 'dart:io';
+// import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:dio/io.dart';
+// import 'package:dio/io.dart';
 import 'package:task_manager/core/constants/api_constants.dart';
 import '../network/api_client.dart';
 import 'injection_container.dart';
@@ -44,12 +44,12 @@ Future<void> initCore() async {
   );
 
   // 2. تفعيل تجاوز شهادات الأمان (Self-signed) على نفس الكائن
-  (dio.httpClientAdapter as IOHttpClientAdapter).createHttpClient = () {
-    final client = HttpClient();
-    client.badCertificateCallback =
-        (X509Certificate cert, String host, int port) => true;
-    return client;
-  };
+  // (dio.httpClientAdapter as IOHttpClientAdapter).createHttpClient = () {
+  //   final client = HttpClient();
+  //   client.badCertificateCallback =
+  //       (X509Certificate cert, String host, int port) => true;
+  //   return client;
+  // };
 
   // 3. إضافة الـ LogInterceptor لمراقبة الطلبات
   dio.interceptors.add(
