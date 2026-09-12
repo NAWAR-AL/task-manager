@@ -13,7 +13,6 @@ class Project {
     required this.description,
     required this.status,
     required this.createdBy,
-
     required this.createdAt,
     required this.updatedAt,
   });

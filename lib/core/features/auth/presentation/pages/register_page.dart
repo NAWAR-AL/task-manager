@@ -18,6 +18,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final userNameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final password_confirmation = TextEditingController();
 
   @override
   void dispose() {
@@ -35,18 +36,14 @@ class _RegisterPageState extends State<RegisterPage> {
         if (state is RegisterSuccess) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: const Text(
-                "User registered successfully",
-              ),
+              content: const Text("User registered successfully"),
               backgroundColor: Colors.green[400],
             ),
           );
 
           Navigator.push(
             context,
-            MaterialPageRoute(
-              builder: (_) => const LoginPage(),
-            ),
+            MaterialPageRoute(builder: (_) => const LoginPage()),
           );
         }
 
@@ -90,7 +87,6 @@ class _RegisterPageState extends State<RegisterPage> {
                     // --------------------------------
                     // Username
                     // --------------------------------
-
                     const Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
@@ -107,14 +103,11 @@ class _RegisterPageState extends State<RegisterPage> {
                     TextField(
                       controller: userNameController,
                       decoration: InputDecoration(
-                        floatingLabelBehavior:
-                            FloatingLabelBehavior.never,
+                        floatingLabelBehavior: FloatingLabelBehavior.never,
 
                         labelText: "Username",
 
-                        prefixIcon: const Icon(
-                          Icons.person_outline,
-                        ),
+                        prefixIcon: const Icon(Icons.person_outline),
 
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(16),
@@ -135,7 +128,6 @@ class _RegisterPageState extends State<RegisterPage> {
                     // --------------------------------
                     // Email
                     // --------------------------------
-
                     const Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
@@ -154,14 +146,11 @@ class _RegisterPageState extends State<RegisterPage> {
                       keyboardType: TextInputType.emailAddress,
 
                       decoration: InputDecoration(
-                        floatingLabelBehavior:
-                            FloatingLabelBehavior.never,
+                        floatingLabelBehavior: FloatingLabelBehavior.never,
 
                         labelText: "Email",
 
-                        prefixIcon: const Icon(
-                          Icons.email_outlined,
-                        ),
+                        prefixIcon: const Icon(Icons.email_outlined),
 
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(16),
@@ -182,7 +171,6 @@ class _RegisterPageState extends State<RegisterPage> {
                     // --------------------------------
                     // Password
                     // --------------------------------
-
                     const Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
@@ -201,14 +189,37 @@ class _RegisterPageState extends State<RegisterPage> {
                       obscureText: true,
 
                       decoration: InputDecoration(
-                        floatingLabelBehavior:
-                            FloatingLabelBehavior.never,
+                        floatingLabelBehavior: FloatingLabelBehavior.never,
 
                         labelText: "Password",
 
-                        prefixIcon: const Icon(
-                          Icons.password,
+                        prefixIcon: const Icon(Icons.password),
+
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16),
                         ),
+
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16),
+                          borderSide: const BorderSide(
+                            color: Colors.black87,
+                            width: 2,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const Gap(10),
+
+                    TextField(
+                      controller: passwordController,
+                      obscureText: true,
+
+                      decoration: InputDecoration(
+                        floatingLabelBehavior: FloatingLabelBehavior.never,
+
+                        labelText: "Confrim Password",
+
+                        prefixIcon: const Icon(Icons.password),
 
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(16),
@@ -229,20 +240,15 @@ class _RegisterPageState extends State<RegisterPage> {
                     // --------------------------------
                     // Sign Up Button
                     // --------------------------------
-
                     SizedBox(
                       width: 250,
                       height: 50,
 
                       child: ElevatedButton(
                         style: const ButtonStyle(
-                          backgroundColor: WidgetStatePropertyAll(
-                            Colors.blue,
-                          ),
+                          backgroundColor: WidgetStatePropertyAll(Colors.blue),
 
-                          foregroundColor: WidgetStatePropertyAll(
-                            Colors.white,
-                          ),
+                          foregroundColor: WidgetStatePropertyAll(Colors.white),
                         ),
 
                         onPressed: state is RegisterLoading
@@ -252,11 +258,10 @@ class _RegisterPageState extends State<RegisterPage> {
                                   userNameController.text,
                                   emailController.text,
                                   passwordController.text,
+                                  password_confirmation.text,
                                 );
 
-                                context
-                                    .read<RegisterCubit>()
-                                    .register(user);
+                                context.read<RegisterCubit>().register(user);
                               },
 
                         child: state is RegisterLoading
@@ -269,9 +274,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   color: Colors.white,
                                 ),
                               )
-                            : const Text(
-                                "Sign Up",
-                              ),
+                            : const Text("Sign Up"),
                       ),
                     ),
 
@@ -280,22 +283,17 @@ class _RegisterPageState extends State<RegisterPage> {
                     // --------------------------------
                     // Go To Login
                     // --------------------------------
-
                     TextButton(
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
-                            builder: (_) => const LoginPage(),
-                          ),
+                          MaterialPageRoute(builder: (_) => const LoginPage()),
                         );
                       },
 
                       child: const Text(
                         "Already have an account? Login",
-                        style: TextStyle(
-                          color: Colors.black,
-                        ),
+                        style: TextStyle(color: Colors.black),
                       ),
                     ),
                   ],
