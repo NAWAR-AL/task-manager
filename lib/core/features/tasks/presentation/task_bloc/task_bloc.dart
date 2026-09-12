@@ -1,7 +1,7 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:task_manager/core/features/tasks/domain/entities/task_entity.dart';
-import 'package:task_manager/core/features/tasks/domain/usercases/createTask_usecase.dart';
+import 'package:task_manager/core/features/tasks/domain/usercases/create_Task_usecase.dart';
 import 'package:task_manager/core/features/tasks/domain/usercases/deleteTask_usecase.dart';
 import 'package:task_manager/core/features/tasks/domain/usercases/getTasks_usecase.dart';
 import 'package:task_manager/core/features/tasks/domain/usercases/updateTask_usecase.dart';
@@ -29,7 +29,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
         emit(TaskError(e.toString()));
       }
     });
-    on<CreateTask>((event, emit) async {
+    on<CreateTaskEvent>((event, emit) async {
       emit(TaskLoading());
       try {
         final task = await createtaskUsecase(event.task);
@@ -38,7 +38,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
         emit(TaskError(e.toString()));
       }
     });
-    on<DeleteTask>((event, emit) async {
+    on<DeleteTaskEvent>((event, emit) async {
       emit(TaskLoading());
       try {
         await deletetaskUsecase(event.id);
@@ -47,7 +47,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
         emit(TaskError(e.toString()));
       }
     });
-    on<UpdateTask>((event, emit) async {
+    on<UpdateTaskEvent>((event, emit) async {
       emit(TaskLoading());
       try {
         final task = await updatetaskUsecase(event.task);

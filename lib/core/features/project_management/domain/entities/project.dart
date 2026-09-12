@@ -17,6 +17,4 @@ class Project {
     required this.createdAt,
     required this.updatedAt,
   });
-
-
 }

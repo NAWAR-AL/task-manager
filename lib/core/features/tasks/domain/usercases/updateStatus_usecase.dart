@@ -8,6 +8,6 @@ class UpdatestatusUsecase {
     if (task.status.isEmpty) {
       throw Exception("the status cannot be empty");
     }
-    return repository.updateTaskStatus(task.id, task.status);
+    return repository.updateTaskStatus(task.id!, task.status);
   }
 }

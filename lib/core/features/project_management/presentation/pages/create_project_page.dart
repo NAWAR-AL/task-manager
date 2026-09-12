@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-import '../../domain/entities/project.dart';
-import '../../presentation/cubit/project_cubit.dart';
+import 'package:task_manager/core/features/app_widgets/drawer.dart';
+import 'package:task_manager/core/features/project_management/domain/entities/project.dart';
+import 'package:task_manager/core/features/project_management/presentation/cubit/project_cubit.dart';
+import 'package:task_manager/core/features/project_management/presentation/pages/update_project_page.dart';
+import 'package:task_manager/core/permission/role.dart';
 
 class CreateProjectPage extends StatefulWidget {
   const CreateProjectPage({super.key});
@@ -27,7 +30,22 @@ class _CreateProjectPageState extends State<CreateProjectPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Create Project")),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: Text("Create Project"),
+        actions: [
+          IconButton(
+            onPressed: () {
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(builder: (_) => UpdateProjectPage(project: null,)),
+              // );
+            },
+            icon: Icon(Icons.edit, color: Colors.lightBlue),
+          ),
+        ],
+      ),
+      drawer: DrawerHome(role: UserRole.admin),
       body: Center(
         child: Padding(
           padding: EdgeInsets.all(15),
@@ -35,18 +53,18 @@ class _CreateProjectPageState extends State<CreateProjectPage> {
             children: [
               TextField(
                 controller: nameController,
-                decoration:  InputDecoration(labelText: 'Project Name'),
+                decoration: InputDecoration(labelText: 'Project Name'),
               ),
 
               TextField(
                 controller: descriptionController,
-                decoration:  InputDecoration(labelText: 'Description'),
+                decoration: InputDecoration(labelText: 'Description'),
                 maxLines: 3,
               ),
 
               DropdownButtonFormField<String>(
-                value: selectedStatus,
-                decoration:  InputDecoration(labelText: 'Status'),
+                initialValue: selectedStatus,
+                decoration: InputDecoration(labelText: 'Status'),
                 items: [
                   DropdownMenuItem(value: 'active', child: Text('Active')),
                   DropdownMenuItem(value: 'on_hold', child: Text('On Hold')),
@@ -68,7 +86,9 @@ class _CreateProjectPageState extends State<CreateProjectPage> {
 
               ElevatedButton(
                 onPressed: () {
-              
+                  // context.read<ProjectCubit>().createProject(
+
+                  // );
                 },
                 child: Text('Create Project'),
               ),

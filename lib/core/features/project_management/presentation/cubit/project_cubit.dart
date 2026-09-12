@@ -57,22 +57,22 @@ class ProjectCubit extends Cubit<ProjectsState> {
   }
 
   Future<void> updateProject(Project project, int id) async {
-  try {
-    await updateProjectUsecases(project);
-    emit(ProjectUpdated());
-    await fetchProject(id);
-  } catch (e) {
-    emit(ProjectError(e.toString()));
+    try {
+      await updateProjectUsecases(project);
+      emit(ProjectUpdated());
+      await fetchProject(id);
+    } catch (e) {
+      emit(ProjectError(e.toString()));
+    }
   }
-}
 
   Future<void> deleteProject(int id) async {
-  try {
-    await deleteProjectsUsecases(id);
-    emit(ProjectDeleted());
-    await fetchProjects();
-  } catch (e) {
-    emit(ProjectError(e.toString()));
+    try {
+      await deleteProjectsUsecases(id);
+      emit(ProjectDeleted());
+      await fetchProjects();
+    } catch (e) {
+      emit(ProjectError(e.toString()));
+    }
   }
-}
 }

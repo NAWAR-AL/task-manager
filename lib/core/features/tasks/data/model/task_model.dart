@@ -2,16 +2,16 @@ import 'package:task_manager/core/features/tasks/domain/entities/task_entity.dar
 
 class TaskModel extends TaskEntity {
   TaskModel({
-    required super.id,
+    super.id,
     required super.title,
     required super.description,
     required super.project_id,
-    required super.created_by,
+    super.created_by,
     required super.assigned_to,
     required super.due_date,
     required super.priority,
     required super.status,
-    required super.timestamps,
+    super.timestamps,
   });
   //convert json to object
   factory TaskModel.fromJson(Map<String, dynamic> map) {
@@ -21,11 +21,13 @@ class TaskModel extends TaskEntity {
       description: map['description'],
       project_id: map['project_id'],
       created_by: map['created_by'],
-      assigned_to: map['assigned_to'],
-      due_date: map['due_date'],
+      assigned_to: List<int>.from(map['assigned_users'] ?? []),
+      due_date: DateTime.parse(map['due_date']),
       priority: map['priority'],
       status: map['status'],
-      timestamps: map['timestamps'],
+      timestamps: map['created_at'] != null
+          ? DateTime.parse(map['timestamps'])
+          : null,
     );
   }
 
@@ -36,7 +38,7 @@ class TaskModel extends TaskEntity {
       'title': title,
       'description': description,
       'project_id': project_id,
-      'assigned_to': assigned_to,
+      'assigned_users': assigned_to,
       'created_by': created_by,
       'due_date': due_date,
       'priority': priority,

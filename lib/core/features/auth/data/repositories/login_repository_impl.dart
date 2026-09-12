@@ -10,10 +10,7 @@ class LoginRepositoryImpl implements LoginRepository {
 
   @override
   Future<String> login(Login login) async {
-    final model = LoginModel(
-      username: login.username,
-      password: login.password,
-    );
-   return await remote.login(model);
+    final model = LoginModel(email: login.email, password: login.password);
+    return await remote.login(model);
   }
 }
