@@ -1,11 +1,10 @@
-import 'dart:io';
+// import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:dio/io.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:task_manager/core/constants/api_constants.dart';
-import '../network/api_client.dart';
-import 'injection_container.dart';
+import 'package:task_manager/core/di/injection_container.dart';
+import 'package:task_manager/core/network/api_client.dart';
 
 Future<void> initCore() async {
   // 1. إنشاء كائن Dio واحد وضبط خياراته وشهادات الأمان عليه مباشرة
@@ -18,12 +17,12 @@ Future<void> initCore() async {
   );
 
   // 2. تفعيل تجاوز شهادات الأمان (Self-signed) على نفس الكائن
-  (dio.httpClientAdapter as IOHttpClientAdapter).createHttpClient = () {
-    final client = HttpClient();
-    client.badCertificateCallback =
-        (X509Certificate cert, String host, int port) => true;
-    return client;
-  };
+  // (dio.httpClientAdapter as IOHttpClientAdapter).createHttpClient = () {
+  //   final client = HttpClient();
+  //   client.badCertificateCallback =
+  //       (X509Certificate cert, String host, int port) => true;
+  //   return client;
+  // };
 
   // 3. إضافة الـ LogInterceptor لمراقبة الطلبات
   dio.interceptors.add(

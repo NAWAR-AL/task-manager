@@ -14,7 +14,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   await init();
-  await initCore();
+  // await initCore();
 
   runApp(MyApp());
 }

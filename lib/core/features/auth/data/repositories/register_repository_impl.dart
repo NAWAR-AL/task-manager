@@ -11,9 +11,10 @@ class RegisterRepositoryImpl implements RegisterRepository {
   @override
   Future<void> register(Register register) async {
     final model = RegisterModel(
-      username: register.username,
+      name: register.name,
       email: register.email,
       password: register.password,
+      password_confirmation: register.password_confirmation,
     );
     await remote.register(model);
   }

@@ -1,23 +1,26 @@
 class RegisterModel {
-  final String username;
+  final String name;
   final String email;
   final String password;
+  final String password_confirmation;
 
   RegisterModel({
-    required this.username,
+    required this.name,
     required this.email,
     required this.password,
+    required this.password_confirmation
   }); // شكل البيانات داخل التطبيق
 
   Map<String, dynamic> toJson() {
-    return {"username": username, "email": email, "password": password};
+    return {"name": name, "email": email, "password": password, "password_confirmation": password_confirmation};
   }
 
   factory RegisterModel.fromJson(Map<String, dynamic> json) {
     return RegisterModel(
-      username: json["username"],
+      name: json["name"],
       email: json["email"],
       password: json["password"],
+      password_confirmation: json["password_confirmation"],
     );
   }
 }

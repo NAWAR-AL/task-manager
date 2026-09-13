@@ -1,7 +1,8 @@
 class Register {
-  final String username;
+  final String name;
   final String email;
   final String password;
+  final String password_confirmation;
 
-  Register(this.username, this.email, this.password);
+  Register(this.name, this.email, this.password, this.password_confirmation);
 }
