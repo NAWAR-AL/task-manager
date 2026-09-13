@@ -6,7 +6,7 @@ class UpdateProjectUsecases {
 
   UpdateProjectUsecases({required this.repo});
 
-  Future<void> call(Project project) async {
+  Future<void> call(ProjectEntity project) async {
     return await repo.createProject(project);
   }
 }

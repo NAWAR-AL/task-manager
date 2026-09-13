@@ -7,7 +7,7 @@ class ProjectsInitial extends ProjectsState {}
 class ProjectsLoading extends ProjectsState {}
 
 class ProjectsLoaded extends ProjectsState {
-  final List<Project> projects;
+  final List<ProjectEntity> projects;
 
   ProjectsLoaded(this.projects);
 }
@@ -23,7 +23,7 @@ class ProjectInitial extends ProjectsState {}
 class ProjectLoading extends ProjectsState {}
 
 class ProjectLoaded extends ProjectsState {
-  final Project project;
+  final ProjectEntity project;
 
   ProjectLoaded(this.project);
 }

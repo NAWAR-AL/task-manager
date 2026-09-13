@@ -2,17 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:task_manager/core/features/app_widgets/navigation_bar.dart';
-
 import 'package:task_manager/core/features/auth/domain/entities/login.dart';
 import 'package:task_manager/core/features/auth/presentation/cubit/login_cubit.dart';
 import 'package:task_manager/core/features/auth/presentation/cubit/login_state.dart';
-
 import 'package:task_manager/core/features/auth/presentation/cubit/logout_cubit.dart';
 import 'package:task_manager/core/features/auth/presentation/cubit/logout_state.dart';
-import 'package:task_manager/core/features/tasks/presentation/screens/task.dart';
 import 'package:task_manager/core/permission/role.dart';
-
-import 'test.dart';
 import 'register_page.dart';
 
 class LoginPage extends StatefulWidget {

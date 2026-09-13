@@ -9,17 +9,17 @@ class ProjectRepositoryImpl implements ProjectRepository {
   ProjectRepositoryImpl(this.remote);
 
   @override
-  Future<List<Project>> getProjects() async {
+  Future<List<ProjectEntity>> getProjects() async {
     return await remote.getProjects();
   }
 
   @override
-  Future<Project> getProject(int id) async {
+  Future<ProjectEntity> getProject(int id) async {
     return await remote.getProject(id);
   }
 
   @override
-  Future<void> createProject(Project project) async {
+  Future<void> createProject(ProjectEntity project) async {
     final model = ProjectModel(
       id: project.id,
       name: project.name,
@@ -33,7 +33,7 @@ class ProjectRepositoryImpl implements ProjectRepository {
   }
 
   @override
-  Future<void> updateProject(Project project) async {
+  Future<void> updateProject(ProjectEntity project) async {
     final model = ProjectModel(
       id: project.id,
       name: project.name,

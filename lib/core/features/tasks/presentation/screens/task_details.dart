@@ -21,7 +21,7 @@ class TaskDetails extends StatelessWidget {
             Text('Due Date : ${task.due_date}'),
             Divider(height: 20),
             const Text('Assigned to :'),
-            ...task.assigned_to.map((devId) {
+            ...task.assigned_users.map((devId) {
               final developer = UserRole.developer.name;
               return ListTile(
                 title: Text(developer),

@@ -1,13 +1,13 @@
 import '../entities/project.dart';
 
 abstract class ProjectRepository {
-  Future<List<Project>> getProjects();
+  Future<List<ProjectEntity>> getProjects();
 
-  Future<Project> getProject(int id);
+  Future<ProjectEntity> getProject(int id);
 
-  Future<void> createProject(Project project);
+  Future<void> createProject(ProjectEntity project);
 
-  Future<void> updateProject(Project project);
+  Future<void> updateProject(ProjectEntity project);
 
   Future<void> deleteProject(int id);
 }

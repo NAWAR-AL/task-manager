@@ -14,7 +14,7 @@ class CreatetaskUsecase {
     if (task.priority.isEmpty) {
       throw Exception('please select a priority');
     }
-    if (task.assigned_to.isEmpty) {
+    if (task.assigned_users.isEmpty) {
       throw Exception('please assgin at least one developer');
     }
     return repository.createTask(task);

@@ -31,7 +31,7 @@ class _CreatetaskPageState extends State<CreatetaskPage> {
   String? selectedPriority;
   DateTime? selectedDueDate;
   String? selectedStatus;
-  ProjectModel? selectedProject;
+  int? selectedProjectId;
   final List<int> selectedDeveloperIds = [];
 
   Future<void> pickDueDate() async {
@@ -95,21 +95,26 @@ class _CreatetaskPageState extends State<CreatetaskPage> {
 
                     color: Colors.blueGrey.shade100,
                   ),
-                  child: DropdownButtonFormField<ProjectModel>(
-                    initialValue: selectedProject,
-
-                    hint: Text('Select Project'),
+                  child: DropdownButtonFormField<int>(
+                    initialValue: selectedProjectId,
+                    decoration: const InputDecoration(
+                      labelText: 'Select Project',
+                      border: InputBorder.none,
+                    ),
+                    hint: Text('Choose a Project'),
                     items: widget.projects.map((project) {
-                      return DropdownMenuItem(
-                        value: project,
+                      return DropdownMenuItem<int>(
+                        value: project.id,
                         child: Text(project.name),
                       );
                     }).toList(),
                     onChanged: (value) {
                       if (value != null) {
                         setState(() {
-                          selectedProject = value;
+                          selectedProjectId = value;
                         });
+                        print('project ccount:${widget.projects.length}');
+                        print('selected project is :$value');
                       }
                     },
                   ),
@@ -124,6 +129,10 @@ class _CreatetaskPageState extends State<CreatetaskPage> {
                   ),
                   child: DropdownButtonFormField<String>(
                     initialValue: selectedPriority,
+                    decoration: const InputDecoration(
+                      labelText: 'Select Priority',
+                      border: InputBorder.none,
+                    ),
                     hint: Text("Select Priority"),
                     items: ['low', 'medium', 'high']
                         .map(
@@ -138,7 +147,7 @@ class _CreatetaskPageState extends State<CreatetaskPage> {
                     }),
                   ),
                 ),
-                Gap(30),
+                Gap(20),
                 Container(
                   padding: const EdgeInsets.only(left: 8, right: 8.0),
                   decoration: BoxDecoration(
@@ -147,6 +156,10 @@ class _CreatetaskPageState extends State<CreatetaskPage> {
                   ),
                   child: DropdownButtonFormField<String>(
                     initialValue: selectedStatus,
+                    decoration: const InputDecoration(
+                      labelText: 'Select Status',
+                      border: InputBorder.none,
+                    ),
                     hint: Text("Select Status"),
                     items: ['todo', 'in_progress', 'review', 'done']
                         .map(
@@ -161,7 +174,7 @@ class _CreatetaskPageState extends State<CreatetaskPage> {
                     }),
                   ),
                 ),
-                Gap(30),
+                Gap(20),
                 Container(
                   padding: const EdgeInsets.only(left: 8, right: 8.0),
                   decoration: BoxDecoration(
@@ -191,7 +204,7 @@ class _CreatetaskPageState extends State<CreatetaskPage> {
                     );
                   }).toList(),
                 ),
-                Gap(30),
+                Gap(20),
                 Container(
                   padding: const EdgeInsets.only(left: 8, right: 8.0),
                   decoration: BoxDecoration(
@@ -227,7 +240,7 @@ class _CreatetaskPageState extends State<CreatetaskPage> {
                   ),
                   onPressed: () {
                     if (!(_formKey.currentState?.validate() ?? false)) return;
-                    if (selectedProject == null) {
+                    if (selectedProjectId == null) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text('Please select a Project')),
                       );
@@ -242,13 +255,11 @@ class _CreatetaskPageState extends State<CreatetaskPage> {
                     final taskEntity = TaskEntity(
                       title: taskTitleController.text.trim(),
                       description: descriptionController.text.trim(),
-                      project_id: selectedProject!.id,
-                      assigned_to: selectedDeveloperIds,
-
+                      project_id: selectedProjectId!,
+                      assigned_users: selectedDeveloperIds,
                       due_date: selectedDueDate!,
                       priority: selectedPriority ?? 'low',
                       status: selectedStatus ?? 'todo',
-                      timestamps: DateTime.now(),
                     );
                     context.read<TaskBloc>().add(CreateTaskEvent(taskEntity));
                   },
