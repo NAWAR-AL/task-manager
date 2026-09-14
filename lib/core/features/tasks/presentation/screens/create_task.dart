@@ -113,8 +113,6 @@ class _CreatetaskPageState extends State<CreatetaskPage> {
                         setState(() {
                           selectedProjectId = value;
                         });
-                        print('project ccount:${widget.projects.length}');
-                        print('selected project is :$value');
                       }
                     },
                   ),
@@ -230,44 +228,64 @@ class _CreatetaskPageState extends State<CreatetaskPage> {
                 ),
                 Gap(20),
 
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.lightBlue,
-
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  onPressed: () {
-                    if (!(_formKey.currentState?.validate() ?? false)) return;
-                    if (selectedProjectId == null) {
+                BlocListener(
+                  listener: (context, state) {
+                    if (state is TaskCreated) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Please select a Project')),
+                        SnackBar(
+                          content: Text('Task Created Successfully'),
+                          backgroundColor: Colors.green,
+                        ),
                       );
-                      return;
-                    }
-                    if (selectedDueDate == null) {
+                      Navigator.pop(context);
+                    } else if (state is TaskError) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Please select a due Date')),
+                        SnackBar(
+                          content: Text(state.message),
+                          backgroundColor: Colors.red,
+                        ),
                       );
-                      return;
                     }
-                    final taskEntity = TaskEntity(
-                      title: taskTitleController.text.trim(),
-                      description: descriptionController.text.trim(),
-                      project_id: selectedProjectId!,
-                      assigned_users: selectedDeveloperIds,
-                      due_date: selectedDueDate!,
-                      priority: selectedPriority ?? 'low',
-                      status: selectedStatus ?? 'todo',
-                    );
-                    context.read<TaskBloc>().add(CreateTaskEvent(taskEntity));
                   },
-                  child: Text(
-                    'Create Task',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.lightBlue,
+
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    onPressed: () {
+                      if (!(_formKey.currentState?.validate() ?? false)) return;
+                      if (selectedProjectId == null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Please select a Project')),
+                        );
+                        return;
+                      }
+                      if (selectedDueDate == null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Please select a due Date')),
+                        );
+                        return;
+                      }
+                      final taskEntity = TaskEntity(
+                        title: taskTitleController.text.trim(),
+                        description: descriptionController.text.trim(),
+                        project_id: selectedProjectId!,
+                        assigned_users: selectedDeveloperIds,
+                        due_date: selectedDueDate!,
+                        priority: selectedPriority ?? 'low',
+                        status: selectedStatus ?? 'todo',
+                      );
+                      context.read<TaskBloc>().add(CreateTaskEvent(taskEntity));
+                    },
+                    child: Text(
+                      'Create Task',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),

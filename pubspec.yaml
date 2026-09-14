@@ -39,7 +39,6 @@ dependencies:
   get_it: ^9.2.1
   gap: ^3.0.1
   shared_preferences: ^2.5.5
-  device_preview: ^3.0.0
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   intl: ^0.20.3

@@ -36,7 +36,7 @@ class TaskModel extends TaskEntity {
       'project_id': project_id,
       'assigned_users': assigned_users,
       'created_by': created_by,
-      'due_date': due_date,
+      'due_date': due_date.toIso8601String(),
       'priority': priority,
       'status': status,
     };

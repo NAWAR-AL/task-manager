@@ -1,4 +1,3 @@
-import 'package:task_manager/core/features/auth/data/models/user_model.dart';
 
 import '../../domain/entities/user.dart';
 import '../../domain/repositories/profile_repository.dart';

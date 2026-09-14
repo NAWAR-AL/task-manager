@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:task_manager/core/di/core_injection.dart';
 import 'package:task_manager/core/features/auth/presentation/pages/register_page.dart';
 import 'package:task_manager/core/features/project_management/presentation/cubit/project_cubit.dart';
 import 'package:task_manager/core/features/tasks/presentation/task_bloc/task_bloc.dart';
