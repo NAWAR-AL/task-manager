@@ -19,7 +19,6 @@ class _TaskState extends State<Task> {
       child: Column(
         // crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-        
           Container(
             color: Colors.white,
             child: TabBar(
@@ -48,9 +47,9 @@ class _TaskState extends State<Task> {
                 }
                 if (state is TaskLoaded) {
                   final tasks = state.tasks;
-                  final newTasks = tasks
-                      .where((task) => task.status == "todo")
-                      .toList();
+                  // final newTasks = tasks
+                  //     .where((task) => task.status == "todo")
+                  //     .toList();
                   final inProgressTasks = tasks
                       .where((task) => task.status == "in_progress")
                       .toList();
