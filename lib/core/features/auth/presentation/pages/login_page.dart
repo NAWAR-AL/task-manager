@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-
 import 'package:task_manager/core/features/app_widgets/navigation_bar.dart';
 import 'package:task_manager/core/features/auth/domain/entities/login.dart';
 import 'package:task_manager/core/features/auth/presentation/cubit/login_cubit.dart';
 import 'package:task_manager/core/features/auth/presentation/cubit/login_state.dart';
 import 'package:task_manager/core/features/auth/presentation/cubit/logout_cubit.dart';
 import 'package:task_manager/core/features/auth/presentation/cubit/logout_state.dart';
+import 'package:task_manager/core/features/auth/presentation/pages/register_page.dart';
 import 'package:task_manager/core/permission/role.dart';
-
-import 'register_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -48,9 +46,7 @@ class _LoginPageState extends State<LoginPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (_) => TaskBottomBar(
-                    role: UserRole.admin,
-                  ),
+                  builder: (_) => TaskBottomBar(role: UserRole.admin),
                 ),
               );
             }
@@ -93,9 +89,7 @@ class _LoginPageState extends State<LoginPage> {
       child: BlocBuilder<LoginCubit, LoginState>(
         builder: (context, state) {
           return Scaffold(
-            appBar: AppBar(
-              title: const Text("Login Page"),
-            ),
+            appBar: AppBar(title: const Text("Login Page")),
 
             body: Center(
               child: SingleChildScrollView(
@@ -124,7 +118,6 @@ class _LoginPageState extends State<LoginPage> {
                       // -------------------------
                       // Email Label
                       // -------------------------
-
                       const Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
@@ -141,20 +134,16 @@ class _LoginPageState extends State<LoginPage> {
                       // -------------------------
                       // Email TextField
                       // -------------------------
-
                       TextField(
                         controller: emailController,
                         keyboardType: TextInputType.emailAddress,
 
                         decoration: InputDecoration(
-                          floatingLabelBehavior:
-                              FloatingLabelBehavior.never,
+                          floatingLabelBehavior: FloatingLabelBehavior.never,
 
                           labelText: "Email",
 
-                          prefixIcon: const Icon(
-                            Icons.email,
-                          ),
+                          prefixIcon: const Icon(Icons.email),
 
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(16),
@@ -175,7 +164,6 @@ class _LoginPageState extends State<LoginPage> {
                       // -------------------------
                       // Password Label
                       // -------------------------
-
                       const Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
@@ -192,20 +180,16 @@ class _LoginPageState extends State<LoginPage> {
                       // -------------------------
                       // Password TextField
                       // -------------------------
-
                       TextField(
                         controller: passwordController,
                         obscureText: true,
 
                         decoration: InputDecoration(
-                          floatingLabelBehavior:
-                              FloatingLabelBehavior.never,
+                          floatingLabelBehavior: FloatingLabelBehavior.never,
 
                           labelText: "Password",
 
-                          prefixIcon: const Icon(
-                            Icons.password,
-                          ),
+                          prefixIcon: const Icon(Icons.password),
 
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(16),
@@ -226,7 +210,6 @@ class _LoginPageState extends State<LoginPage> {
                       // -------------------------
                       // Login Button
                       // -------------------------
-
                       SizedBox(
                         width: 250,
                         height: 50,
@@ -250,9 +233,7 @@ class _LoginPageState extends State<LoginPage> {
                                     passwordController.text,
                                   );
 
-                                  context
-                                      .read<LoginCubit>()
-                                      .login(login);
+                                  context.read<LoginCubit>().login(login);
                                 },
 
                           child: state is LoginLaoding
@@ -265,9 +246,7 @@ class _LoginPageState extends State<LoginPage> {
                                     color: Colors.white,
                                   ),
                                 )
-                              : const Text(
-                                  "LogIn",
-                                ),
+                              : const Text("LogIn"),
                         ),
                       ),
 
@@ -276,7 +255,6 @@ class _LoginPageState extends State<LoginPage> {
                       // -------------------------
                       // Register
                       // -------------------------
-
                       TextButton(
                         onPressed: () {
                           Navigator.push(
@@ -290,9 +268,7 @@ class _LoginPageState extends State<LoginPage> {
                         child: const Text(
                           "Don't have an account? Sign Up",
 
-                          style: TextStyle(
-                            color: Colors.black,
-                          ),
+                          style: TextStyle(color: Colors.black),
                         ),
                       ),
 
@@ -301,7 +277,6 @@ class _LoginPageState extends State<LoginPage> {
                       // -------------------------
                       // Logout Button
                       // -------------------------
-
                       SizedBox(
                         width: 100,
                         height: 40,
@@ -309,12 +284,7 @@ class _LoginPageState extends State<LoginPage> {
                         child: ElevatedButton(
                           style: const ButtonStyle(
                             backgroundColor: WidgetStatePropertyAll(
-                              Color.fromARGB(
-                                255,
-                                243,
-                                112,
-                                103,
-                              ),
+                              Color.fromARGB(255, 243, 112, 103),
                             ),
 
                             foregroundColor: WidgetStatePropertyAll(
@@ -323,14 +293,10 @@ class _LoginPageState extends State<LoginPage> {
                           ),
 
                           onPressed: () {
-                            context
-                                .read<LogoutCubit>()
-                                .logout();
+                            context.read<LogoutCubit>().logout();
                           },
 
-                          child: const Text(
-                            "Logout",
-                          ),
+                          child: const Text("Logout"),
                         ),
                       ),
                     ],

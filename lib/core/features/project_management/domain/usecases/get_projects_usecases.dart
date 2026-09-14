@@ -6,7 +6,7 @@ class GetProjectsUsecases {
 
   GetProjectsUsecases({required this.repo});
 
-  Future<List<Project>> call() async {
+  Future<List<ProjectEntity>> call() async {
     return await repo.getProjects();
   }
 }

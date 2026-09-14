@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:task_manager/core/features/app_widgets/drawer.dart';
+import 'package:task_manager/core/features/project_management/data/models/project_model.dart';
 import 'package:task_manager/core/features/project_management/domain/entities/project.dart';
 import 'package:task_manager/core/features/project_management/presentation/cubit/project_cubit.dart';
-import 'package:task_manager/core/features/project_management/presentation/pages/update_project_page.dart';
+
 import 'package:task_manager/core/permission/role.dart';
 
 class CreateProjectPage extends StatefulWidget {
@@ -17,7 +18,6 @@ class CreateProjectPage extends StatefulWidget {
 class _CreateProjectPageState extends State<CreateProjectPage> {
   final nameController = TextEditingController();
   final descriptionController = TextEditingController();
-
   String selectedStatus = 'active';
 
   @override
@@ -31,20 +31,7 @@ class _CreateProjectPageState extends State<CreateProjectPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Text("Create Project"),
-        actions: [
-          IconButton(
-            onPressed: () {
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(builder: (_) => UpdateProjectPage(project: null,)),
-              // );
-            },
-            icon: Icon(Icons.edit, color: Colors.lightBlue),
-          ),
-        ],
-      ),
+      appBar: AppBar(title: Text("Create Project"), centerTitle: true),
       drawer: DrawerHome(role: UserRole.admin),
       body: Center(
         child: Padding(
@@ -86,11 +73,21 @@ class _CreateProjectPageState extends State<CreateProjectPage> {
 
               ElevatedButton(
                 onPressed: () {
-                  // context.read<ProjectCubit>().createProject(
-
-                  // );
+                  if (nameController.text.trim().isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('please enter project name')),
+                    );
+                    return;
+                  }
+                  context.read<ProjectCubit>().createProject(
+                    ProjectModel(
+                      name: nameController.text.trim(),
+                      description: descriptionController.text.trim(),
+                      status: selectedStatus,
+                    ),
+                  );
                 },
-                child: Text('Create Project'),
+                child: Text('Create a Project'),
               ),
             ],
           ),

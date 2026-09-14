@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-import 'package:task_manager/core/features/app_widgets/navigation_bar.dart';
-import 'package:task_manager/core/permission/role.dart';
-
-import '../../../app_widgets/drawer.dart';
 import '../../domain/entities/project.dart';
 import '../../presentation/cubit/project_cubit.dart';
 import '../../presentation/cubit/projects_state.dart';
 
 class UpdateProjectPage extends StatefulWidget {
-  final Project project;
+  final ProjectEntity project;
 
   const UpdateProjectPage({super.key, required this.project});
 
@@ -43,8 +39,9 @@ class _UpdateProjectPageState extends State<UpdateProjectPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Update Project')),
-      drawer: DrawerHome(role: UserRole.admin),
+      backgroundColor: Colors.white,
+      appBar: AppBar(title: Text('Update Project'), centerTitle: true),
+      // drawer: DrawerHome(role: UserRole.admin),
       body: BlocListener<ProjectCubit, ProjectsState>(
         listener: (context, state) {
           if (state is ProjectUpdated) {
@@ -83,7 +80,7 @@ class _UpdateProjectPageState extends State<UpdateProjectPage> {
               Gap(15),
 
               DropdownButtonFormField<String>(
-                value: selectedStatus,
+                initialValue: selectedStatus,
 
                 decoration: InputDecoration(labelText: 'Status'),
 
@@ -111,7 +108,7 @@ class _UpdateProjectPageState extends State<UpdateProjectPage> {
 
               ElevatedButton(
                 onPressed: () {
-                  final updatedProject = Project(
+                  final updatedProject = ProjectEntity(
                     id: widget.project.id,
                     name: nameController.text,
                     description: descriptionController.text,
@@ -121,10 +118,7 @@ class _UpdateProjectPageState extends State<UpdateProjectPage> {
                     updatedAt: widget.project.updatedAt,
                   );
 
-                  context.read<ProjectCubit>().updateProject(
-                    updatedProject,
-                    widget.project.id,
-                  );
+                  // context.read<ProjectCubit>().updateProject(project, id)
                 },
 
                 child: Text('Update Project'),
@@ -133,7 +127,7 @@ class _UpdateProjectPageState extends State<UpdateProjectPage> {
           ),
         ),
       ),
-      bottomNavigationBar: TaskBottomBar(role: UserRole.admin),
+      // bottomNavigationBar: TaskBottomBar(role: UserRole.admin),
     );
   }
 }

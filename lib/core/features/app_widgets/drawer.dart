@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:task_manager/core/features/project_management/presentation/pages/create_project_page.dart';
+import 'package:task_manager/core/features/project_management/presentation/pages/projects_page.dart';
 import 'package:task_manager/core/features/settings/screens/setting_screen.dart';
 import 'package:task_manager/core/features/app_widgets/navigation_bar.dart';
 import 'package:task_manager/core/features/users_mangment/presentation/user_profile.dart';
@@ -44,7 +44,7 @@ class DrawerHome extends StatelessWidget {
               icon: Icons.folder_outlined,
               title: 'Projects',
               ontap: () {
-                navigateToScreen(context, CreateProjectPage());
+                navigateToScreen(context, ProjectsPage());
               },
             ),
 

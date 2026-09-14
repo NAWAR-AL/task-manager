@@ -4,6 +4,7 @@ import 'package:task_manager/core/di/injection_container.dart';
 import 'package:task_manager/core/features/project_management/domain/usecases/create_project_usecases.dart';
 import 'package:task_manager/core/features/project_management/domain/usecases/delete_projects_usecases.dart';
 import 'package:task_manager/core/features/project_management/domain/usecases/get_project_usecases.dart';
+import 'package:task_manager/core/features/project_management/domain/usecases/get_projectdetails_usecases.dart';
 import 'package:task_manager/core/features/project_management/domain/usecases/get_projects_usecases.dart';
 import 'package:task_manager/core/features/project_management/domain/usecases/update_project_usecases.dart';
 import 'package:task_manager/core/features/project_management/presentation/cubit/project_cubit.dart';
@@ -35,6 +36,7 @@ class _DashScreenState extends State<DashScreen> {
         createProjectUsecases: CreateProjectUsecases(repo: sl()),
         updateProjectUsecases: UpdateProjectUsecases(repo: sl()),
         deleteProjectsUsecases: DeleteProjectsUsecases(repo: sl()),
+        getProjectdetailsUsecases: GetProjectdetailsUsecases(repo: sl())
       ),
       child: SingleChildScrollView(
         child: Padding(
