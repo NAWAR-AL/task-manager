@@ -6,10 +6,18 @@ class LogoutRemoteDataSource {
   LogoutRemoteDataSource(this.dio);
 
   Future<bool> logout() async {
-    final response = await dio.delete(
-      'https://dummyjson.com/users/1',
-    );
+    try {
+      final response = await dio.post(
+        'https://taskback.orbit-eng.net/api/logout',
+      );
 
-    return response.statusCode == 200;
+      return response.statusCode == 200;
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401) {
+        return true;
+      }
+
+      rethrow;
+    }
   }
 }

@@ -4,7 +4,7 @@ class TaskEntity {
   String description;
   int project_id;
   int? created_by;
-  List<int> assigned_users;
+  List<int>? assigned_users;
   String status;
   String priority;
   DateTime due_date;
@@ -15,7 +15,7 @@ class TaskEntity {
     required this.description,
     required this.project_id,
     this.created_by,
-    required this.assigned_users,
+    this.assigned_users,
     required this.due_date,
     required this.priority,
     required this.status,

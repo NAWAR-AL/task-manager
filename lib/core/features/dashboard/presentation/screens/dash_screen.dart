@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_manager/core/di/injection_container.dart';
+import 'package:task_manager/core/features/auth/presentation/cubit/logout_cubit.dart';
+import 'package:task_manager/core/features/auth/presentation/cubit/logout_state.dart';
+import 'package:task_manager/core/features/auth/presentation/pages/login_page.dart';
 import 'package:task_manager/core/features/project_management/domain/usecases/create_project_usecases.dart';
 import 'package:task_manager/core/features/project_management/domain/usecases/delete_projects_usecases.dart';
 import 'package:task_manager/core/features/project_management/domain/usecases/get_project_usecases.dart';
@@ -20,54 +23,46 @@ class DashScreen extends StatefulWidget {
 }
 
 class _DashScreenState extends State<DashScreen> {
-  // final TextEditingController searchController = TextEditingController();
-  // @override
-  // void dispose() {
-  //   searchController.dispose();
-  //   super.dispose();
-  // }
+  @override
+  void initState() {
+    super.initState();
+    context.read<TaskBloc>().add(GetTasks());
+    context.read<ProjectCubit>().fetchProjects();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ProjectCubit(
-        getProjectsUsecases: GetProjectsUsecases(repo: sl()),
-        getProjectUsecases: GetProjectUsecases(repo: sl()),
-        createProjectUsecases: CreateProjectUsecases(repo: sl()),
-        updateProjectUsecases: UpdateProjectUsecases(repo: sl()),
-        deleteProjectsUsecases: DeleteProjectsUsecases(repo: sl()),
-        getProjectdetailsUsecases: GetProjectdetailsUsecases(repo: sl())
-      ),
-      child: SingleChildScrollView(
+    return BlocListener<LogoutCubit, LogoutState>(
+      listener: (context, state) {
+        if (state is LogoutSuccess) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Logged out successfully"),
+              backgroundColor: Colors.green,
+            ),
+          );
+
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (_) => const LoginPage()),
+            (route) => false,
+          );
+        }
+      },
+      child: BlocProvider(
+        create: (context) => ProjectCubit(
+          getProjectsUsecases: GetProjectsUsecases(repo: sl()),
+          getProjectUsecases: GetProjectUsecases(repo: sl()),
+          createProjectUsecases: CreateProjectUsecases(repo: sl()),
+          updateProjectUsecases: UpdateProjectUsecases(repo: sl()),
+          deleteProjectsUsecases: DeleteProjectsUsecases(repo: sl()),
+          getProjectdetailsUsecases: GetProjectdetailsUsecases(repo: sl()),
+        ),
+        child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
-              // SizedBox(
-              //   width: MediaQuery.of(context).size.width / 2,
-              //   height: MediaQuery.of(context).size.height / 16,
-              //   child: TextFormField(
-              //     controller: searchController,
-              //     onChanged: (value) {
-              //       // context.read<TaskBloc>().searchProducts(value);
-              //     },
-              //     decoration: InputDecoration(
-              //       prefixIcon: Icon(
-              //         Icons.search,
-              //         color: Colors.lightBlueAccent,
-              //       ),
-              //       hintText: 'Search Now',
-
-              //       filled: true,
-              //       // fillColor: Colors.lightBlue.shade100,
-              //       border: OutlineInputBorder(
-              //         borderRadius: BorderRadius.circular(12),
-              //         borderSide: BorderSide.none,
-              //       ),
-              //     ),
-              //   ),
-              // ),
-              SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -196,45 +191,33 @@ class _DashScreenState extends State<DashScreen> {
                       return const Center(child: CircularProgressIndicator());
                     }
                     if (state is TaskLoaded) {
-                      int index = 0;
                       final task = state.tasks;
                       return DataTable(
                         columns: <DataColumn>[
+                          ///1
                           DataColumn(label: Expanded(child: Text("Task Name"))),
+                          //2
                           DataColumn(
                             label: Expanded(child: Text("Project Name")),
                           ),
+                          //3
                           DataColumn(label: Expanded(child: Text("Priority"))),
+                          //4
                           DataColumn(label: Expanded(child: Text("Due Date"))),
+                          //5
                           DataColumn(label: Expanded(child: Text("Status"))),
                         ],
-                        rows: [
-                          DataRow(
+                        rows: task.map((task) {
+                          return DataRow(
                             cells: <DataCell>[
-                              DataCell(Text("Task ${task[index].title}")),
+                              DataCell(Text(task.title)),
+                              DataCell(Text("Task ${task.project_id}")),
+                              DataCell(Text("Task ${task.priority}")),
+                              DataCell(Text("Task ${task.due_date}")),
+                              DataCell(Text("Task ${task.status}")),
                             ],
-                          ),
-                          DataRow(
-                            cells: <DataCell>[
-                              DataCell(Text("Task ${task[index].project_id}")),
-                            ],
-                          ),
-                          DataRow(
-                            cells: <DataCell>[
-                              DataCell(Text("Task ${task[index].priority}")),
-                            ],
-                          ),
-                          DataRow(
-                            cells: <DataCell>[
-                              DataCell(Text("Task ${task[index].due_date}")),
-                            ],
-                          ),
-                          DataRow(
-                            cells: <DataCell>[
-                              DataCell(Text("Task ${task[index].status}")),
-                            ],
-                          ),
-                        ],
+                          );
+                        }).toList(),
                       );
                     }
                     return Center(child: Text("No Tasks Yet"));
@@ -248,10 +231,34 @@ class _DashScreenState extends State<DashScreen> {
                   },
                 ),
               ),
+               SizedBox(
+                        width: 100,
+                        height: 40,
+
+                        child: ElevatedButton(
+                          style: const ButtonStyle(
+                            backgroundColor: WidgetStatePropertyAll(
+                              Color.fromARGB(255, 243, 112, 103),
+                            ),
+
+                            foregroundColor: WidgetStatePropertyAll(
+                              Colors.white,
+                            ),
+                          ),
+
+                          onPressed: () {
+                            context.read<LogoutCubit>().logout();
+                          },
+
+                          child: const Text("Logout"),
+                        ),
+                      ),
             ],
           ),
         ),
       ),
+      ),
     );
+    
   }
 }

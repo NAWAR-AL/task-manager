@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:task_manager/core/features/app_widgets/colors.dart';
 import '../../domain/entities/project.dart';
 import '../../presentation/cubit/project_cubit.dart';
 import '../../presentation/cubit/projects_state.dart';
@@ -118,10 +119,18 @@ class _UpdateProjectPageState extends State<UpdateProjectPage> {
                     updatedAt: widget.project.updatedAt,
                   );
 
-                  // context.read<ProjectCubit>().updateProject(project, id)
+                  final projectId = widget.project.id;
+                  if (projectId != null) {
+                    context
+                        .read<ProjectCubit>()
+                        .updateProject(updatedProject, projectId);
+                  }
                 },
 
-                child: Text('Update Project'),
+                child: Text(
+                  'Update Project',
+                  style: TextStyle(color: ColorsApp.icons),
+                ),
               ),
             ],
           ),

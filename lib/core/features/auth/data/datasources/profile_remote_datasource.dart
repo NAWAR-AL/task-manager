@@ -7,8 +7,20 @@ class ProfileRemoteDatasource {
   ProfileRemoteDatasource(this.apiClient);
 
   Future<UserModel> getProfile() async {
-    final response = await apiClient.dio.get("https://taskback.orbit-eng.net/api/users");
+    final response = await apiClient.dio.get(
+      "https://taskback.orbit-eng.net/api/users",
+    );
 
-     return UserModel.fromJson(response.data["data"]);
+    // print(response.data);
+    return UserModel.fromJson(response.data["data"]);
+  }
+
+  Future<List<UserModel>> getUsers() async {
+    final response = await apiClient.dio.get(
+      "https://taskback.orbit-eng.net/api/users",
+    );
+    final List<dynamic> responseUsers = response.data['data'];
+    // print(response.data);
+    return responseUsers.map((json) => UserModel.fromJson(json)).toList();
   }
 }

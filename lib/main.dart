@@ -1,26 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:task_manager/core/di/core_injection.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:task_manager/core/features/auth/presentation/cubit/profile_cubit.dart';
 import 'package:task_manager/core/features/auth/presentation/pages/register_page.dart';
 import 'package:task_manager/core/features/project_management/presentation/cubit/project_cubit.dart';
 import 'package:task_manager/core/features/tasks/presentation/task_bloc/task_bloc.dart';
+
 import 'core/di/injection_container.dart';
 import 'core/features/auth/presentation/cubit/register_cubit.dart';
 import 'core/features/auth/presentation/cubit/login_cubit.dart';
 import 'core/features/auth/presentation/cubit/logout_cubit.dart';
+import 'package:task_manager/core/features/dashboard/presentation/screens/dash_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await Hive.initFlutter();
   await init();
-  // await initCore();
 
-  runApp(MyApp());
+  final prefs = await SharedPreferences.getInstance();
+  final token = prefs.getString("auth_token");
+
+  final isLoggedIn = token != null && token.isNotEmpty;
+
+  runApp(MyApp(isLoggedIn: isLoggedIn));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final bool isLoggedIn;
+
+  const MyApp({super.key, required this.isLoggedIn});
 
   @override
   Widget build(BuildContext context) {
@@ -31,12 +42,12 @@ class MyApp extends StatelessWidget {
         BlocProvider<LogoutCubit>(create: (_) => sl<LogoutCubit>()),
         BlocProvider<TaskBloc>(create: (_) => sl<TaskBloc>()),
         BlocProvider<ProjectCubit>(create: (_) => sl<ProjectCubit>()),
+        BlocProvider<ProfileCubit>(create: (_) => sl<ProfileCubit>()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        // home: TaskBottomBar(role: UserRole.admin),
-        // home: DashBoardScreen(),
-        home: RegisterPage(),
+
+        home: isLoggedIn ? const DashScreen() : const RegisterPage(),
       ),
     );
   }

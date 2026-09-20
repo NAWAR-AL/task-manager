@@ -16,22 +16,87 @@ class TaskList extends StatelessWidget {
       itemBuilder: (context, index) {
         final task = tasks[index];
         return Card(
-          child: ListTile(
-            title: Text(task.title),
-            subtitle: Text(task.description),
-            trailing: Text(task.priority),
-            leading: TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => TaskDetails(task: task)),
-                );
-              },
-              child: Text('Task Details'),
+          elevation: 2,
+          color: _getCardBackgoundColor(index),
+          margin: EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+            side: BorderSide(color: Colors.grey),
+          ),
+          child: InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => TaskDetails(task: task)),
+              );
+            },
+            child: ListTile(
+              trailing: Container(
+                width: 20,
+                height: 30,
+                decoration: BoxDecoration(
+                  color: _getPriorityColor(task.priority),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+              ),
+              title: Text(
+                task.title,
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+
+              leading: Text(
+                task.priority.toUpperCase(),
+                style: TextStyle(fontSize: 12),
+              ),
+
+              // trailing: Row(
+              //   children: [
+              //     Chip(
+              //       label: Text(task.status),
+              //       backgroundColor: _getStatusColor(task.status),
+              //       visualDensity: VisualDensity.compact,
+              //     ),
+              //     Icon(Icons.arrow_forward_ios),
+              //   ],
+              // ),
             ),
+            // child: ListTile(
+            //   title: Text(task.title),
+            //   subtitle: Text(task.priority),
+            //   trailing: Text(task.status),
+            //   leading: Text(task.title),
+            // ),
           ),
         );
       },
     );
+  }
+}
+
+Color _getCardBackgoundColor(int index) {
+  switch (index % 3) {
+    case 0:
+      return Color(0xff9BCEC1);
+    case 1:
+      return Color(0xffFFEBD3);
+    case 2:
+      return Color(0xffFFB6A6);
+    default:
+      return Color(0xff9BCEC1);
+  }
+}
+
+Color _getPriorityColor(String priority) {
+  switch (priority.toLowerCase()) {
+    case 'high':
+      return Colors.red;
+    case 'medium':
+      return Colors.orange;
+    case 'low':
+      return Colors.green;
+    default:
+      return Colors.green;
   }
 }
