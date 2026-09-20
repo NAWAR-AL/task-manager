@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_manager/core/features/project_management/domain/entities/project.dart';
 import 'package:task_manager/core/features/project_management/presentation/cubit/project_cubit.dart';
-import '../cubit/project_cubit.dart';
 import 'package:task_manager/core/features/project_management/presentation/cubit/projects_state.dart';
 import 'package:task_manager/core/features/project_management/presentation/pages/create_project_page.dart';
 import 'package:task_manager/core/features/project_management/presentation/pages/project_details_page.dart';
