@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:task_manager/core/features/project_management/domain/usecases/get_projectdetails_usecases.dart';
 import '../../domain/usecases/get_projects_usecases.dart';
 import '../../domain/usecases/get_project_usecases.dart';
 import '../../domain/usecases/create_project_usecases.dart';
@@ -14,6 +15,7 @@ class ProjectCubit extends Cubit<ProjectsState> {
   final CreateProjectUsecases createProjectUsecases;
   final UpdateProjectUsecases updateProjectUsecases;
   final DeleteProjectsUsecases deleteProjectsUsecases;
+  final GetProjectdetailsUsecases getProjectdetailsUsecases;
 
   ProjectCubit({
     required this.getProjectsUsecases,
@@ -21,6 +23,7 @@ class ProjectCubit extends Cubit<ProjectsState> {
     required this.createProjectUsecases,
     required this.updateProjectUsecases,
     required this.deleteProjectsUsecases,
+    required this.getProjectdetailsUsecases,
   }) : super(ProjectInitial());
 
   Timer? debounce;
@@ -73,6 +76,17 @@ class ProjectCubit extends Cubit<ProjectsState> {
       await deleteProjectsUsecases(id);
       emit(ProjectDeleted());
       await fetchProjects();
+    } catch (e) {
+      emit(ProjectError(e.toString()));
+    }
+  }
+
+  Future<void> getProjectDetails(int projectId) async {
+    emit(ProjectLoading());
+
+    try {
+      final project = await getProjectdetailsUsecases(projectId);
+      emit(GetProjectDetailesLoaded(project));
     } catch (e) {
       emit(ProjectError(e.toString()));
     }

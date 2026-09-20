@@ -4,10 +4,11 @@ import 'package:task_manager/core/features/project_management/domain/entities/pr
 import 'package:task_manager/core/features/project_management/presentation/cubit/project_cubit.dart';
 import 'package:task_manager/core/features/project_management/presentation/cubit/projects_state.dart';
 import 'package:task_manager/core/features/project_management/presentation/pages/create_project_page.dart';
+import 'package:task_manager/core/features/project_management/presentation/pages/project_details_page.dart';
 import 'package:task_manager/core/features/project_management/presentation/pages/update_project_page.dart';
 
 class ProjectsPage extends StatefulWidget {
-  ProjectsPage({super.key});
+  const ProjectsPage({super.key});
 
   @override
   State<ProjectsPage> createState() => _ProjectsPageState();
@@ -20,10 +21,11 @@ class _ProjectsPageState extends State<ProjectsPage> {
     context.read<ProjectCubit>().fetchProjects();
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Projects List'),
+        title: const Text('Projects List'),
         centerTitle: true,
         actions: [
           IconButton(
@@ -33,60 +35,130 @@ class _ProjectsPageState extends State<ProjectsPage> {
                 MaterialPageRoute(builder: (_) => CreateProjectPage()),
               );
             },
-            icon: Icon(Icons.add, color: Colors.lightBlue),
+            icon: const Icon(Icons.add, color: Colors.lightBlue),
           ),
         ],
       ),
-      body: BlocBuilder<ProjectCubit, ProjectsState>(
-        builder: ((context, state) {
+      body: BlocConsumer<ProjectCubit, ProjectsState>(
+        listener: (context, state) {
+          if (state is ProjectError) {
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(state.message)));
+          }
+        },
+        builder: (context, state) {
           if (state is ProjectLoading) {
-            return CircularProgressIndicator();
+            return const Center(child: CircularProgressIndicator());
           }
           if (state is ProjectsLoaded) {
             final projectsList = state.projects;
             if (projectsList.isEmpty) {
-              return Center(child: Text('No avalible projects'));
+              return const Center(child: Text('No available projects'));
             }
             return ListView.builder(
               itemCount: projectsList.length,
               itemBuilder: (context, index) {
                 final project = projectsList[index];
-                return Card(
-                  child: ListTile(
-                    title: Text(project.name),
-                    trailing: IconButton(
-                      onPressed: () {
-                        final projectEntity = ProjectEntity(
-                          name: project.name,
-                          description: project.description,
-                          status: project.status,
-                        );
+
+                return Dismissible(
+                  key: Key(project.id.toString()),
+                  direction: DismissDirection.horizontal,
+
+                  // الخلفية عند السحب جهة اليمين
+                  background: Container(
+                    color: Colors.red,
+                    alignment: Alignment.centerLeft,
+                    padding: const EdgeInsets.only(left: 20),
+                    child: const Icon(Icons.delete, color: Colors.white),
+                  ),
+
+                  // الخلفية عند السحب جهة اليسار
+                  secondaryBackground: Container(
+                    color: Colors.red,
+                    alignment: Alignment.centerRight,
+                    padding: const EdgeInsets.only(right: 20),
+                    child: const Icon(Icons.delete, color: Colors.white),
+                  ),
+
+                  // نافذة تأكيد الحذف
+                  confirmDismiss: (direction) async {
+                    return await showDialog<bool>(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text('تأكيد الحذف'),
+                              content: Text(
+                                'هل أنت تأكد من إزالة مشروع "${project.name}"؟',
+                              ),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.of(context).pop(false),
+                                  child: const Text('إلغاء'),
+                                ),
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.of(context).pop(true),
+                                  style: TextButton.styleFrom(
+                                    foregroundColor: Colors.red,
+                                  ),
+                                  child: const Text('حذف'),
+                                ),
+                              ],
+                            );
+                          },
+                        ) ??
+                        false;
+                  },
+
+                  // تنفيذ الحذف عبر الكيوبيت بعد موافقة المستخدم
+                  onDismissed: (direction) {
+                    context.read<ProjectCubit>().deleteProject(project.id!);
+                  },
+
+                  child: Card(
+                    child: ListTile(
+                      onTap: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                UpdateProjectPage(project: projectEntity),
+                            builder: (_) =>
+                                ProjectDetailsPage(projectId: project.id),
                           ),
                         );
-                        print('object');
                       },
-                      icon: Icon(Icons.edit, color: Colors.lightBlue),
+                      title: Text(project.name),
+                      trailing: IconButton(
+                        onPressed: () {
+                          final projectEntity = ProjectEntity(
+                            name: project.name,
+                            description: project.description,
+                            status: project.status,
+                          );
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  UpdateProjectPage(project: projectEntity),
+                            ),
+                          );
+                        },
+                        icon: const Icon(Icons.edit, color: Colors.lightBlue),
+                      ),
+                      leading: const Icon(
+                        Icons.folder_open_outlined,
+                        color: Colors.lightBlue,
+                      ),
+                      subtitle: Text(project.description),
                     ),
-                    leading: Icon(
-                      Icons.folder_open_outlined,
-                      color: Colors.lightBlue,
-                    ),
-                    subtitle: Text(project.description),
                   ),
                 );
               },
             );
           }
-          if (state is ProjectError) {
-            return Center(child: Text('please read the error $state.message'));
-          }
           return const Center(child: Text("loading projects."));
-        }),
+        },
       ),
     );
   }

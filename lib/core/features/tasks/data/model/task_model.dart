@@ -7,7 +7,7 @@ class TaskModel extends TaskEntity {
     required super.description,
     required super.project_id,
     super.created_by,
-    required super.assigned_users,
+    super.assigned_users,
     required super.due_date,
     required super.priority,
     required super.status,
@@ -15,15 +15,24 @@ class TaskModel extends TaskEntity {
   //convert json to object
   factory TaskModel.fromJson(Map<String, dynamic> map) {
     return TaskModel(
-      id: map['id'],
-      title: map['title'],
-      description: map['description'],
-      project_id: map['project_id'],
+      id: map['id'] ?? 0,
+      title: map['title'] ?? '',
+      description: map['description'] ?? '',
+      project_id: map['project_id'] ?? 0,
       created_by: map['created_by'],
-      assigned_users: List<int>.from(map['assigned_users'] ?? []),
+      assigned_users:
+          map['assigned_users'] != null && map['assigned_users'] is List
+          ? (map['assigned_users'] as List).map((item) {
+              if (item is Map<String, dynamic>) {
+                return item['id'] as int;
+              }
+              return item as int;
+            }).toList()
+          : [],
+
       due_date: DateTime.parse(map['due_date']),
-      priority: map['priority'],
-      status: map['status'],
+      priority: map['priority'] ?? 'low',
+      status: map['status'] ?? 'todo',
     );
   }
 
@@ -34,7 +43,7 @@ class TaskModel extends TaskEntity {
       'title': title,
       'description': description,
       'project_id': project_id,
-      'assigned_users': assigned_users,
+      'assigned_users': assigned_users ?? [],
       'created_by': created_by,
       'due_date': due_date.toIso8601String(),
       'priority': priority,

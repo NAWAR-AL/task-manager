@@ -10,4 +10,6 @@ abstract class ProjectRepository {
   Future<void> updateProject(ProjectEntity project);
 
   Future<void> deleteProject(int id);
+
+  Future<ProjectEntity> getProjectDetails(int projectId);
 }

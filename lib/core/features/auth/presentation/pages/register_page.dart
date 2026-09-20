@@ -211,7 +211,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     const Gap(10),
 
                     TextField(
-                      controller: passwordController,
+                      controller: password_confirmation,
                       obscureText: true,
 
                       decoration: InputDecoration(

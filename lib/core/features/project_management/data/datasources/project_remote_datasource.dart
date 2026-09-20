@@ -1,5 +1,6 @@
 import 'package:task_manager/core/network/api_client.dart';
 import '../models/project_model.dart';
+import 'package:dio/dio.dart';
 
 class ProjectRemoteDatasource {
   final ApiClient apiClient;
@@ -36,6 +37,21 @@ class ProjectRemoteDatasource {
   }
 
   Future<void> deleteProject(int id) async {
-    await apiClient.dio.delete("/projects/$id");
+  await apiClient.dio.post(
+    "/projects/$id",
+    options: Options(
+      headers: {
+        'Accept': 'application/json',
+        'X-HTTP-Method-Override': 'DELETE', // إخبار سيرفر لاراڤيل أن هذا طلب DELETE
+      },
+    ),
+  );
+}
+
+  Future<ProjectModel> getProjectDetails(int projectId) async {
+    final response = await apiClient.dio.get(
+      "https://taskback.orbit-eng.net/api/projects/$projectId",
+    );
+    return ProjectModel.fromJson(response.data);
   }
 }

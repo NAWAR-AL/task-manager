@@ -39,3 +39,9 @@ class ProjectCreated extends ProjectsState {}
 class ProjectUpdated extends ProjectsState {}
 
 class ProjectDeleted extends ProjectsState {}
+
+class GetProjectDetailesLoaded extends ProjectsState {
+  final ProjectEntity project;
+
+  GetProjectDetailesLoaded(this.project);
+}

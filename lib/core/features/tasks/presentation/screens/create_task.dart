@@ -3,21 +3,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:task_manager/core/features/app_widgets/drawer.dart';
-import 'package:task_manager/core/features/project_management/data/models/project_model.dart';
+import 'package:task_manager/core/features/auth/presentation/cubit/profile_cubit.dart';
+import 'package:task_manager/core/features/auth/presentation/cubit/profile_state.dart';
+import 'package:task_manager/core/features/project_management/presentation/cubit/project_cubit.dart';
+import 'package:task_manager/core/features/project_management/presentation/cubit/projects_state.dart';
 import 'package:task_manager/core/features/tasks/domain/entities/task_entity.dart';
 import 'package:task_manager/core/features/tasks/presentation/task_bloc/task_bloc.dart';
 import 'package:task_manager/core/features/tasks/presentation/widgets/task_field.dart';
-import 'package:task_manager/core/features/users_mangment/data/user_model.dart';
 import 'package:task_manager/core/permission/role.dart';
 
 class CreatetaskPage extends StatefulWidget {
-  final List<ProjectModel> projects;
-  final List<UserModel> allDevelopers;
-  const CreatetaskPage({
-    super.key,
-    this.allDevelopers = const [],
-    this.projects = const [],
-  });
+  const CreatetaskPage({super.key});
 
   @override
   State<CreatetaskPage> createState() => _CreatetaskPageState();
@@ -49,6 +45,13 @@ class _CreatetaskPageState extends State<CreatetaskPage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    context.read<ProjectCubit>().fetchProjects();
+    context.read<ProfileCubit>().getusers();
+  }
+
+  @override
   void dispose() {
     taskTitleController.dispose();
     descriptionController.dispose();
@@ -61,6 +64,7 @@ class _CreatetaskPageState extends State<CreatetaskPage> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text("Create Task"),
+        centerTitle: true,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_outlined),
           onPressed: () {
@@ -88,42 +92,51 @@ class _CreatetaskPageState extends State<CreatetaskPage> {
                 ),
 
                 Gap(30),
-                Container(
-                  padding: const EdgeInsets.only(left: 8, right: 8.0),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8.0),
 
-                    color: Colors.blueGrey.shade100,
-                  ),
-                  child: DropdownButtonFormField<int>(
-                    initialValue: selectedProjectId,
-                    decoration: const InputDecoration(
-                      labelText: 'Select Project',
-                      border: InputBorder.none,
-                    ),
-                    hint: Text('Choose a Project'),
-                    items: widget.projects.map((project) {
-                      return DropdownMenuItem<int>(
-                        value: project.id,
-                        child: Text(project.name),
+                BlocBuilder<ProjectCubit, ProjectsState>(
+                  builder: (context, state) {
+                    if (state is ProjectsLoading) {
+                      return CircularProgressIndicator();
+                    }
+                    if (state is ProjectsLoaded) {
+                      return Container(
+                        padding: const EdgeInsets.only(left: 8, right: 8.0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8.0),
+
+                          color: Color(0xffCCFBFA),
+                        ),
+                        child: DropdownButtonFormField<int>(
+                          decoration: InputDecoration(
+                            labelText: 'Select Project',
+                            border: InputBorder.none,
+                          ),
+                          items: state.projects.map((project) {
+                            return DropdownMenuItem<int>(
+                              value: project.id,
+                              child: Text(project.name),
+                            );
+                          }).toList(),
+                          onChanged: ((value) {
+                            setState(() {
+                              selectedProjectId = value;
+                            });
+                          }),
+                        ),
                       );
-                    }).toList(),
-                    onChanged: (value) {
-                      if (value != null) {
-                        setState(() {
-                          selectedProjectId = value;
-                        });
-                      }
-                    },
-                  ),
+                    }
+                    if (state is ProjectsError) {
+                      return Text('Error: ${state.message}');
+                    }
+                    return Text('No Projects Yet');
+                  },
                 ),
-
                 Gap(30),
                 Container(
                   padding: const EdgeInsets.only(left: 8, right: 8.0),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8.0),
-                    color: Colors.blueGrey.shade100,
+                    color: Color(0xffB1E5E6),
                   ),
                   child: DropdownButtonFormField<String>(
                     initialValue: selectedPriority,
@@ -150,7 +163,7 @@ class _CreatetaskPageState extends State<CreatetaskPage> {
                   padding: const EdgeInsets.only(left: 8, right: 8.0),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8.0),
-                    color: Colors.blueGrey.shade100,
+                    color: Color(0xffF7ADAD),
                   ),
                   child: DropdownButtonFormField<String>(
                     initialValue: selectedStatus,
@@ -177,7 +190,7 @@ class _CreatetaskPageState extends State<CreatetaskPage> {
                   padding: const EdgeInsets.only(left: 8, right: 8.0),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8.0),
-                    color: Colors.blueGrey.shade100,
+                    color: Color(0xffF29191),
                   ),
                   child: Text(
                     'Assign Developers',
@@ -185,23 +198,38 @@ class _CreatetaskPageState extends State<CreatetaskPage> {
                   ),
                 ),
                 Gap(20),
-                Column(
-                  children: widget.allDevelopers.map((dev) {
-                    return CheckboxListTile(
-                      value: selectedDeveloperIds.contains(dev.id),
-                      title: Text(dev.username),
-                      onChanged: (bool? checked) {
-                        setState(() {
-                          if (checked == true) {
-                            selectedDeveloperIds.add(dev.id);
-                          } else {
-                            selectedDeveloperIds.remove(dev.id);
-                          }
-                        });
-                      },
-                    );
-                  }).toList(),
+                BlocBuilder<ProfileCubit, ProfileState>(
+                  builder: ((context, state) {
+                    if (state is UsersLoaded) {
+                      final developers = state.users
+                          .where((user) => user.role == 'developer')
+                          .toList();
+                      return Column(
+                        children: developers.map((dev) {
+                          return CheckboxListTile(
+                            value: selectedDeveloperIds.contains(dev.id),
+                            title: Text(dev.name),
+                            onChanged: (bool? checked) {
+                              setState(() {
+                                if (checked == true) {
+                                  selectedDeveloperIds.add(dev.id);
+                                } else {
+                                  selectedDeveloperIds.remove(dev.id);
+                                }
+                              });
+                            },
+                          );
+                        }).toList(),
+                      );
+                    }
+                    if (state is UserErorr) {
+                      print('error for task is ${state.message}');
+                      return Center(child: Text(state.message));
+                    }
+                    return Text('No Developer Yet');
+                  }),
                 ),
+
                 Gap(20),
                 Container(
                   padding: const EdgeInsets.only(left: 8, right: 8.0),
@@ -228,7 +256,7 @@ class _CreatetaskPageState extends State<CreatetaskPage> {
                 ),
                 Gap(20),
 
-                BlocListener(
+                BlocListener<TaskBloc, TaskState>(
                   listener: (context, state) {
                     if (state is TaskCreated) {
                       ScaffoldMessenger.of(context).showSnackBar(

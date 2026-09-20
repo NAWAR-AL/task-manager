@@ -2,16 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_manager/core/features/tasks/presentation/task_bloc/task_bloc.dart';
 import 'package:task_manager/core/features/tasks/presentation/widgets/task_list.dart';
-import 'package:task_manager/core/features/tasks/presentation/widgets/task_page.dart';
 
-class Task extends StatefulWidget {
-  const Task({super.key});
+class TaskPage extends StatefulWidget {
+  TaskPage({super.key});
 
   @override
-  State<Task> createState() => _TaskState();
+  State<TaskPage> createState() => _TaskPageState();
 }
 
-class _TaskState extends State<Task> {
+class _TaskPageState extends State<TaskPage> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<TaskBloc>().add(GetTasks());
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -54,14 +59,14 @@ class _TaskState extends State<Task> {
                       .where((task) => task.status == "in_progress")
                       .toList();
                   final completedTasks = tasks
-                      .where((task) => task.status == "completed")
+                      .where((task) => task.status == "done")
                       .toList();
                   final scheduleTasks = tasks
-                      .where((task) => task.status == "schedule")
+                      .where((task) => task.status == "review")
                       .toList();
                   return TabBarView(
                     children: [
-                      buildNewTasksTab(context, tasks, 2),
+                      // buildNewTasksTab(context, tasks, 2),
                       // TaskList(tasks: newTasks),
                       TaskList(tasks: inProgressTasks),
                       TaskList(tasks: completedTasks),
@@ -75,8 +80,12 @@ class _TaskState extends State<Task> {
               },
               listener: (context, state) {
                 if (state is TaskError) {
-                  ScaffoldMessenger(
-                    child: SnackBar(content: Text(state.message)),
+                  print('error of the ui is ${state.message}');
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('error of the ui is ${state.message}'),
+                      backgroundColor: Colors.red,
+                    ),
                   );
                 }
               },
