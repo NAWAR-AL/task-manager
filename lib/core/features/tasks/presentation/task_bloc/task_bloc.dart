@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:task_manager/core/features/tasks/domain/entities/task_entity.dart';
-import 'package:task_manager/core/features/tasks/domain/usercases/create_Task_usecase.dart';
+import 'package:task_manager/core/features/tasks/domain/usercases/create_task_usecase.dart';
 import 'package:task_manager/core/features/tasks/domain/usercases/deleteTask_usecase.dart';
 import 'package:task_manager/core/features/tasks/domain/usercases/getTasks_usecase.dart';
 import 'package:task_manager/core/features/tasks/domain/usercases/updateTask_usecase.dart';

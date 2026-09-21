@@ -4,7 +4,7 @@ import 'package:task_manager/core/features/tasks/presentation/task_bloc/task_blo
 import 'package:task_manager/core/features/tasks/presentation/widgets/task_list.dart';
 
 class TaskPage extends StatefulWidget {
-  TaskPage({super.key});
+  const TaskPage({super.key});
 
   @override
   State<TaskPage> createState() => _TaskPageState();
@@ -52,9 +52,6 @@ class _TaskPageState extends State<TaskPage> {
                 }
                 if (state is TaskLoaded) {
                   final tasks = state.tasks;
-                  // final newTasks = tasks
-                  //     .where((task) => task.status == "todo")
-                  //     .toList();
                   final inProgressTasks = tasks
                       .where((task) => task.status == "in_progress")
                       .toList();
@@ -66,8 +63,6 @@ class _TaskPageState extends State<TaskPage> {
                       .toList();
                   return TabBarView(
                     children: [
-                      // buildNewTasksTab(context, tasks, 2),
-                      // TaskList(tasks: newTasks),
                       TaskList(tasks: inProgressTasks),
                       TaskList(tasks: completedTasks),
                       TaskList(tasks: scheduleTasks),
@@ -80,7 +75,7 @@ class _TaskPageState extends State<TaskPage> {
               },
               listener: (context, state) {
                 if (state is TaskError) {
-                  print('error of the ui is ${state.message}');
+                  // print('error of the ui is ${state.message}');
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text('error of the ui is ${state.message}'),

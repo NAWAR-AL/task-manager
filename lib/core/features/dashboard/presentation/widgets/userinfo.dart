@@ -5,7 +5,7 @@ import 'package:task_manager/core/permission/role.dart';
 class UserInfo extends StatelessWidget {
   final LoginModel user;
   final UserRole role;
-  UserInfo({super.key, required this.role, required this.user});
+  const UserInfo({super.key, required this.role, required this.user});
 
   @override
   Widget build(BuildContext context) {

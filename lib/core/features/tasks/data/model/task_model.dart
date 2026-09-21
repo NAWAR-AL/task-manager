@@ -11,6 +11,8 @@ class TaskModel extends TaskEntity {
     required super.due_date,
     required super.priority,
     required super.status,
+    super.created_at,
+    super.updated_at,
   });
   //convert json to object
   factory TaskModel.fromJson(Map<String, dynamic> map) {
@@ -31,6 +33,8 @@ class TaskModel extends TaskEntity {
           : [],
 
       due_date: DateTime.parse(map['due_date']),
+      created_at: DateTime.parse(map['created_at']),
+      updated_at: DateTime.parse(map['updated_at']),
       priority: map['priority'] ?? 'low',
       status: map['status'] ?? 'todo',
     );
@@ -48,6 +52,8 @@ class TaskModel extends TaskEntity {
       'due_date': due_date.toIso8601String(),
       'priority': priority,
       'status': status,
+      'updated_at': updated_at,
+      'created_at': created_at,
     };
   }
 
@@ -63,6 +69,8 @@ class TaskModel extends TaskEntity {
       due_date: entity.due_date,
       priority: entity.priority,
       status: entity.status,
+      created_at: entity.created_at,
+      updated_at: entity.updated_at,
     );
   }
 }

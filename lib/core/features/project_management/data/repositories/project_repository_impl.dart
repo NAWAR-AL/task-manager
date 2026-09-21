@@ -51,6 +51,7 @@ class ProjectRepositoryImpl implements ProjectRepository {
     await remote.deleteProject(id);
   }
 
+  @override
   Future<ProjectEntity> getProjectDetails(int projectId) async {
     return await remote.getProjectDetails(projectId);
   }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:task_manager/core/features/comments/presentation/screens/comment_screen.dart';
 import 'package:task_manager/core/features/dashboard/presentation/screens/dash_screen.dart';
-import 'package:task_manager/core/features/tasks/presentation/screens/create_task.dart';
+import 'package:task_manager/core/features/project_management/presentation/pages/create_project_page.dart';
 import 'package:task_manager/core/features/tasks/presentation/screens/task.dart';
 import 'package:task_manager/core/features/app_widgets/drawer.dart';
 import 'package:task_manager/core/features/users_mangment/presentation/user_profile.dart';
@@ -17,11 +16,7 @@ class TaskBottomBar extends StatefulWidget {
 
 class _TaskBottomBarState extends State<TaskBottomBar> {
   int _selectedIndex = 0;
-  List<Widget> pages = [
-    DashScreen(), TaskPage(), CommentScreen(), UserProfile(),
-
-    // ProfileScreen()
-  ];
+  List<Widget> pages = [DashScreen(), TaskPage(), UserProfile()];
 
   @override
   Widget build(BuildContext context) {
@@ -66,8 +61,6 @@ class _TaskBottomBarState extends State<TaskBottomBar> {
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "DashBorad"),
           BottomNavigationBarItem(icon: Icon(Icons.task), label: "Tasks"),
-
-          BottomNavigationBarItem(icon: Icon(Icons.comment), label: "Comments"),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
         ],
       ),
@@ -75,17 +68,17 @@ class _TaskBottomBarState extends State<TaskBottomBar> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (_) => CreatetaskPage()),
+            MaterialPageRoute(builder: (_) => CreateProjectPage()),
           );
         },
         backgroundColor: Colors.lightBlue,
         elevation: 10.02,
-        tooltip: 'New Task',
+        tooltip: 'New Project',
         label: Text(
-          'New TAsk',
+          'New Project',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        icon: Icon(Icons.add_task, color: Colors.white),
+        icon: Icon(Icons.add_business, color: Colors.white),
       ),
     );
   }

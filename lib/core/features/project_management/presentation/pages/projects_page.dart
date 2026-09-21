@@ -6,6 +6,7 @@ import 'package:task_manager/core/features/project_management/presentation/cubit
 import 'package:task_manager/core/features/project_management/presentation/pages/create_project_page.dart';
 import 'package:task_manager/core/features/project_management/presentation/pages/project_details_page.dart';
 import 'package:task_manager/core/features/project_management/presentation/pages/update_project_page.dart';
+import 'package:task_manager/core/features/tasks/presentation/screens/create_task.dart';
 
 class ProjectsPage extends StatefulWidget {
   const ProjectsPage({super.key});
@@ -159,6 +160,25 @@ class _ProjectsPageState extends State<ProjectsPage> {
           }
           return const Center(child: Text("loading projects."));
         },
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => CreatetaskPage()),
+          );
+        },
+        backgroundColor: Color(0xffB1E5E6),
+        elevation: 10.02,
+        tooltip: 'New Task',
+        label: Text(
+          'New Task',
+          style: TextStyle(
+            color: Color(0xffF7ADAD),
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        icon: Icon(Icons.add_box_outlined, color: Color(0xffF7ADAD)),
       ),
     );
   }

@@ -40,7 +40,6 @@ class ProjectCubit extends Cubit<ProjectsState> {
   }
 
   Future<void> fetchProject(int id) async {
-    print('fetch projects is called');
     emit(ProjectLoading());
 
     try {
@@ -49,7 +48,6 @@ class ProjectCubit extends Cubit<ProjectsState> {
     } catch (e) {
       emit(ProjectError(e.toString()));
     }
-    print('fetch projects finished work');
   }
 
   Future<void> createProject(ProjectEntity project) async {
