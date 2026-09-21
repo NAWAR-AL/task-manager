@@ -8,15 +8,26 @@ Widget buildDetailRow({
   return Column(
     children: [
       Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, size: 20, color: Color(0xffF29191)),
-
-          Text(title, style: TextStyle(fontSize: 15, color: Colors.black)),
-          SizedBox(width: 12),
-          Text(value, style: TextStyle(fontSize: 14, color: Colors.grey)),
+          Icon(icon, size: 20, color: const Color(0xffF29191)),
+          const SizedBox(width: 8),
+          Text(
+            title,
+            style: const TextStyle(fontSize: 15, color: Colors.black),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              value,
+              style: const TextStyle(fontSize: 14, color: Colors.grey),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 4,
+            ),
+          ),
         ],
       ),
-      Divider(height: 20, thickness: 2, color: Color(0xffCCFBFA)),
+      const Divider(height: 20, thickness: 2, color: Color(0xffCCFBFA)),
     ],
   );
 }
