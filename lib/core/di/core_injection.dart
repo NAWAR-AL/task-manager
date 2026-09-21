@@ -12,8 +12,8 @@ Future<void> initCore() async {
   final dio = Dio(
     BaseOptions(
       baseUrl: ApiConstants.baseUrl,
-      connectTimeout: const Duration(seconds: 10),
-      receiveTimeout: const Duration(seconds: 10),
+      connectTimeout: const Duration(seconds: 30),
+      receiveTimeout: const Duration(seconds: 30),
     ),
   );
 
@@ -68,6 +68,36 @@ Future<void> initCore() async {
       requestBody: true,
       responseBody: true,
       error: true,
+    ),
+  );
+
+  // Retry transient network failures (DNS lookup / connection setup).
+  // Only failures that happen BEFORE the request reaches the server are
+  // retried; HTTP errors and response timeouts are NOT retried so that
+  // create/update requests are never sent twice.
+  dio.interceptors.add(
+    InterceptorsWrapper(
+      onError: (DioException err, ErrorInterceptorHandler handler) async {
+        final isConnectionFailure =
+            err.type == DioExceptionType.connectionTimeout ||
+                err.type == DioExceptionType.connectionError;
+
+        var attempts = (err.requestOptions.extra['_retryCount'] as int?) ?? 0;
+
+        if (isConnectionFailure && attempts < 2) {
+          err.requestOptions.extra['_retryCount'] = attempts + 1;
+          await Future<void>.delayed(
+            Duration(milliseconds: 500 * (attempts + 1)),
+          );
+          try {
+            final response = await dio.fetch(err.requestOptions);
+            return handler.resolve(response);
+          } on DioException {
+            // Retry attempt failed, fall through to the regular error handler.
+          }
+        }
+        handler.next(err);
+      },
     ),
   );
 
