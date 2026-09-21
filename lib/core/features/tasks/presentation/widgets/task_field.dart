@@ -15,7 +15,7 @@ class TaskField extends StatelessWidget {
       padding: const EdgeInsets.only(left: 8, right: 8),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8.0),
-        color: Colors.blueGrey.shade100,
+        color: Color(0xffCCFBFA),
       ),
       child: TextField(
         controller: fieldController,

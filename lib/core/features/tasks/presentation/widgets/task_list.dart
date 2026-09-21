@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_manager/core/features/tasks/domain/entities/task_entity.dart';
 import 'package:task_manager/core/features/tasks/presentation/screens/task_details.dart';
+import 'package:task_manager/core/features/tasks/presentation/task_bloc/task_bloc.dart';
 
 class TaskList extends StatelessWidget {
   final List<TaskEntity> tasks;
@@ -15,41 +17,42 @@ class TaskList extends StatelessWidget {
       itemCount: tasks.length,
       itemBuilder: (context, index) {
         final task = tasks[index];
-        return Card(
-          elevation: 2,
-          color: _getCardBackgoundColor(index),
-          margin: EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-            side: BorderSide(color: Colors.grey),
-          ),
-          child: InkWell(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => TaskDetails(task: task)),
-              );
-            },
-            child: ListTile(
-              trailing: Container(
-                width: 20,
-                height: 30,
-                decoration: BoxDecoration(
-                  color: _getPriorityColor(task.priority),
-                  borderRadius: BorderRadius.circular(4),
-                ),
-              ),
-              title: Text(
-                task.title,
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
 
-              leading: Text(
-                task.priority.toUpperCase(),
-                style: TextStyle(fontSize: 12),
-              ),
+        // return Card(
+        //   elevation: 2,
+        //   color: _getCardBackgoundColor(index),
+        //   margin: EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+        //   shape: RoundedRectangleBorder(
+        //     borderRadius: BorderRadius.circular(12),
+        //     side: BorderSide(color: Colors.grey),
+        //   ),
+        //   child: InkWell(
+            // onTap: () {
+            //   Navigator.push(
+            //     context,
+            //     MaterialPageRoute(builder: (_) => TaskDetails(task: task)),
+            //   );
+            // },
+            // child: ListTile(
+            //   trailing: Container(
+            //     width: 20,
+            //     height: 30,
+            //     decoration: BoxDecoration(
+            //       color: _getPriorityColor(task.priority),
+            //       borderRadius: BorderRadius.circular(4),
+            //     ),
+            //   ),
+            //   title: Text(
+            //     task.title,
+            //     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            //     maxLines: 1,
+            //     overflow: TextOverflow.ellipsis,
+            //   ),
+
+            //   leading: Text(
+            //     task.priority.toUpperCase(),
+            //     style: TextStyle(fontSize: 12),
+            //   ),
 
               // trailing: Row(
               //   children: [
@@ -61,6 +64,87 @@ class TaskList extends StatelessWidget {
               //     Icon(Icons.arrow_forward_ios),
               //   ],
               // ),
+
+        return Dismissible(
+          key: Key(task.id.toString()),
+          direction: DismissDirection.horizontal,
+          background: Container(
+            color: Colors.red,
+            alignment: Alignment.centerLeft,
+            padding: const EdgeInsets.only(left: 20),
+            child: const Icon(Icons.delete, color: Colors.white),
+          ),
+          secondaryBackground: Container(
+            color: Colors.red,
+            alignment: Alignment.centerRight,
+            padding: const EdgeInsets.only(right: 20),
+            child: const Icon(Icons.delete, color: Colors.white),
+          ),
+
+          confirmDismiss: (diraction) async {
+            return await showDialog<bool>(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text('Do You want to delete this Task'),
+                  content: Text('Do you want to delete ${task.title}'),
+                  actions: <Widget>[
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(false);
+                      },
+                      child: Text("Cancel"),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(true);
+                        context.read<TaskBloc>().add(DeleteTaskEvent(task.id!));
+                      },
+                      style: TextButton.styleFrom(foregroundColor: Colors.red),
+                      child: Text("Delete"),
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+          child: Card(
+            elevation: 2,
+            color: _getCardBackgoundColor(index),
+            margin: EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+              side: BorderSide(color: Colors.grey),
+            ),
+            child: InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => TaskDetails(task: task)),
+                );
+              },
+              child: ListTile(
+                trailing: Container(
+                  width: 20,
+                  height: 30,
+                  decoration: BoxDecoration(
+                    color: _getPriorityColor(task.priority),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                ),
+                title: Text(
+                  task.title,
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+
+                leading: Text(
+                  task.priority.toUpperCase(),
+                  style: TextStyle(fontSize: 12),
+                ),
+              ),
+
             ),
             // child: ListTile(
             //   title: Text(task.title),
@@ -75,6 +159,7 @@ class TaskList extends StatelessWidget {
   }
 }
 
+
 Color _getCardBackgoundColor(int index) {
   switch (index % 3) {
     case 0:
@@ -87,6 +172,8 @@ Color _getCardBackgoundColor(int index) {
       return Color(0xff9BCEC1);
   }
 }
+
+
 
 Color _getPriorityColor(String priority) {
   switch (priority.toLowerCase()) {

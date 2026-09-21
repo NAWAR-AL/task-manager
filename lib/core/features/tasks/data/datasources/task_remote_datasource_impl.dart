@@ -16,7 +16,7 @@ class TaskRemoteDatasourceImpl extends TaskRemoteDatasource {
 
   @override
   Future<void> deleteTask(int id) async {
-    await apiClient.dio.delete('/task/$id');
+    await apiClient.dio.delete('/tasks/$id');
   }
 
   @override
@@ -44,7 +44,7 @@ class TaskRemoteDatasourceImpl extends TaskRemoteDatasource {
   @override
   Future<TaskModel> updateTask(TaskModel task) async {
     final response = await apiClient.dio.put(
-      '/task/${task.id}',
+      '/tasks/${task.id}',
       data: task.toJson(),
     );
     final responseData = response.data['data'] ?? response.data;

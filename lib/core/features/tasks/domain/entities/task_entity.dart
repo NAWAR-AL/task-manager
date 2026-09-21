@@ -8,6 +8,8 @@ class TaskEntity {
   String status;
   String priority;
   DateTime due_date;
+  DateTime? created_at;
+  DateTime? updated_at;
 
   TaskEntity({
     this.id,
@@ -19,5 +21,7 @@ class TaskEntity {
     required this.due_date,
     required this.priority,
     required this.status,
+    this.created_at,
+    this.updated_at,
   });
 }

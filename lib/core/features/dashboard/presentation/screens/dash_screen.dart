@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:task_manager/core/di/injection_container.dart';
@@ -60,28 +60,27 @@ class _DashScreenState extends State<DashScreen> {
       listener: (context, state) {
         if (state is LogoutSuccess) {
           ScaffoldMessenger.of(context).showSnackBar(
-             SnackBar(
+            const SnackBar(
               content: Text("Logged out successfully"),
               backgroundColor: Colors.green,
             ),
           );
-
           Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (_) =>  LoginPage()),
+            MaterialPageRoute(builder: (_) => const LoginPage()),
             (route) => false,
           );
         }
       },
       child: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                   Text(
+                  const Text(
                     "My Projects",
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                   ),
@@ -89,18 +88,20 @@ class _DashScreenState extends State<DashScreen> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (_) =>  ProjectsPage()),
+                        MaterialPageRoute(
+                          builder: (_) => const ProjectsPage(),
+                        ),
                       );
                     },
-                    child:  Text("View All"),
+                    child: const Text("View All"),
                   ),
                 ],
               ),
-              Gap(10),
+              const Gap(10),
               BlocBuilder<ProjectCubit, ProjectsState>(
                 builder: (context, state) {
                   if (state is ProjectsLoading) {
-                    return  Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator());
                   }
                   if (state is ProjectsError) {
                     return Center(child: Text(state.message));
@@ -111,7 +112,7 @@ class _DashScreenState extends State<DashScreen> {
                       return Center(
                         child: TextButton(
                           onPressed: _openCreateProject,
-                          child:  Text(
+                          child: const Text(
                             "No Projects yet, Create from here",
                             style: TextStyle(color: Colors.blueAccent),
                           ),
@@ -121,13 +122,12 @@ class _DashScreenState extends State<DashScreen> {
                     return GridView.builder(
                       itemCount: projects.length,
                       shrinkWrap: true,
-                      physics:  NeverScrollableScrollPhysics(),
+                      physics: const NeverScrollableScrollPhysics(),
                       gridDelegate:
-                           SliverGridDelegateWithFixedCrossAxisCount(
+                          const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
                         crossAxisSpacing: 10,
                         mainAxisSpacing: 20,
-                        childAspectRatio: 1,
                         mainAxisExtent: 200,
                       ),
                       itemBuilder: (context, index) {
@@ -136,7 +136,7 @@ class _DashScreenState extends State<DashScreen> {
                           elevation: 2,
                           borderOnForeground: true,
                           shape: RoundedRectangleBorder(
-                            side:  BorderSide(
+                            side: BorderSide(
                               color: ColorsApp.icons,
                               width: 1.5,
                             ),
@@ -147,7 +147,7 @@ class _DashScreenState extends State<DashScreen> {
                             borderRadius: BorderRadius.circular(12),
                             onTap: () => _openProjectDetails(project.id),
                             child: Padding(
-                              padding:  EdgeInsets.all(8),
+                              padding: const EdgeInsets.all(8),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -156,12 +156,12 @@ class _DashScreenState extends State<DashScreen> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Container(
-                                        padding:  EdgeInsets.all(12),
-                                        decoration:  BoxDecoration(
+                                        padding: const EdgeInsets.all(12),
+                                        decoration: const BoxDecoration(
                                           color: Color(0xffdce7f9),
                                           shape: BoxShape.circle,
                                         ),
-                                        child:  Icon(
+                                        child: Icon(
                                           Icons.folder_outlined,
                                           color: ColorsApp.icons,
                                         ),
@@ -170,7 +170,7 @@ class _DashScreenState extends State<DashScreen> {
                                         child: Text(
                                           project.name,
                                           overflow: TextOverflow.ellipsis,
-                                          style:  TextStyle(
+                                          style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 14,
                                             color: Colors.lightBlueAccent,
@@ -179,22 +179,20 @@ class _DashScreenState extends State<DashScreen> {
                                       ),
                                     ],
                                   ),
-                                  Gap(10),
+                                  const Gap(10),
                                   Text(
                                     project.description,
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
-                                    style:  TextStyle(
+                                    style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 14,
                                     ),
                                   ),
                                   Text(
                                     project.createdAt?.timeZoneName ?? '',
-                                    style:  TextStyle(fontSize: 12),
+                                    style: const TextStyle(fontSize: 12),
                                   ),
-                                  //  SizedBox(height: 20),
-                                  //  LinearProgressIndicator(value: 0.6),
                                 ],
                               ),
                             ),
@@ -203,35 +201,37 @@ class _DashScreenState extends State<DashScreen> {
                       },
                     );
                   }
-                  return SizedBox.shrink();
+                  return const SizedBox.shrink();
                 },
               ),
-              Gap(20),
+              const Gap(20),
               Card(
                 child: BlocConsumer<TaskBloc, TaskState>(
                   builder: (BuildContext context, TaskState state) {
                     if (state is TaskLoading) {
-                      return  Center(child: CircularProgressIndicator());
+                      return const Center(child: CircularProgressIndicator());
                     }
                     if (state is TaskLoaded) {
-                      final task = state.tasks;
+                      final tasks = state.tasks;
                       return SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child: DataTable(
-                          columns:  <DataColumn>[
+                          columns: const <DataColumn>[
                             DataColumn(label: Text("Task Name")),
                             DataColumn(label: Text("Project Name")),
                             DataColumn(label: Text("Priority")),
                             DataColumn(label: Text("Due Date")),
                             DataColumn(label: Text("Status")),
                           ],
-                          rows: task.map((task) {
+                          rows: tasks.map((task) {
                             return DataRow(
                               cells: <DataCell>[
                                 DataCell(Text(task.title)),
                                 DataCell(Text('${task.project_id}')),
                                 DataCell(Text(task.priority)),
-                                DataCell(Text('${task.due_date}')),
+                                DataCell(
+                                  Text(task.due_date.toString().split(' ').first),
+                                ),
                                 DataCell(Text(task.status)),
                               ],
                             );
@@ -239,7 +239,7 @@ class _DashScreenState extends State<DashScreen> {
                         ),
                       );
                     }
-                    return  Center(child: Text("No Tasks Yet"));
+                    return const Center(child: Text("No Tasks Yet"));
                   },
                   listener: (BuildContext context, TaskState state) {
                     if (state is TaskError) {
@@ -250,28 +250,10 @@ class _DashScreenState extends State<DashScreen> {
                   },
                 ),
               ),
-              SizedBox(
-                width: 100,
-                height: 40,
-                child: ElevatedButton(
-                  style:  ButtonStyle(
-                    backgroundColor: WidgetStatePropertyAll(
-                      Color.fromARGB(255, 243, 112, 103),
-                    ),
-                    foregroundColor: WidgetStatePropertyAll(Colors.white),
-                  ),
-                  onPressed: _logout,
-                  child:  Text("Logout"),
-                ),
-              ),
             ],
           ),
         ),
       ),
     );
-  }
-
-  void _logout() {
-    context.read<LogoutCubit>().logout();
   }
 }
