@@ -1,13 +1,14 @@
-import 'dart:io'; 
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:task_manager/core/constants/api_constants.dart';
+
 import '../network/api_client.dart';
 import 'injection_container.dart';
 
 Future<void> initCore() async {
-  // 1. إنشاء كائن Dio واحد وضبط خياراته وشهادات الأمان عليه مباشرة
   final dio = Dio(
     BaseOptions(
       baseUrl: ApiConstants.baseUrl,
@@ -16,38 +17,65 @@ Future<void> initCore() async {
     ),
   );
 
-  // 2. تفعيل تجاوز شهادات الأمان (Self-signed) على نفس الكائن
+  // SSL
   (dio.httpClientAdapter as IOHttpClientAdapter).createHttpClient = () {
     final client = HttpClient();
+
     client.badCertificateCallback =
         (X509Certificate cert, String host, int port) => true;
+
     return client;
   };
 
-  // 3. إضافة الـ LogInterceptor لمراقبة الطلبات
+  // Authentication interceptor
   dio.interceptors.add(
-    // LogInterceptor(requestBody: true, responseBody: true, error: true),
     InterceptorsWrapper(
       onRequest: (options, handler) async {
         final prefs = await SharedPreferences.getInstance();
+
         final token = prefs.getString('auth_token');
-        if (token != null) {
+
+        print('==============================');
+        print(
+          'TOKEN EXISTS: ${token != null && token.isNotEmpty}',
+        );
+        print(
+          'TOKEN LENGTH: ${token?.length ?? 0}',
+        );
+
+        if (token != null && token.isNotEmpty) {
           options.headers['Authorization'] = 'Bearer $token';
         }
+
         options.headers['Accept'] = 'application/json';
-        // print('token is $token');
-        // print("hearder is ${options.headers}");
+
+        print(
+          'AUTH HEADER EXISTS: '
+          '${options.headers.containsKey('Authorization')}',
+        );
+
+        print('REQUEST URL: ${options.uri}');
+        print('==============================');
+
         return handler.next(options);
       },
     ),
   );
+
+  // Dio logs
   dio.interceptors.add(
-    LogInterceptor(requestBody: true, responseBody: true, error: true),
+    LogInterceptor(
+      requestBody: true,
+      responseBody: true,
+      error: true,
+    ),
   );
 
-  // 4. تسجيل كائن الـ Dio الجاهز في الـ GetIt مرة واحدة فقط
+  // Register Dio
   sl.registerLazySingleton<Dio>(() => dio);
 
-  // 5. تسجيل الـ ApiClient
-  sl.registerLazySingleton<ApiClient>(() => ApiClient(sl()));
+  // Register ApiClient
+  sl.registerLazySingleton<ApiClient>(
+    () => ApiClient(sl()),
+  );
 }

@@ -14,7 +14,7 @@ class ProjectDetailsPage extends StatefulWidget {
 
 class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
   @override
-  void initState() {  
+  void initState() {
     super.initState();
     context.read<ProjectCubit>().getProjectDetails(widget.projectId!);
   }
@@ -35,11 +35,68 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Center(child: Text(project.name)),
+                  Center(
+                    child: Column(
+                      children: [
+                        Container(
+                          width: 300,
+                          height: 200,
+                          child: Text(project.name),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(25),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.03),
+                                blurRadius: 15,
+                                offset: const Offset(0, 5),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Gap(10),
+                        Container(
+                          width: 300,
+                          height:200,
+                          child: Text(project.description),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(25),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.03),
+                                blurRadius: 15,
+                                offset: const Offset(0, 5),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Gap(10),
+                        Container(
+                          width: 300,
+                          height: 200,
+                          child: Text(project.status),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(25),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.03),
+                                blurRadius: 15,
+                                offset:  Offset(0, 5),
+                              ),
+                            ],
+                          ),
+                        ),
+
+
+                      ],
+                    ),
+                  ),
                   Gap(20),
-                  Text(project.description),
+                  
                   Gap(20),
-                  Text(project.status),
+                  // Text(project.status),
                 ],
               ),
             );

@@ -10,7 +10,8 @@ class TaskRemoteDatasourceImpl extends TaskRemoteDatasource {
   @override
   Future<TaskModel> createTask(TaskModel task) async {
     final response = await apiClient.dio.post('/tasks', data: task.toJson());
-    return TaskModel.fromJson(response.data);
+    final responseData = response.data['data'] ?? response.data;
+    return TaskModel.fromJson(Map<String, dynamic>.from(responseData));
   }
 
   @override
@@ -20,15 +21,23 @@ class TaskRemoteDatasourceImpl extends TaskRemoteDatasource {
 
   @override
   Future<TaskModel> getTaskById(int id) async {
-    final response = await apiClient.dio.get('/task/{$id}');
-    return TaskModel.fromJson(response.data);
+    final response = await apiClient.dio.get('/task/$id');
+    final responseData = response.data['data'] ?? response.data;
+    return TaskModel.fromJson(Map<String, dynamic>.from(responseData));
   }
 
   @override
   Future<List<TaskModel>> getTasks() async {
     final response = await apiClient.dio.get('/tasks');
-    return (response.data as List)
-        .map((json) => TaskModel.fromJson(json))
+    print(response.data);
+    final dynamic rawList = response.data['data'] ?? response.data;
+    if (rawList is! List) {
+      throw FormatException(
+        'expected a list of tasks, but found : ${rawList.runtimeType}',
+      );
+    }
+    return (rawList)
+        .map((json) => TaskModel.fromJson(Map<String, dynamic>.from(json)))
         .toList();
   }
 
@@ -38,12 +47,14 @@ class TaskRemoteDatasourceImpl extends TaskRemoteDatasource {
       '/task/${task.id}',
       data: task.toJson(),
     );
-    return TaskModel.fromJson(response.data);
+    final responseData = response.data['data'] ?? response.data;
+    return TaskModel.fromJson(Map<String, dynamic>.from(responseData));
   }
 
   @override
   Future<TaskModel> updateTaskStatus(int taskId, String status) async {
     final response = await apiClient.dio.put('/task/$taskId/$status');
-    return (TaskModel.fromJson(response.data));
+    final responseData = response.data['data'] ?? response.data;
+    return TaskModel.fromJson(Map<String, dynamic>.from(responseData));
   }
 }

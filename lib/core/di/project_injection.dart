@@ -44,7 +44,7 @@ Future<void> initProject() async {
   );
 
 
-  sl.registerLazySingleton<ProjectCubit>(
+  sl.registerFactory<ProjectCubit>(
     () => ProjectCubit(
       getProjectsUsecases: sl(),
       getProjectUsecases: sl(),

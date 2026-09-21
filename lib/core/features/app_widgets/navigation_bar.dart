@@ -18,7 +18,7 @@ class TaskBottomBar extends StatefulWidget {
 class _TaskBottomBarState extends State<TaskBottomBar> {
   int _selectedIndex = 0;
   List<Widget> pages = [
-    DashScreen(), Task(), CommentScreen(), UserProfile(),
+    DashScreen(), TaskPage(), CommentScreen(), UserProfile(),
 
     // ProfileScreen()
   ];

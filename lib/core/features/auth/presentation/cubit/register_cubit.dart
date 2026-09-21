@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_manager/core/features/auth/domain/usecases/register_usecases.dart';
 import '../../domain/entities/register.dart';
 import 'register_state.dart';
-import 'package:dio/dio.dart';
 
 
 class RegisterCubit extends Cubit<RegisterState> {
