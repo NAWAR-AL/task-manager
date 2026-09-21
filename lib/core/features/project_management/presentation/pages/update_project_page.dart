@@ -119,7 +119,13 @@ class _UpdateProjectPageState extends State<UpdateProjectPage> {
                     updatedAt: widget.project.updatedAt,
                   );
 
-                  //  context.read<ProjectCubit>().updateProject(updatedProject, pr)
+                  final projectId = widget.project.id;
+                  if (projectId != null) {
+                    context.read<ProjectCubit>().updateProject(
+                      updatedProject,
+                      projectId,
+                    );
+                  }
                 },
 
                 child: Text(

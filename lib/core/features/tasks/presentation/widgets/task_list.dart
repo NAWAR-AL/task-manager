@@ -98,6 +98,12 @@ class TaskList extends StatelessWidget {
                 ),
               ),
             ),
+            // child: ListTile(
+            //   title: Text(task.title),
+            //   subtitle: Text(task.priority),
+            //   trailing: Text(task.status),
+            //   leading: Text(task.title),
+            // ),
           ),
         );
       },

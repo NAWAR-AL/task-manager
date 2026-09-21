@@ -29,7 +29,7 @@ class TaskRemoteDatasourceImpl extends TaskRemoteDatasource {
   @override
   Future<List<TaskModel>> getTasks() async {
     final response = await apiClient.dio.get('/tasks');
-
+    print(response.data);
     final dynamic rawList = response.data['data'] ?? response.data;
     if (rawList is! List) {
       throw FormatException(
@@ -43,7 +43,6 @@ class TaskRemoteDatasourceImpl extends TaskRemoteDatasource {
 
   @override
   Future<TaskModel> updateTask(TaskModel task) async {
- 
     final response = await apiClient.dio.put(
       '/tasks/${task.id}',
       data: task.toJson(),

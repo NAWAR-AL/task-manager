@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:task_manager/core/features/app_widgets/colors.dart';
 import 'package:task_manager/core/features/project_management/domain/entities/project.dart';
 import 'package:task_manager/core/features/project_management/presentation/cubit/project_cubit.dart';
 import 'package:task_manager/core/features/project_management/presentation/cubit/projects_state.dart';
 import 'package:task_manager/core/features/project_management/presentation/pages/create_project_page.dart';
 import 'package:task_manager/core/features/project_management/presentation/pages/project_details_page.dart';
 import 'package:task_manager/core/features/project_management/presentation/pages/update_project_page.dart';
-import 'package:task_manager/core/features/tasks/presentation/screens/create_task.dart';
+
 
 class ProjectsPage extends StatefulWidget {
   const ProjectsPage({super.key});
@@ -28,17 +29,17 @@ class _ProjectsPageState extends State<ProjectsPage> {
       appBar: AppBar(
         title: const Text('Projects List'),
         centerTitle: true,
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => CreateProjectPage()),
-              );
-            },
-            icon: const Icon(Icons.add, color: Colors.lightBlue),
-          ),
-        ],
+        // actions: [
+        //   IconButton(
+        //     onPressed: () {
+        //       Navigator.push(
+        //         context,
+        //         MaterialPageRoute(builder: (_) => CreateProjectPage()),
+        //       );
+        //     },
+        //     icon: const Icon(Icons.add, color: Colors.lightBlue),
+        //   ),
+        // ],
       ),
       body: BlocConsumer<ProjectCubit, ProjectsState>(
         listener: (context, state) {
@@ -61,6 +62,8 @@ class _ProjectsPageState extends State<ProjectsPage> {
               itemCount: projectsList.length,
               itemBuilder: (context, index) {
                 final project = projectsList[index];
+                final color = ColorsApp
+                    .projectColors[index % ColorsApp.projectColors.length];
 
                 return Dismissible(
                   key: Key(project.id.toString()),
@@ -96,7 +99,7 @@ class _ProjectsPageState extends State<ProjectsPage> {
                                 TextButton(
                                   onPressed: () =>
                                       Navigator.of(context).pop(false),
-                                  child: const Text('إلغاء'),
+                                  child: const Text('Cencle'),
                                 ),
                                 TextButton(
                                   onPressed: () =>
@@ -104,7 +107,7 @@ class _ProjectsPageState extends State<ProjectsPage> {
                                   style: TextButton.styleFrom(
                                     foregroundColor: Colors.red,
                                   ),
-                                  child: const Text('حذف'),
+                                  child: const Text('Delete'),
                                 ),
                               ],
                             );
@@ -118,67 +121,72 @@ class _ProjectsPageState extends State<ProjectsPage> {
                     context.read<ProjectCubit>().deleteProject(project.id!);
                   },
 
-                  child: Card(
-                    child: ListTile(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) =>
-                                ProjectDetailsPage(projectId: project.id),
-                          ),
-                        );
-                      },
-                      title: Text(project.name),
-                      trailing: IconButton(
-                        onPressed: () {
-                          final projectEntity = ProjectEntity(
-                            name: project.name,
-                            description: project.description,
-                            status: project.status,
-                          );
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  UpdateProjectPage(project: projectEntity),
+                  child: Padding(
+                    padding: const EdgeInsets.all(5),
+                    child: Center(
+                      child: SizedBox(
+                        height: 90,
+                        width: 350,
+                        child: Card(
+                          color: color,
+                          child: ListTile(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) =>
+                                      ProjectDetailsPage(projectId: project.id),
+                                ),
+                              );
+                            },
+                            title: Text(project.name),
+                            trailing: IconButton(
+                              onPressed: () {
+                                final projectEntity = ProjectEntity(
+                                  name: project.name,
+                                  description: project.description,
+                                  status: project.status,
+                                );
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => UpdateProjectPage(
+                                      project: projectEntity,
+                                    ),
+                                  ),
+                                );
+                              },
+                              icon: const Icon(
+                                Icons.edit,
+                                color: Colors.lightBlue,
+                              ),
                             ),
-                          );
-                        },
-                        icon: const Icon(Icons.edit, color: Colors.lightBlue),
+                            leading: const Icon(
+                              Icons.folder_open_outlined,
+                              color: Colors.lightBlue,
+                            ),
+                            subtitle: Text(project.description),
+                          ),
+                        ),
                       ),
-                      leading: const Icon(
-                        Icons.folder_open_outlined,
-                        color: Colors.lightBlue,
-                      ),
-                      subtitle: Text(project.description),
                     ),
                   ),
                 );
               },
             );
           }
-          return const Center(child: Text("loading projects."));
+          return const Center(child: Text("loading projects..."));
         },
       ),
-      floatingActionButton: FloatingActionButton.extended(
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: ColorsApp.icons,
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (_) => CreatetaskPage()),
+            MaterialPageRoute(builder: (_) => CreateProjectPage()),
           );
         },
-        backgroundColor: Color(0xffB1E5E6),
-        elevation: 10.02,
-        tooltip: 'New Task',
-        label: Text(
-          'New Task',
-          style: TextStyle(
-            color: Color(0xffF7ADAD),
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        icon: Icon(Icons.add_box_outlined, color: Color(0xffF7ADAD)),
+        child: Icon(Icons.add, color: Colors.white),
       ),
     );
   }

@@ -15,14 +15,14 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  final userNameController = TextEditingController();
+  final nameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final password_confirmation = TextEditingController();
 
   @override
   void dispose() {
-    userNameController.dispose();
+    nameController.dispose();
     emailController.dispose();
     passwordController.dispose();
     super.dispose();
@@ -34,6 +34,10 @@ class _RegisterPageState extends State<RegisterPage> {
       listener: (context, state) {
         // Register Success
         if (state is RegisterSuccess) {
+          // Navigator.pushReplacement(
+          //   context,
+          //   MaterialPageRoute(builder: (_) => LoginPage()),
+          // );
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: const Text("User registered successfully"),
@@ -101,7 +105,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     const Gap(10),
 
                     TextField(
-                      controller: userNameController,
+                      controller: nameController,
                       decoration: InputDecoration(
                         floatingLabelBehavior: FloatingLabelBehavior.never,
 
@@ -171,7 +175,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     // --------------------------------
                     // Password
                     // --------------------------------
-                    const Align(
+                    Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
                         "Password",
@@ -182,7 +186,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                     ),
 
-                    const Gap(10),
+                    Gap(10),
 
                     TextField(
                       controller: passwordController,
@@ -209,6 +213,18 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                     ),
                     const Gap(10),
+
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "Confrim Password",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    Gap(10),
 
                     TextField(
                       controller: password_confirmation,
@@ -255,7 +271,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             ? null
                             : () {
                                 final user = Register(
-                                  userNameController.text,
+                                  nameController.text,
                                   emailController.text,
                                   passwordController.text,
                                   password_confirmation.text,

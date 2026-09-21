@@ -244,4 +244,20 @@ class _TaskDetailsState extends State<TaskDetails> {
       ),
     );
   }
+
+  Widget _buildDetailRow({
+    required IconData icon,
+    required String title,
+    required String value,
+  }) {
+    return Row(
+      children: [
+        Icon(icon, size: 20, color: Colors.lightBlue),
+
+        Text(title, style: TextStyle(fontSize: 15, color: Colors.black)),
+        SizedBox(width: 12),
+        Text(value, style: TextStyle(fontSize: 14, color: Colors.grey)),
+      ],
+    );
+  }
 }
