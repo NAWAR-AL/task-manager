@@ -59,7 +59,7 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
     }
 
     context.read<ProjectCubit>().fetchProjects();
-    context.read<ProfileCubit>().getusers();
+    context.read<ProfileCubit>().getDashboardusers();
   }
 
   @override

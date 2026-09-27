@@ -16,6 +16,7 @@ class TaskRemoteDatasourceImpl extends TaskRemoteDatasource {
 
   @override
   Future<void> deleteTask(int id) async {
+    print('delets tasks');
     await apiClient.dio.delete('/tasks/$id');
   }
 

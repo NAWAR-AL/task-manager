@@ -21,18 +21,17 @@ class _CommentScreenState extends State<CommentScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(centerTitle: true, title: Text('Comments')),
+      appBar: AppBar(centerTitle: true, title: Text('Comment List')),
       body: Padding(
         padding: const EdgeInsets.only(left: 8, right: 8),
         child: BlocBuilder<CommentBloc, CommentState>(
           builder: (context, state) {
-           
             if (state is CommentsLoading) {
               return const Center(child: CircularProgressIndicator());
             }
             if (state is CommentsLoaded) {
               final comments = state.comments;
-             
+
               if (comments.isEmpty) {
                 return Text('No Comments Yet');
               }

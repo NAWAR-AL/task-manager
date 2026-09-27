@@ -4,7 +4,6 @@ import 'package:task_manager/core/features/tasks/presentation/task_bloc/task_blo
 import 'package:task_manager/core/features/tasks/presentation/widgets/task_list.dart';
 
 class TaskPage extends StatefulWidget {
-
   TaskPage({super.key});
 
   // const TaskPage({super.key});
@@ -86,7 +85,9 @@ class _TaskPageState extends State<TaskPage> {
                   print('error of the ui is ${state.message}');
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('error of the ui is ${state.message}'),
+                      content: Text(
+                        'We Can not delete the task now,Please try again',
+                      ),
                       backgroundColor: Colors.red,
                     ),
                   );

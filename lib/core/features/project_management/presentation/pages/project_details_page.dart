@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:task_manager/core/features/tasks/presentation/widgets/details_widget.dart';
 import '../cubit/projects_state.dart';
 import '../cubit/project_cubit.dart';
 
@@ -22,7 +23,8 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Project Details")),
+      backgroundColor: Colors.white,
+      appBar: AppBar(title: Text("Project Details"), centerTitle: true),
       body: BlocBuilder<ProjectCubit, ProjectsState>(
         builder: (context, state) {
           if (state is ProjectLoading) {
@@ -35,66 +37,86 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Center(
+                  Card(
+                    child: buildDetailRow(
+                      icon: Icons.pages_outlined,
+                      title: 'Project Name: ',
+                      value: project.name,
+                    ),
+                  ),
+                  Card(
                     child: Column(
                       children: [
-                        Container(
-                          width: 300,
-                          height: 200,
-                          child: Text(project.name),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(25),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.03),
-                                blurRadius: 15,
-                                offset: const Offset(0, 5),
-                              ),
-                            ],
-                          ),
+                        // Container(
+                        //   width: 300,
+                        //   height: 200,
+                        //   child: Text(project.name),
+                        //   decoration: BoxDecoration(
+                        //     color: Colors.white,
+                        //     borderRadius: BorderRadius.circular(25),
+                        //     boxShadow: [
+                        //       BoxShadow(
+                        //         color: Colors.black.withOpacity(0.03),
+                        //         blurRadius: 15,
+                        //         offset: const Offset(0, 5),
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
+                        // Gap(10),
+                        buildDetailRow(
+                          icon: Icons.description,
+                          title: 'Description: ',
+                          value: project.description,
                         ),
-                        Gap(10),
-                        Container(
-                          width: 300,
-                          height:200,
-                          child: Text(project.description),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(25),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.03),
-                                blurRadius: 15,
-                                offset: const Offset(0, 5),
-                              ),
-                            ],
-                          ),
+                        buildDetailRow(
+                          icon: Icons.info_sharp,
+                          title: 'Project Status: ',
+                          value: project.status,
                         ),
-                        Gap(10),
-                        Container(
-                          width: 300,
-                          height: 200,
-                          child: Text(project.status),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(25),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.03),
-                                blurRadius: 15,
-                                offset:  Offset(0, 5),
-                              ),
-                            ],
-                          ),
+                        buildDetailRow(
+                          icon: Icons.date_range,
+                          title: 'Project Date: ',
+                          value: project.createdAt.toString(),
                         ),
-
-
+                        // Container(
+                        //   width: 300,
+                        //   height: 200,
+                        //   child: Text(project.description),
+                        //   decoration: BoxDecoration(
+                        //     color: Colors.white,
+                        //     borderRadius: BorderRadius.circular(25),
+                        //     boxShadow: [
+                        //       BoxShadow(
+                        //         color: Colors.black.withOpacity(0.03),
+                        //         blurRadius: 15,
+                        //         offset: const Offset(0, 5),
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
+                        // Gap(10),
+                        // Container(
+                        //   width: 300,
+                        //   height: 200,
+                        //   child: Text(project.status),
+                        //   decoration: BoxDecoration(
+                        //     color: Colors.white,
+                        //     borderRadius: BorderRadius.circular(25),
+                        //     boxShadow: [
+                        //       BoxShadow(
+                        //         color: Colors.black.withOpacity(0.03),
+                        //         blurRadius: 15,
+                        //         offset: Offset(0, 5),
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),
                   Gap(20),
-                  
+
                   Gap(20),
                   // Text(project.status),
                 ],

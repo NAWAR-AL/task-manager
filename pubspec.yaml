@@ -45,6 +45,7 @@ dependencies:
   equatable: ^2.1.0
   bloc: ^9.2.1
   meta: ^1.18.3
+  adaptive_stat_card: ^0.2.0
   
   
 
