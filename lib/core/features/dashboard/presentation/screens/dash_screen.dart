@@ -2,9 +2,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:task_manager/core/features/app_widgets/colors.dart';
 import 'package:task_manager/core/features/auth/presentation/cubit/profile_cubit.dart';
 import 'package:task_manager/core/features/auth/presentation/cubit/profile_state.dart';
 import 'package:task_manager/core/features/dashboard/presentation/bloc/dashboard_bloc.dart';
+import 'package:task_manager/core/features/tasks/presentation/widgets/task_list.dart';
 
 class DashScreen extends StatefulWidget {
   const DashScreen({super.key});
@@ -53,15 +55,20 @@ class _DashScreenState extends State<DashScreen> {
                 if (state is UsersLoaded) {
                   final usersInfo = state.users;
                   return SizedBox(
-                    height: 200,
+                    height: 300,
                     child: ListView.builder(
+                      padding: EdgeInsets.only(bottom: 20),
                       itemCount: usersInfo.length,
                       itemBuilder: (context, index) {
                         final user = usersInfo[index];
-                        return ListTile(
-                          leading: Icon(Icons.person),
-                          title: Text(user.email),
-                          subtitle: Text(user.role),
+                        return Card(
+                          elevation: 2,
+                          color: getCardBackgoundColor(index),
+                          child: ListTile(
+                            leading: Icon(Icons.person),
+                            title: Text(user.email),
+                            subtitle: Text(user.role),
+                          ),
                         );
                       },
                     ),
@@ -87,12 +94,20 @@ class _DashScreenState extends State<DashScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             StatCard(
+                              theme: StatCardThemeData(
+                                backgroundColor: Color(0xff9BCEC1),
+                              ),
+                              unit: 'Projects',
                               value: data.total_projects.toString(),
-                              label: 'Total Projects',
+                              label: 'Total ',
                             ),
                             StatCard(
+                              theme: StatCardThemeData(
+                                backgroundColor: Color(0xffFFB6A6),
+                              ),
+                              unit: 'Tasks',
                               value: data.total_tasks.toString(),
-                              label: 'Total Tasks',
+                              label: 'Total ',
                             ),
                           ],
                         ),
@@ -115,19 +130,33 @@ class _DashScreenState extends State<DashScreen> {
                           childAspectRatio: 1.5,
                           children: [
                             StatCard(
-                              icon: Icon(Icons.tornado, color: Colors.orange),
-                              value: data.todo.toString(),
+                              theme: StatCardThemeData(
+                                backgroundColor: Color(0xffFFEBD3),
+                              ),
+                              value:
+                                  '${data.todo.toString()}/${data.total_tasks}',
                               label: 'Todo Tasks',
                             ),
+
                             StatCard(
-                              value: data.in_progress.toString(),
+                              theme: StatCardThemeData(
+                                backgroundColor: Color(0xff9BCEC1),
+                              ),
+                              value:
+                                  '${data.in_progress.toString()}/${data.total_tasks}',
                               label: 'In Progress Tasks',
                             ),
                             StatCard(
+                              theme: StatCardThemeData(
+                                backgroundColor: Color(0xff67A2C5),
+                              ),
                               value: data.done.toString(),
                               label: 'Done Tasks',
                             ),
                             StatCard(
+                              theme: StatCardThemeData(
+                                backgroundColor: Color(0xffFFB6A6),
+                              ),
                               value: data.review.toString(),
                               label: 'Review Tasks',
                             ),
@@ -148,11 +177,17 @@ class _DashScreenState extends State<DashScreen> {
                           childAspectRatio: 1.5,
                           children: [
                             StatCard(
+                              theme: StatCardThemeData(
+                                backgroundColor: ColorsApp.background2,
+                              ),
                               value: data.overdue.toString(),
                               label: 'OverDue Projects',
                             ),
 
                             StatCard(
+                              theme: StatCardThemeData(
+                                backgroundColor: ColorsApp.background1,
+                              ),
                               value: data.high_priority.toString(),
                               label: 'High Priority Tasks',
                             ),
