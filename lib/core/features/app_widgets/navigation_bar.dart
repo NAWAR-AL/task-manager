@@ -20,11 +20,7 @@ class TaskBottomBar extends StatefulWidget {
 class _TaskBottomBarState extends State<TaskBottomBar> {
   int _selectedIndex = 0;
 
-  List<Widget> pages = [
-    DashScreen(),
-    TaskPage(),
-    UserProfile(),
-  ];
+  List<Widget> pages = [DashScreen(), TaskPage(), UserProfile()];
 
   Future<void> _openCreateProject() async {
     await Navigator.push(

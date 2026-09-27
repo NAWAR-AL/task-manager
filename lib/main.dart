@@ -8,6 +8,7 @@ import 'package:task_manager/core/features/app_widgets/navigation_bar.dart';
 import 'package:task_manager/core/features/auth/presentation/cubit/profile_cubit.dart';
 import 'package:task_manager/core/features/auth/presentation/pages/register_page.dart';
 import 'package:task_manager/core/features/comments/presentation/comment_bloc/comment_bloc.dart';
+import 'package:task_manager/core/features/dashboard/presentation/bloc/dashboard_bloc.dart';
 import 'package:task_manager/core/features/project_management/presentation/cubit/project_cubit.dart';
 import 'package:task_manager/core/features/tasks/presentation/task_bloc/task_bloc.dart';
 
@@ -17,8 +18,9 @@ import 'core/di/injection_container.dart';
 import 'core/features/auth/presentation/cubit/register_cubit.dart';
 import 'core/features/auth/presentation/cubit/login_cubit.dart';
 import 'core/features/auth/presentation/cubit/logout_cubit.dart';
-// import 'package:task_manager/core/features/dashboard/presentation/screens/dash_screen.dart';
 
+// import 'package:task_manager/core/features/dashboard/presentation/screens/dash_screen.dart';
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -48,12 +50,13 @@ class MyApp extends StatelessWidget {
         BlocProvider<TaskBloc>(create: (_) => sl<TaskBloc>()),
         BlocProvider<ProjectCubit>(create: (_) => sl<ProjectCubit>()),
         BlocProvider<ProfileCubit>(create: (_) => sl<ProfileCubit>()),
-
+        BlocProvider<DashboardBloc>(create: (_) => sl<DashboardBloc>()),
         BlocProvider<CommentBloc>(create: (_) => sl<CommentBloc>()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-
+        navigatorKey: navigatorKey,
+        title: 'Task Manger',
 
         home: isLoggedIn
             ? const TaskBottomBar(role: UserRole.admin)

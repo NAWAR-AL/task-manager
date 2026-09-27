@@ -49,7 +49,7 @@ class _CreatetaskPageState extends State<CreatetaskPage> {
   void initState() {
     super.initState();
     context.read<ProjectCubit>().fetchProjects();
-    context.read<ProfileCubit>().getusers();
+    context.read<ProfileCubit>().getDashboardusers();
   }
 
   @override
@@ -307,13 +307,17 @@ class _CreatetaskPageState extends State<CreatetaskPage> {
                       if (!(_formKey.currentState?.validate() ?? false)) return;
                       if (selectedProjectId == null) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Please select a Project')),
+                          const SnackBar(
+                            content: Text('Please select a Project'),
+                          ),
                         );
                         return;
                       }
                       if (selectedDueDate == null) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Please select a due Date')),
+                          const SnackBar(
+                            content: Text('Please select a due Date'),
+                          ),
                         );
                         return;
                       }

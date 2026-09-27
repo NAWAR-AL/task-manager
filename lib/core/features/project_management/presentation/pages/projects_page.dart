@@ -26,10 +26,7 @@ class _ProjectsPageState extends State<ProjectsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Projects List'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text('Projects List'), centerTitle: true),
       body: BlocConsumer<ProjectCubit, ProjectsState>(
         listener: (context, state) {
           if (state is ProjectError) {
@@ -74,9 +71,9 @@ class _ProjectsPageState extends State<ProjectsPage> {
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: const Text('تأكيد الحذف'),
+                              title: const Text('Delete Project'),
                               content: Text(
-                                'هل أنت تأكد من إزالة مشروع "${project.name}"؟',
+                                'Are you sure you want to delete the "${project.name}"؟',
                               ),
                               actions: <Widget>[
                                 TextButton(
@@ -140,7 +137,9 @@ class _ProjectsPageState extends State<ProjectsPage> {
                                   MaterialPageRoute(
                                     builder: (context) => BlocProvider(
                                       create: (_) => sl<ProjectCubit>(),
-                                      child: UpdateProjectPage(project: project),
+                                      child: UpdateProjectPage(
+                                        project: project,
+                                      ),
                                     ),
                                   ),
                                 );

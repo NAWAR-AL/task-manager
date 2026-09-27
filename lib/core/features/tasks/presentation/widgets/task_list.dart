@@ -18,53 +18,6 @@ class TaskList extends StatelessWidget {
       itemBuilder: (context, index) {
         final task = tasks[index];
 
-        // return Card(
-        //   elevation: 2,
-        //   color: _getCardBackgoundColor(index),
-        //   margin: EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-        //   shape: RoundedRectangleBorder(
-        //     borderRadius: BorderRadius.circular(12),
-        //     side: BorderSide(color: Colors.grey),
-        //   ),
-        //   child: InkWell(
-            // onTap: () {
-            //   Navigator.push(
-            //     context,
-            //     MaterialPageRoute(builder: (_) => TaskDetails(task: task)),
-            //   );
-            // },
-            // child: ListTile(
-            //   trailing: Container(
-            //     width: 20,
-            //     height: 30,
-            //     decoration: BoxDecoration(
-            //       color: _getPriorityColor(task.priority),
-            //       borderRadius: BorderRadius.circular(4),
-            //     ),
-            //   ),
-            //   title: Text(
-            //     task.title,
-            //     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            //     maxLines: 1,
-            //     overflow: TextOverflow.ellipsis,
-            //   ),
-
-            //   leading: Text(
-            //     task.priority.toUpperCase(),
-            //     style: TextStyle(fontSize: 12),
-            //   ),
-
-              // trailing: Row(
-              //   children: [
-              //     Chip(
-              //       label: Text(task.status),
-              //       backgroundColor: _getStatusColor(task.status),
-              //       visualDensity: VisualDensity.compact,
-              //     ),
-              //     Icon(Icons.arrow_forward_ios),
-              //   ],
-              // ),
-
         return Dismissible(
           key: Key(task.id.toString()),
           direction: DismissDirection.horizontal,
@@ -80,37 +33,39 @@ class TaskList extends StatelessWidget {
             padding: const EdgeInsets.only(right: 20),
             child: const Icon(Icons.delete, color: Colors.white),
           ),
-
-          confirmDismiss: (diraction) async {
+          confirmDismiss: (direction) async {
             return await showDialog<bool>(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: Text('Do You want to delete this Task'),
-                  content: Text('Do you want to delete ${task.title}'),
-                  actions: <Widget>[
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop(false);
-                      },
-                      child: Text("Cancel"),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop(true);
-                        context.read<TaskBloc>().add(DeleteTaskEvent(task.id!));
-                      },
-                      style: TextButton.styleFrom(foregroundColor: Colors.red),
-                      child: Text("Delete"),
-                    ),
-                  ],
-                );
-              },
-            );
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: const Text(' Delete task'),
+                      content: Text(
+                        'Are you sure you want to delete the "${task.title}"؟',
+                      ),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(false),
+                          child: const Text('Cancel'),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(true),
+                          style: TextButton.styleFrom(
+                            foregroundColor: Colors.red,
+                          ),
+                          child: const Text('Delete'),
+                        ),
+                      ],
+                    );
+                  },
+                ) ??
+                false;
+          },
+          onDismissed: (direction) {
+            context.read<TaskBloc>().add(DeleteTaskEvent(task.id!));
           },
           child: Card(
             elevation: 2,
-            color: _getCardBackgoundColor(index),
+            color: getCardBackgoundColor(index),
             margin: EdgeInsets.symmetric(horizontal: 16, vertical: 6),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
@@ -144,14 +99,7 @@ class TaskList extends StatelessWidget {
                   style: TextStyle(fontSize: 12),
                 ),
               ),
-
             ),
-            // child: ListTile(
-            //   title: Text(task.title),
-            //   subtitle: Text(task.priority),
-            //   trailing: Text(task.status),
-            //   leading: Text(task.title),
-            // ),
           ),
         );
       },
@@ -159,8 +107,7 @@ class TaskList extends StatelessWidget {
   }
 }
 
-
-Color _getCardBackgoundColor(int index) {
+Color getCardBackgoundColor(int index) {
   switch (index % 3) {
     case 0:
       return Color(0xff9BCEC1);
@@ -172,8 +119,6 @@ Color _getCardBackgoundColor(int index) {
       return Color(0xff9BCEC1);
   }
 }
-
-
 
 Color _getPriorityColor(String priority) {
   switch (priority.toLowerCase()) {

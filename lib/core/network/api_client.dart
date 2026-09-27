@@ -1,5 +1,8 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:task_manager/core/features/auth/presentation/pages/login_page.dart';
+import 'package:task_manager/main.dart';
 
 class ApiClient {
   final Dio dio;
@@ -28,6 +31,25 @@ class ApiClient {
 
           return handler.next(options);
         },
+        onError: (DioException error, ErrorInterceptorHandler handler) async {
+          if (error.response?.statusCode == 401) {
+            final prefs = await SharedPreferences.getInstance();
+            await prefs.remove('token');
+            navigatorKey.currentState?.pushAndRemoveUntil(
+              MaterialPageRoute(builder: (_) => LoginPage()),
+              (route) => false,
+            );
+          }
+          return handler.next(error);
+        },
+      ),
+    );
+    dio.interceptors.add(
+      LogInterceptor(
+        request: true,
+        requestBody: true,
+        responseBody: true,
+        error: true,
       ),
     );
   }

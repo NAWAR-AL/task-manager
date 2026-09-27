@@ -3,7 +3,6 @@ import 'package:task_manager/core/features/tasks/data/model/task_model.dart';
 import 'package:task_manager/core/features/tasks/domain/entities/task_entity.dart';
 import 'package:task_manager/core/features/tasks/domain/repositories/task_repository.dart';
 
-
 class TaskRepositoryImpl extends TaskRepository {
   final TaskRemoteDatasource datasource;
   TaskRepositoryImpl(this.datasource);
@@ -17,6 +16,7 @@ class TaskRepositoryImpl extends TaskRepository {
 
   @override
   Future<void> deleteTask(int id) async {
+    print('repository code');
     return await datasource.deleteTask(id);
   }
 
