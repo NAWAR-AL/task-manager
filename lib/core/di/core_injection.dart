@@ -135,7 +135,7 @@ Future<void> initCore() async {
           );
           messenger?.showSnackBar(
             const SnackBar(
-              content: Text('انتهت الجلسة، سجّل الدخول مرة أخرى'),
+              content: Text('Session expired, Please log in again.'),
               backgroundColor: Colors.deepOrange,
             ),
           );
