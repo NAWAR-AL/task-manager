@@ -14,6 +14,7 @@ import 'package:task_manager/core/features/tasks/presentation/task_bloc/task_blo
 import 'package:task_manager/core/permission/role.dart';
 
 import 'core/di/injection_container.dart';
+import 'core/network/app_navigator.dart';
 import 'core/features/auth/presentation/cubit/register_cubit.dart';
 import 'core/features/auth/presentation/cubit/login_cubit.dart';
 import 'core/features/auth/presentation/cubit/logout_cubit.dart';
@@ -48,11 +49,11 @@ class MyApp extends StatelessWidget {
         BlocProvider<TaskBloc>(create: (_) => sl<TaskBloc>()),
         BlocProvider<ProjectCubit>(create: (_) => sl<ProjectCubit>()),
         BlocProvider<ProfileCubit>(create: (_) => sl<ProfileCubit>()),
-
         BlocProvider<CommentBloc>(create: (_) => sl<CommentBloc>()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
+        navigatorKey: appNavigatorKey,
 
 
         home: isLoggedIn

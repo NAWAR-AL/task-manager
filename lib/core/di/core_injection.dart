@@ -2,10 +2,13 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:task_manager/core/constants/api_constants.dart';
+import 'package:task_manager/core/features/auth/presentation/pages/login_page.dart';
 
 import '../network/api_client.dart';
+import '../network/app_navigator.dart';
 import 'injection_container.dart';
 
 Future<void> initCore() async {
@@ -95,6 +98,47 @@ Future<void> initCore() async {
           } on DioException {
             // Retry attempt failed, fall through to the regular error handler.
           }
+        }
+        handler.next(err);
+      },
+    ),
+  );
+
+  // Auth guard: when the server rejects the stored token (HTTP 401), clear it
+  // and send the user back to the login screen instead of showing a raw error.
+  // Requests to the auth endpoints themselves (login/register/logout) are
+  // excluded so the login page is not replaced while the user is entering
+  // credentials.
+  dio.interceptors.add(
+    InterceptorsWrapper(
+      onError: (DioException err, ErrorInterceptorHandler handler) async {
+        final path = err.requestOptions.path;
+
+        final isAuthPath = path.contains('/login') ||
+            path.contains('/register') ||
+            path.contains('/logout');
+
+        if (err.response?.statusCode == 401 && !isAuthPath) {
+          final navigator = appNavigatorKey.currentState;
+          // Capture before any await to avoid using a BuildContext across
+          // an async gap.
+          final messenger = navigator == null
+              ? null
+              : ScaffoldMessenger.maybeOf(navigator.context);
+
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.remove('auth_token');
+
+          navigator?.pushAndRemoveUntil(
+            MaterialPageRoute(builder: (_) => const LoginPage()),
+            (route) => false,
+          );
+          messenger?.showSnackBar(
+            const SnackBar(
+              content: Text('انتهت الجلسة، سجّل الدخول مرة أخرى'),
+              backgroundColor: Colors.deepOrange,
+            ),
+          );
         }
         handler.next(err);
       },
