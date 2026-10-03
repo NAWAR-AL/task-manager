@@ -46,6 +46,7 @@ dependencies:
   bloc: ^9.2.1
   meta: ^1.18.3
   adaptive_stat_card: ^0.2.0
+  fl_chart: ^1.1.1
   
   
 

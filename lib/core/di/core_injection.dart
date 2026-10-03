@@ -15,8 +15,10 @@ Future<void> initCore() async {
   final dio = Dio(
     BaseOptions(
       baseUrl: ApiConstants.baseUrl,
-      connectTimeout: const Duration(seconds: 30),
-      receiveTimeout: const Duration(seconds: 30),
+      // مهل قصيرة عمدا على الشبكات الضعيفة، الطلب الفاشل يجب أن يفشل
+      // بسرعة ويعرض رسالة بدل أن يعلق التطبيق 30-90 ثانية.
+      connectTimeout: const Duration(seconds: 8),
+      receiveTimeout: const Duration(seconds: 15),
     ),
   );
 
@@ -38,39 +40,14 @@ Future<void> initCore() async {
 
         final token = prefs.getString('auth_token');
 
-        print('==============================');
-        print(
-          'TOKEN EXISTS: ${token != null && token.isNotEmpty}',
-        );
-        print(
-          'TOKEN LENGTH: ${token?.length ?? 0}',
-        );
-
         if (token != null && token.isNotEmpty) {
           options.headers['Authorization'] = 'Bearer $token';
         }
 
         options.headers['Accept'] = 'application/json';
 
-        print(
-          'AUTH HEADER EXISTS: '
-          '${options.headers.containsKey('Authorization')}',
-        );
-
-        print('REQUEST URL: ${options.uri}');
-        print('==============================');
-
         return handler.next(options);
       },
-    ),
-  );
-
-  // Dio logs
-  dio.interceptors.add(
-    LogInterceptor(
-      requestBody: true,
-      responseBody: true,
-      error: true,
     ),
   );
 
@@ -87,10 +64,10 @@ Future<void> initCore() async {
 
         var attempts = (err.requestOptions.extra['_retryCount'] as int?) ?? 0;
 
-        if (isConnectionFailure && attempts < 2) {
+        if (isConnectionFailure && attempts < 1) {
           err.requestOptions.extra['_retryCount'] = attempts + 1;
           await Future<void>.delayed(
-            Duration(milliseconds: 500 * (attempts + 1)),
+            Duration(milliseconds: 200 * (attempts + 1)),
           );
           try {
             final response = await dio.fetch(err.requestOptions);

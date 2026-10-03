@@ -23,9 +23,11 @@ class _TaskPageState extends State<TaskPage> {
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 3,
-      child: Column(
-        // crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+      child: SafeArea(
+        bottom: false,
+        child: Column(
+          // crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
           Container(
             color: Colors.white,
             child: TabBar(
@@ -82,7 +84,6 @@ class _TaskPageState extends State<TaskPage> {
               },
               listener: (context, state) {
                 if (state is TaskError) {
-                  print('error of the ui is ${state.message}');
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(
@@ -96,6 +97,7 @@ class _TaskPageState extends State<TaskPage> {
             ),
           ),
         ],
+        ),
       ),
     );
   }
