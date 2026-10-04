@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:task_manager/core/features/project_management/presentation/pages/projects_page.dart';
-import 'package:task_manager/core/features/settings/screens/setting_screen.dart';
+import 'package:task_manager/core/features/calender/screens/calender_screen.dart';
 import 'package:task_manager/core/features/app_widgets/navigation_bar.dart';
+import 'package:task_manager/core/features/tasks/presentation/screens/task.dart';
 import 'package:task_manager/core/features/users_mangment/presentation/user_profile.dart';
 import 'package:task_manager/core/permission/permission.dart';
 import 'package:task_manager/core/permission/permission_manger.dart';
@@ -9,26 +10,28 @@ import 'package:task_manager/core/permission/role.dart';
 
 class DrawerHome extends StatelessWidget {
   final UserRole role;
-  const DrawerHome({super.key, required this.role});
+  DrawerHome({super.key, required this.role});
+  // final bool isDeveloper = role == UserRole.developer;
 
   @override
   Widget build(BuildContext context) {
     return Drawer(
+      semanticLabel: 'Task Manger',
+      clipBehavior: Clip.antiAliasWithSaveLayer,
       child: ListView(
-        padding: EdgeInsets.zero,
+        // padding: EdgeInsets.only(bottom: 20),
         children: [
           UserAccountsDrawerHeader(
-            currentAccountPicture: const CircleAvatar(
+            currentAccountPicture: CircleAvatar(
+              backgroundImage: AssetImage('assets/images/logo.png'),
+              radius: 22,
               backgroundColor: Colors.white,
-              child: Icon(Icons.person, size: 36, color: Colors.blueGrey),
             ),
             margin: const EdgeInsets.only(bottom: 20),
-            accountEmail: Text("${role.name}@Orbit.com"),
-            accountName: Text(
-              role.name.toUpperCase(),
-              style: TextStyle(fontSize: 18.0),
-            ),
-            decoration: const BoxDecoration(color: Colors.blueGrey),
+
+            accountName: Text('Task Manger', style: TextStyle(fontSize: 18.0)),
+            accountEmail: Text("Hello $role"),
+            decoration: const BoxDecoration(color: Colors.blueAccent),
           ),
 
           drawerItem(
@@ -47,40 +50,38 @@ class DrawerHome extends StatelessWidget {
                 navigateToScreen(context, ProjectsPage());
               },
             ),
-
+          drawerItem(icon: Icons.task_sharp, title: 'Tasks', ontap: () {}),
           if (PermissionManager.can(role, Permission.readUser))
             drawerItem(
               icon: Icons.people_outline,
-              title: 'Users',
+              title: 'UsersMangement',
               ontap: () {
                 navigateToScreen(context, UserProfile());
               },
             ),
 
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: const Divider(),
-          ),
           drawerItem(
             icon: Icons.calendar_month_outlined,
             title: 'Calender',
+            ontap: () {
+              Navigator.pop(context);
+              navigateToScreen(context, CalenderScreen());
+            },
+          ),
+
+          drawerItem(
+            icon: Icons.home,
+            title: 'Home',
             ontap: () {
               Navigator.pop(context);
             },
           ),
 
           drawerItem(
-            icon: Icons.report_outlined,
-            title: 'Reports',
+            icon: Icons.logout,
+            title: 'Log Out',
             ontap: () {
-              Navigator.pop(context);
-            },
-          ),
-          drawerItem(
-            icon: Icons.settings_outlined,
-            title: 'Settings',
-            ontap: () {
-              navigateToScreen(context, SettingsScreen());
+              AlertDialog();
             },
           ),
         ],
