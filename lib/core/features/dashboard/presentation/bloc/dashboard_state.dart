@@ -7,7 +7,8 @@ class DashboardInitial extends DashboardState {}
 
 class DashboardLoaded extends DashboardState {
   final DashboardEntity entity;
-  DashboardLoaded(this.entity);
+  final List<RecentActivityEntity> recentActivity;
+  DashboardLoaded(this.entity, this.recentActivity);
 }
 
 class DashboardLoading extends DashboardState {}

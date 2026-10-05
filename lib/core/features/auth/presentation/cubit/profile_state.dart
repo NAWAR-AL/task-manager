@@ -17,6 +17,13 @@ class UsersLoaded extends ProfileState {
   UsersLoaded(this.users);
 }
 
+class UserCreated extends ProfileState {}
+
+class SingleUserLoaded extends ProfileState {
+  final User user;
+  SingleUserLoaded(this.user);
+}
+
 class UserErorr extends ProfileState {
   final String message;
 

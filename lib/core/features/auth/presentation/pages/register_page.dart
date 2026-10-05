@@ -77,7 +77,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     // --------------------------------
                     // Title
                     // --------------------------------
-
+                    Text('Be Organized.', style: TextStyle(fontSize: 32)),
                     const Text(
                       "Create Account",
                       style: TextStyle(

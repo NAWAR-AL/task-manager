@@ -28,12 +28,13 @@ class _CalenderScreenState extends State<CalenderScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Task & Projects Calender'),
+        title: Text('Task & Projects Calender', style: TextStyle(fontSize: 16)),
         centerTitle: true,
       ),
       drawer: DrawerHome(role: UserRole.developer),
 
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           TableCalendar(
             firstDay: DateTime.utc(2025, 1, 1),
@@ -47,30 +48,7 @@ class _CalenderScreenState extends State<CalenderScreen> {
               });
             },
           ),
-          Expanded(
-            child: BlocBuilder<TaskBloc, TaskState>(
-              builder: (context, state) {
-                if (state is TaskLoaded) {
-                  final dayTasks = getTasksForSelectedDay(state.tasks);
-                  if (dayTasks.isEmpty) {
-                    return Center(child: Text('no deadlines for this day'));
-                  }
-                  return ListView.builder(
-                    itemCount: dayTasks.length,
-                    itemBuilder: ((context, index) {
-                      final task = dayTasks[index];
-                      return ListTile(
-                        leading: Icon(Icons.assignment_turned_in),
-                        title: Text('Status ${task.status}'),
-                        subtitle: Text('Priority : ${task.priority}'),
-                      );
-                    }),
-                  );
-                }
-                return Center(child: CircularProgressIndicator());
-              },
-            ),
-          ),
+        
         ],
       ),
     );

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:task_manager/core/features/auth/presentation/pages/user_profile_page.dart';
 import 'package:task_manager/core/features/project_management/presentation/pages/projects_page.dart';
 import 'package:task_manager/core/features/calender/screens/calender_screen.dart';
 import 'package:task_manager/core/features/app_widgets/navigation_bar.dart';
-import 'package:task_manager/core/features/tasks/presentation/screens/task.dart';
-import 'package:task_manager/core/features/users_mangment/presentation/user_profile.dart';
 import 'package:task_manager/core/permission/permission.dart';
 import 'package:task_manager/core/permission/permission_manger.dart';
 import 'package:task_manager/core/permission/role.dart';
@@ -56,7 +55,7 @@ class DrawerHome extends StatelessWidget {
               icon: Icons.people_outline,
               title: 'UsersMangement',
               ontap: () {
-                navigateToScreen(context, UserProfile());
+                navigateToScreen(context, UserProfilePage());
               },
             ),
 

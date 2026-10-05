@@ -8,3 +8,11 @@ class GetstatisticsUseCase {
     return await repository.getstatistics();
   }
 }
+
+class GetRecentActivityUseCase {
+  final DashboardRepository repository;
+  GetRecentActivityUseCase(this.repository);
+  Future<List<RecentActivityEntity>> call() async {
+    return await repository.getRecentActivity();
+  }
+}

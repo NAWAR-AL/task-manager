@@ -8,13 +8,21 @@ part 'dashboard_state.dart';
 
 class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   final GetstatisticsUseCase getstatisticsUseCase;
-  DashboardBloc({required this.getstatisticsUseCase})
-    : super(DashboardInitial()) {
+  final GetRecentActivityUseCase getRecentActivityUseCase;
+  DashboardBloc({
+    required this.getstatisticsUseCase,
+    required this.getRecentActivityUseCase,
+  }) : super(DashboardInitial()) {
     on<GetStatistics>((event, emit) async {
       emit(DashboardLoading());
       try {
         final statics = await getstatisticsUseCase();
-        emit(DashboardLoaded(statics));
+        // أفضل مجهود: فشل جلب النشاطات لا يوقف الداشبورد كاملاً.
+        var activity = const <RecentActivityEntity>[];
+        try {
+          activity = await getRecentActivityUseCase();
+        } catch (_) {}
+        emit(DashboardLoaded(statics, activity));
       } catch (e) {
         emit(DashboardError(e.toString()));
       }

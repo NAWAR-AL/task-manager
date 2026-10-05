@@ -10,4 +10,9 @@ class DashboardRepositoryImpl extends DashboardRepository {
   Future<DashboardEntity> getstatistics() async {
     return await remoteDataSource.getstatistics();
   }
+
+  @override
+  Future<List<RecentActivityEntity>> getRecentActivity() async {
+    return await remoteDataSource.getRecentActivity();
+  }
 }

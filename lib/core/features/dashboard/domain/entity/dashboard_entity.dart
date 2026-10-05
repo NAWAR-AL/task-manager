@@ -42,3 +42,19 @@ class DataEntity {
     return data;
   }
 }
+
+/// عنصر واحد في قسم (Recent Activity) بالداشبورد — مشتق من بيانات حقيقية
+/// (آخر المستخدمين والمشاريع والمهام حسب تاريخ الإنشاء).
+class RecentActivityEntity {
+  /// 'user' | 'project' | 'task'
+  final String type;
+  final String title;
+  final String subtitle;
+  final DateTime time;
+  const RecentActivityEntity({
+    required this.type,
+    required this.title,
+    required this.subtitle,
+    required this.time,
+  });
+}
