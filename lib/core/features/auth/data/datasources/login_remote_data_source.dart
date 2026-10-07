@@ -9,10 +9,7 @@ class LoginRemoteDatasource {
 
   Future<String> login(LoginModel login) async {
     // print(login.toJson());
-    final response = await apiClient.dio.post(
-      "/login",
-      data: login.toJson(),
-    );
+    final response = await apiClient.dio.post("/login", data: login.toJson());
     // print('Status Code is ya Nour :${response.statusCode}');
     // print(response.data);
     final token = response.data['token'];

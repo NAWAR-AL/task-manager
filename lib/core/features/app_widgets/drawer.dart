@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:task_manager/core/features/project_management/presentation/pages/projects_page.dart';
-import 'package:task_manager/core/features/settings/screens/setting_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_manager/core/features/app_widgets/navigation_bar.dart';
+import 'package:task_manager/core/features/auth/presentation/cubit/logout_cubit.dart';
+import 'package:task_manager/core/features/auth/presentation/pages/login_page.dart';
 import 'package:task_manager/core/features/auth/presentation/pages/user_profile_page.dart';
+import 'package:task_manager/core/features/calender/screens/calender_screen.dart';
+import 'package:task_manager/core/features/project_management/presentation/pages/projects_page.dart';
+import 'package:task_manager/core/network/app_navigator.dart';
 import 'package:task_manager/core/permission/permission.dart';
 import 'package:task_manager/core/permission/permission_manger.dart';
 import 'package:task_manager/core/permission/role.dart';
@@ -11,31 +15,65 @@ class DrawerHome extends StatelessWidget {
   final UserRole role;
   const DrawerHome({super.key, required this.role});
 
+  Future<void> _confirmLogout(BuildContext context) async {
+    final confirmed =
+        await showDialog<bool>(
+          context: context,
+          builder: (dialogContext) => AlertDialog(
+            title: const Text('Log Out'),
+            content: const Text('Are you sure you want to log out?'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(dialogContext).pop(false),
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(dialogContext).pop(true),
+                style: TextButton.styleFrom(foregroundColor: Colors.red),
+                child: const Text('Log Out'),
+              ),
+            ],
+          ),
+        ) ??
+        false;
+
+    if (!confirmed || !context.mounted) return;
+
+    // يمسح التوكن من السيرفر والمحلي، وبعدها بنرجع لشاشة اللوقن
+    await context.read<LogoutCubit>().logout();
+    appNavigatorKey.currentState?.pushAndRemoveUntil(
+      MaterialPageRoute(builder: (_) => const LoginPage()),
+      (route) => false,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
+      semanticLabel: 'Task Manager',
+      clipBehavior: Clip.antiAliasWithSaveLayer,
       child: ListView(
-        padding: EdgeInsets.zero,
         children: [
           UserAccountsDrawerHeader(
-            currentAccountPicture: const CircleAvatar(
+            currentAccountPicture: CircleAvatar(
+              backgroundImage: AssetImage('assets/images/logo.png'),
+              radius: 22,
               backgroundColor: Colors.white,
-              child: Icon(Icons.person, size: 36, color: Colors.blueGrey),
             ),
             margin: const EdgeInsets.only(bottom: 20),
-            accountEmail: Text("${role.name}@Orbit.com"),
-            accountName: Text(
-              role.name.toUpperCase(),
+            accountName: const Text(
+              'Task Manager',
               style: TextStyle(fontSize: 18.0),
             ),
-            decoration: const BoxDecoration(color: Colors.blueGrey),
+            accountEmail: Text('Hello, ${role.name.toUpperCase()}'),
+            decoration: const BoxDecoration(color: Colors.blueAccent),
           ),
 
           drawerItem(
             icon: Icons.dashboard_outlined,
             title: 'Dashboard',
             ontap: () {
-              navigateToScreen(context, TaskBottomBar(role: UserRole.admin));
+              navigateToScreen(context, TaskBottomBar(role: role));
             },
           ),
 
@@ -44,43 +82,51 @@ class DrawerHome extends StatelessWidget {
               icon: Icons.folder_outlined,
               title: 'Projects',
               ontap: () {
-                navigateToScreen(context, ProjectsPage());
+                navigateToScreen(context, const ProjectsPage());
               },
             ),
+
+          drawerItem(
+            icon: Icons.task_sharp,
+            title: 'Tasks',
+            ontap: () {
+              navigateToScreen(
+                context,
+                TaskBottomBar(role: role, initialIndex: 1),
+              );
+            },
+          ),
 
           if (PermissionManager.can(role, Permission.readUser))
             drawerItem(
               icon: Icons.people_outline,
-              title: 'Users',
+              title: 'UsersMangement',
               ontap: () {
-                navigateToScreen(context, UserProfilePage());
+                navigateToScreen(context, const UserProfilePage());
               },
             ),
 
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: const Divider(),
-          ),
           drawerItem(
             icon: Icons.calendar_month_outlined,
             title: 'Calender',
             ontap: () {
-              Navigator.pop(context);
+              navigateToScreen(context, const CalenderScreen());
             },
           ),
 
           drawerItem(
-            icon: Icons.report_outlined,
-            title: 'Reports',
+            icon: Icons.home,
+            title: 'Home',
             ontap: () {
-              Navigator.pop(context);
+              navigateToScreen(context, TaskBottomBar(role: role));
             },
           ),
+
           drawerItem(
-            icon: Icons.settings_outlined,
-            title: 'Settings',
+            icon: Icons.logout,
+            title: 'Log Out',
             ontap: () {
-              navigateToScreen(context, SettingsScreen());
+              _confirmLogout(context);
             },
           ),
         ],

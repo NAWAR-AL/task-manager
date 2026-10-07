@@ -60,10 +60,11 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                Row(
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
                   children: [
                     RoleChip(role: user.role),
-                    const SizedBox(width: 8),
                     if (user.email_verified_at != null)
                       const AppChip(
                         label: 'Verified',

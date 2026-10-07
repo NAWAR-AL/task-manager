@@ -3,29 +3,27 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:task_manager/core/features/app_widgets/app_theme.dart';
-import 'package:task_manager/core/features/app_widgets/navigation_bar.dart';
 
+import 'package:task_manager/core/features/app_widgets/app_theme.dart';
+
+import 'package:task_manager/core/features/app_widgets/navigation_bar.dart';
 import 'package:task_manager/core/features/auth/presentation/cubit/profile_cubit.dart';
 import 'package:task_manager/core/features/auth/presentation/pages/register_page.dart';
 import 'package:task_manager/core/features/comments/presentation/comment_bloc/comment_bloc.dart';
 import 'package:task_manager/core/features/dashboard/presentation/bloc/dashboard_bloc.dart';
 import 'package:task_manager/core/features/project_management/presentation/cubit/project_cubit.dart';
 import 'package:task_manager/core/features/tasks/presentation/task_bloc/task_bloc.dart';
-
 import 'package:task_manager/core/permission/role.dart';
-
 import 'core/di/injection_container.dart';
 import 'core/network/app_navigator.dart';
 import 'core/features/auth/presentation/cubit/register_cubit.dart';
 import 'core/features/auth/presentation/cubit/login_cubit.dart';
 import 'core/features/auth/presentation/cubit/logout_cubit.dart';
 
-// import 'package:task_manager/core/features/dashboard/presentation/screens/dash_screen.dart';
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  // await initializeDateFormatting('en', null).then(_);
   await Hive.initFlutter();
   await init();
 
@@ -59,7 +57,6 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         navigatorKey: appNavigatorKey,
         theme: AppTheme.light,
-
 
         home: isLoggedIn
             ? const TaskBottomBar(role: UserRole.admin)

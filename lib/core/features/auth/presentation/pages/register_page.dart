@@ -77,7 +77,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     // --------------------------------
                     // Title
                     // --------------------------------
-
+                    Text('Be Organized.', style: TextStyle(fontSize: 32)),
                     const Text(
                       "Create Account",
                       style: TextStyle(
@@ -162,7 +162,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(16),
-                          borderSide: const BorderSide(
+                          borderSide:  BorderSide(
                             color: Colors.black87,
                             width: 2,
                           ),
@@ -170,7 +170,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                     ),
 
-                    const Gap(20),
+                     Gap(20),
 
                     // --------------------------------
                     // Password
