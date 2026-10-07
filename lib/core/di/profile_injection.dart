@@ -7,6 +7,7 @@ import 'package:task_manager/core/features/auth/domain/usecases/get_profile_usec
 import 'package:task_manager/core/features/auth/domain/usecases/get_single_user_usecase.dart';
 import 'package:task_manager/core/features/auth/domain/usecases/get_user_usecase.dart';
 import 'package:task_manager/core/features/auth/domain/usecases/get_userdashboard_usecase.dart';
+import 'package:task_manager/core/features/auth/domain/usecases/update_user_role_usecase.dart';
 import 'package:task_manager/core/features/auth/presentation/cubit/profile_cubit.dart';
 
 Future<void> initProfile() async {
@@ -27,6 +28,9 @@ Future<void> initProfile() async {
   sl.registerLazySingleton<CreateUserUsecase>(
     () => CreateUserUsecase(sl()),
   );
+  sl.registerLazySingleton<UpdateUserRoleUsecase>(
+    () => UpdateUserRoleUsecase(sl()),
+  );
   sl.registerLazySingleton<ProfileCubit>(
     () => ProfileCubit(
       getProfileUsecase: sl(),
@@ -34,6 +38,7 @@ Future<void> initProfile() async {
       getDashboardUsersUsecase: sl(),
       getSingleUserUsecase: sl(),
       createUserUsecase: sl(),
+      updateUserRoleUsecase: sl(),
     ),
   );
 }

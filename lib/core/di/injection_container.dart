@@ -8,6 +8,7 @@ import 'package:task_manager/core/di/task_injection.dart';
 import 'register_injection.dart';
 import 'login_injection.dart';
 import 'logout_injection.dart';
+import 'forgot_password_injection.dart';
 
 final sl = GetIt.instance;
 
@@ -16,6 +17,7 @@ Future<void> init() async {
   initRegister();
   initLogin();
   logoutInjection();
+  initForgotPassword();
   initTask();
   initProject();
   initProfile();

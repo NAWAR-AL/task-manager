@@ -5,6 +5,7 @@ import 'package:task_manager/core/features/dashboard/presentation/screens/dash_s
 import 'package:task_manager/core/features/project_management/presentation/cubit/project_cubit.dart';
 import 'package:task_manager/core/features/project_management/presentation/pages/create_project_page.dart';
 import 'package:task_manager/core/features/tasks/presentation/screens/task.dart';
+import 'package:task_manager/core/features/app_widgets/colors.dart';
 import 'package:task_manager/core/features/app_widgets/drawer.dart';
 import 'package:task_manager/core/features/auth/presentation/pages/user_profile_page.dart';
 import 'package:task_manager/core/permission/role.dart';
@@ -39,7 +40,6 @@ class _TaskBottomBarState extends State<TaskBottomBar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       // الهيدر القديم (Welcome <role>) اتشال — كل صفحة صار عندها هيدرها الخاص
       drawer: DrawerHome(role: UserRole.admin),
       body: AnimatedSwitcher(
@@ -53,10 +53,21 @@ class _TaskBottomBarState extends State<TaskBottomBar> {
           });
         },
         currentIndex: _selectedIndex,
-        unselectedItemColor: Colors.grey,
-        unselectedLabelStyle: const TextStyle(color: Colors.grey),
+        backgroundColor: ColorsApp.surface,
+        unselectedItemColor: ColorsApp.textSecondary,
+        unselectedLabelStyle: const TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.w500,
+          color: ColorsApp.textSecondary,
+        ),
+        selectedLabelStyle: const TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.w700,
+          color: ColorsApp.primary,
+        ),
         showUnselectedLabels: true,
-        selectedItemColor: Colors.lightBlue,
+        selectedItemColor: ColorsApp.primary,
+        elevation: 0,
         type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "DashBoard"),
@@ -66,12 +77,10 @@ class _TaskBottomBarState extends State<TaskBottomBar> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _openCreateProject,
-        backgroundColor: Colors.lightBlue,
-        elevation: 10.02,
         tooltip: 'New Project',
         label: const Text(
           'New Project',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
         ),
         icon: const Icon(Icons.add_business, color: Colors.white),
       ),

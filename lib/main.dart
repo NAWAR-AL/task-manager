@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:task_manager/core/features/app_widgets/app_theme.dart';
 import 'package:task_manager/core/features/app_widgets/navigation_bar.dart';
 
 import 'package:task_manager/core/features/auth/presentation/cubit/profile_cubit.dart';
@@ -57,6 +58,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         navigatorKey: appNavigatorKey,
+        theme: AppTheme.light,
 
 
         home: isLoggedIn

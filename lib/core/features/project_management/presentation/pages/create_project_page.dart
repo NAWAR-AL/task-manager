@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gap/gap.dart';
+import 'package:task_manager/core/features/app_widgets/app_widgets.dart';
 import 'package:task_manager/core/features/app_widgets/drawer.dart';
 import 'package:task_manager/core/features/project_management/data/models/project_model.dart';
 import 'package:task_manager/core/features/project_management/presentation/cubit/project_cubit.dart';
-
 import 'package:task_manager/core/features/project_management/presentation/cubit/projects_state.dart';
-
 import 'package:task_manager/core/permission/role.dart';
+
+import '../../../auth/presentation/cubit/logout_cubit.dart';
 
 class CreateProjectPage extends StatefulWidget {
   const CreateProjectPage({super.key});
@@ -17,8 +17,10 @@ class CreateProjectPage extends StatefulWidget {
 }
 
 class _CreateProjectPageState extends State<CreateProjectPage> {
+  final _formKey = GlobalKey<FormState>();
   final nameController = TextEditingController();
   final descriptionController = TextEditingController();
+
   String selectedStatus = 'active';
   bool _isCreating = false;
 
@@ -29,97 +31,150 @@ class _CreateProjectPageState extends State<CreateProjectPage> {
     super.dispose();
   }
 
+  void _submit() {
+    if (!(_formKey.currentState?.validate() ?? false)) return;
+
+    FocusScope.of(context).unfocus();
+    setState(() => _isCreating = true);
+
+    context.read<ProjectCubit>().createProject(
+      ProjectModel(
+        name: nameController.text.trim(),
+        description: descriptionController.text.trim(),
+        status: selectedStatus,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<ProjectCubit, ProjectsState>(
       listener: (context, state) {
         if (state is ProjectCreated) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("Project created successfully"),
-              backgroundColor: Colors.green,
-            ),
-          );
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              const SnackBar(
+                content: Text('Project created successfully'),
+                backgroundColor: Colors.green,
+              ),
+            );
           Navigator.pop(context);
         }
         if (state is ProjectError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-              backgroundColor: Colors.red,
-            ),
-          );
+          setState(() => _isCreating = false);
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              SnackBar(content: Text(state.message), backgroundColor: Colors.red),
+            );
         }
       },
       child: Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(title: Text("Create Project"), centerTitle: true),
-      drawer: DrawerHome(role: UserRole.admin),
-      body: Center(
-        child: Padding(
-          padding: EdgeInsets.all(15),
-          child: Column(
+        appBar: AppBar(
+          title: const Text('Create Project'),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_rounded),
+            onPressed: () => Navigator.pop(context),
+          ),
+        ),
+        drawer: const DrawerHome(role: UserRole.admin),
+        body: Form(
+          key: _formKey,
+          child: ListView(
+            padding: const EdgeInsets.fromLTRB(20, 16, 20, 28),
             children: [
-              TextField(
-                controller: nameController,
-                decoration: InputDecoration(labelText: 'Project Name'),
-              ),
-
-              TextField(
-                controller: descriptionController,
-                decoration: InputDecoration(labelText: 'Description'),
-                maxLines: 3,
-              ),
-
-              DropdownButtonFormField<String>(
-                initialValue: selectedStatus,
-                decoration: InputDecoration(labelText: 'Status'),
-                items: [
-                  DropdownMenuItem(value: 'active', child: Text('Active')),
-                  DropdownMenuItem(value: 'on_hold', child: Text('On Hold')),
-                  DropdownMenuItem(
-                    value: 'completed',
-                    child: Text('Completed'),
-                  ),
-                ],
-                onChanged: (value) {
-                  if (value != null) {
-                    setState(() {
-                      selectedStatus = value;
-                    });
-                  }
-                },
-              ),
-
-              Gap(30),
-
-              ElevatedButton(
-                onPressed: _isCreating
-                    ? null
-                    : () {
-                        if (nameController.text.trim().isEmpty) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('please enter project name'),
-                            ),
-                          );
-                          return;
+              AppCard(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const AppSectionTitle(
+                      text: 'Project details',
+                      icon: Icons.folder_outlined,
+                    ),
+                    const SizedBox(height: 18),
+                    AppTextField(
+                      controller: nameController,
+                      label: 'Project name',
+                      hint: 'e.g. Orbit Mobile App',
+                      prefixIcon: Icons.title,
+                      textInputAction: TextInputAction.next,
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return 'Please enter a project name';
                         }
-                        setState(() => _isCreating = true);
-                        context.read<ProjectCubit>().createProject(
-                              ProjectModel(
-                                name: nameController.text.trim(),
-                                description: descriptionController.text.trim(),
-                                status: selectedStatus,
-                              ),
-                            );
+                        if (value.trim().length < 3) {
+                          return 'Name must be at least 3 characters';
+                        }
+                        return null;
                       },
-                child: const Text('Create a Project'),
+                    ),
+                    const SizedBox(height: 16),
+                    AppTextField(
+                      controller: descriptionController,
+                      label: 'Description',
+                      hint: 'What is this project about?',
+                      prefixIcon: Icons.notes_outlined,
+                      maxLines: 4,
+                    ),
+                    const SizedBox(height: 16),
+                    AppDropdown<String>(
+                      label: 'Status',
+                      prefixIcon: Icons.flag_outlined,
+                      value: selectedStatus,
+                      items: const [
+                        DropdownMenuItem(value: 'active', child: Text('Active')),
+                        DropdownMenuItem(
+                          value: 'on_hold',
+                          child: Text('On Hold'),
+                        ),
+                        DropdownMenuItem(
+                          value: 'completed',
+                          child: Text('Completed'),
+                        ),
+                      ],
+                      onChanged: (value) {
+                        if (value != null) {
+                          setState(() => selectedStatus = value);
+                        }
+                      },
+                    ),
+                  ],
+                ),
               ),
+              const SizedBox(height: 24),
+              AppButton(
+                label: 'Create Project',
+                icon: Icons.add_rounded,
+                loading: _isCreating,
+                onPressed: _submit,
+              ),
+              const SizedBox(height: 12),
+              OutlinedButton.icon(
+                onPressed: () => Navigator.pop(context),
+                icon: const Icon(Icons.close_rounded, size: 18),
+                label: const Text('Cancel'),
+              ),
+              ElevatedButton(
+                          style:  ButtonStyle(
+                            backgroundColor: WidgetStatePropertyAll(
+                              Color.fromARGB(255, 243, 112, 103),
+                            ),
+
+                            foregroundColor: WidgetStatePropertyAll(
+                              Colors.white,
+                            ),
+                          ),
+
+                          onPressed: () {
+                            context.read<LogoutCubit>().logout();
+                          },
+
+                          child:  Text("Logout"),
+                        ),
             ],
           ),
         ),
-      ),
       ),
     );
   }

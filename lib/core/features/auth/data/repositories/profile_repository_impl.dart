@@ -39,4 +39,9 @@ class ProfileRepositoryImpl implements ProfileRepository {
     );
     await remote.createUser(model);
   }
+
+  @override
+  Future<void> updateUserRole(int userId, String role) async {
+    await remote.updateUserRole(userId, role);
+  }
 }

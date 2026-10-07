@@ -7,4 +7,5 @@ abstract class ProfileRepository {
   Future<List<User>> getDashboardUsers();
   Future<List<User>> getUsers();
   Future<void> createUser(Register register);
+  Future<void> updateUserRole(int userId, String role);
 }
