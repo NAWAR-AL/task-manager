@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:task_manager/core/features/app_widgets/colors.dart';
+import 'package:task_manager/core/features/app_widgets/drawer.dart';
 import 'package:task_manager/core/features/project_management/presentation/cubit/project_cubit.dart';
+import 'package:task_manager/core/features/project_management/presentation/cubit/projects_state.dart';
 import 'package:task_manager/core/features/tasks/presentation/screens/create_task.dart';
 import 'package:task_manager/core/features/tasks/presentation/task_bloc/task_bloc.dart';
+import 'package:task_manager/core/permission/role.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -26,12 +29,23 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final List<DateTime> weekDays = List.generate(
-      7,
+    int rowItems = 7;
+    final List<DateTime> monthDays = List.generate(
+      30,
       (index) => DateTime.now().add(Duration(days: index)),
     );
 
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Home Page'),
+        actions: [
+          const CircleAvatar(
+            backgroundColor: Colors.blueAccent,
+            child: Icon(Icons.person, color: Colors.white),
+          ),
+        ],
+      ),
+      drawer: DrawerHome(role: UserRole.admin),
       backgroundColor: const Color(0xFFF8F9FA),
       body: SafeArea(
         child: Padding(
@@ -39,45 +53,27 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Task Magner App ',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        DateFormat('EEEE, MMMM d, yyyy').format(selectedDate),
-                        style: const TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const CircleAvatar(
-                    backgroundColor: Colors.blueAccent,
-                    child: Icon(Icons.person, color: Colors.white),
-                  ),
-                ],
+              Image.asset('assets/images/desgin.png'),
+              const Text(
+                'Welcome to Orbit Task Management App ',
+                softWrap: true,
+                style: TextStyle(fontSize: 16, color: Colors.black),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 4),
+              Text(
+                DateFormat('EEEE, MMMM d, yyyy').format(selectedDate),
+                style: TextStyle(fontSize: 14, color: ColorsApp.background3),
+              ),
+              const SizedBox(height: 30),
 
               SizedBox(
                 height: 80,
                 child: ListView.builder(
+                  // itemExtent: 7,
                   scrollDirection: Axis.horizontal,
-                  itemCount: weekDays.length,
+                  itemCount: (monthDays.length / rowItems).ceil(),
                   itemBuilder: (context, index) {
-                    final day = weekDays[index];
+                    final day = monthDays[index];
                     final isSelected =
                         day.year == selectedDate.year &&
                         day.month == selectedDate.month &&
@@ -137,14 +133,124 @@ class _HomePageState extends State<HomePage> {
               ),
               const SizedBox(height: 20),
 
-              const Text(
-                'Schedule for the day',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+              Expanded(
+                child: BlocBuilder<ProjectCubit, ProjectsState>(
+                  builder: (context, state) {
+                    if (state is ProjectLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    if (state is ProjectsLoaded) {
+                      final filteredProjects = state.projects.where((project) {
+                        try {
+                          final createdAt = DateTime.parse(
+                            project.createdAt.toString(),
+                          );
+                          return createdAt.year == selectedDate.year &&
+                              createdAt.month == selectedDate.month &&
+                              createdAt.day == selectedDate.day;
+                        } catch (e) {
+                          return false;
+                        }
+                      }).toList();
+
+                      if (filteredProjects.isEmpty) {
+                        return Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.event_available,
+                                size: 50,
+                                color: Colors.grey,
+                              ),
+                              SizedBox(height: 10),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => CreatetaskPage(),
+                                    ),
+                                  );
+                                },
+                                child: Text(
+                                  "No  projects for this day, Add now ",
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 15,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
+
+                      return ListView.builder(
+                        itemCount: filteredProjects.length,
+                        itemBuilder: (context, index) {
+                          final project = filteredProjects[index];
+
+                          final bool isEven = index % 2 == 0;
+                          final cardColor = isEven
+                              ? ColorsApp.background2
+                              : ColorsApp.background3;
+
+                          return Column(
+                            children: [
+                              Container(
+                                margin: const EdgeInsets.only(bottom: 12),
+                                padding: const EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                  color: cardColor,
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Project Name: ${project.name}',
+                                          style: const TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 6),
+                                        Text(
+                                          'Status: ${project.status} ',
+                                          style: const TextStyle(
+                                            color: Colors.black26,
+                                            fontSize: 13,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const Icon(
+                                      Icons.arrow_forward_ios,
+                                      color: Colors.white54,
+                                      size: 16,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    }
+                    return const Center(
+                      child: Text("Please check your internet connection"),
+                    );
+                  },
                 ),
               ),
+
               const SizedBox(height: 12),
 
               Expanded(
@@ -188,7 +294,7 @@ class _HomePageState extends State<HomePage> {
                                   );
                                 },
                                 child: Text(
-                                  "No tasks or projects for this day, Add now ",
+                                  "No tasks for this day, Add now ",
                                   style: TextStyle(
                                     color: Colors.grey,
                                     fontSize: 15,
@@ -207,8 +313,8 @@ class _HomePageState extends State<HomePage> {
 
                           final bool isEven = index % 2 == 0;
                           final cardColor = isEven
-                              ? Color(0xffFFEBD3)
-                              : Color(0xffFFB6A6);
+                              ? ColorsApp.background2
+                              : ColorsApp.background3;
 
                           return Column(
                             children: [
@@ -228,7 +334,7 @@ class _HomePageState extends State<HomePage> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          task.title,
+                                          'Task Title: ${task.title}',
                                           style: const TextStyle(
                                             color: Colors.black,
                                             fontSize: 16,
@@ -250,24 +356,21 @@ class _HomePageState extends State<HomePage> {
                                       color: Colors.white54,
                                       size: 16,
                                     ),
-                                  ],
-                                ),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) => CreatetaskPage(),
+                                    IconButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (_) => CreatetaskPage(),
+                                          ),
+                                        );
+                                      },
+                                      icon: Icon(
+                                        Icons.add_task,
+                                        color: ColorsApp.background3,
+                                      ),
                                     ),
-                                  );
-                                },
-                                child: Text(
-                                  " Add new task ",
-                                  style: TextStyle(
-                                    color: Colors.blue,
-                                    fontSize: 15,
-                                  ),
+                                  ],
                                 ),
                               ),
                             ],

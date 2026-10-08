@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:task_manager/core/features/auth/presentation/pages/user_profile_page.dart';
 import 'package:task_manager/core/features/project_management/presentation/pages/projects_page.dart';
-import 'package:task_manager/core/features/calender/screens/calender_screen.dart';
 import 'package:task_manager/core/features/app_widgets/navigation_bar.dart';
+import 'package:task_manager/core/features/tasks/presentation/screens/task.dart';
 import 'package:task_manager/core/permission/permission.dart';
 import 'package:task_manager/core/permission/permission_manger.dart';
 import 'package:task_manager/core/permission/role.dart';
 
 class DrawerHome extends StatelessWidget {
+  // List<User> users;
+  // final String role;
   final UserRole role;
   DrawerHome({super.key, required this.role});
   // final bool isDeveloper = role == UserRole.developer;
@@ -29,7 +31,7 @@ class DrawerHome extends StatelessWidget {
             margin: const EdgeInsets.only(bottom: 20),
 
             accountName: Text('Task Manger', style: TextStyle(fontSize: 18.0)),
-            accountEmail: Text("Hello $role"),
+            accountEmail: Text("Hello ${UserRole.admin}"),
             decoration: const BoxDecoration(color: Colors.blueAccent),
           ),
 
@@ -49,7 +51,13 @@ class DrawerHome extends StatelessWidget {
                 navigateToScreen(context, ProjectsPage());
               },
             ),
-          drawerItem(icon: Icons.task_sharp, title: 'Tasks', ontap: () {}),
+          drawerItem(
+            icon: Icons.task_sharp,
+            title: 'Tasks',
+            ontap: () {
+              navigateToScreen(context, TaskPage());
+            },
+          ),
           if (PermissionManager.can(role, Permission.readUser))
             drawerItem(
               icon: Icons.people_outline,
@@ -58,15 +66,6 @@ class DrawerHome extends StatelessWidget {
                 navigateToScreen(context, UserProfilePage());
               },
             ),
-
-          drawerItem(
-            icon: Icons.calendar_month_outlined,
-            title: 'Calender',
-            ontap: () {
-              Navigator.pop(context);
-              navigateToScreen(context, CalenderScreen());
-            },
-          ),
 
           drawerItem(
             icon: Icons.home,

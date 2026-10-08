@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:task_manager/core/features/app_widgets/colors.dart';
+import 'package:task_manager/core/features/app_widgets/drawer.dart';
 import 'package:task_manager/core/features/auth/domain/entities/user.dart';
 import 'package:task_manager/core/features/auth/presentation/cubit/profile_cubit.dart';
 import 'package:task_manager/core/features/auth/presentation/cubit/profile_state.dart';
 import 'package:task_manager/core/features/auth/presentation/pages/user_details_page.dart';
+import 'package:task_manager/core/permission/role.dart';
 
 class UserProfilePage extends StatefulWidget {
   const UserProfilePage({super.key});
@@ -75,6 +77,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Users Management'), centerTitle: true),
+      drawer: DrawerHome(role: UserRole.admin),
       body: BlocConsumer<ProfileCubit, ProfileState>(
         listener: (context, state) {
           if (state is UsersLoaded) {
@@ -132,5 +135,3 @@ class _RoleBadge extends StatelessWidget {
     );
   }
 }
-
-
