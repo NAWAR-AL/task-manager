@@ -2,12 +2,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:task_manager/core/features/app_widgets/app_widgets.dart';
+import 'package:task_manager/core/features/app_widgets/drawer.dart';
 import 'package:task_manager/core/features/auth/presentation/cubit/profile_cubit.dart';
 import 'package:task_manager/core/features/dashboard/domain/entity/dashboard_entity.dart';
 import 'package:task_manager/core/features/dashboard/presentation/bloc/dashboard_bloc.dart';
+import 'package:task_manager/core/permission/role.dart';
 
 class DashScreen extends StatefulWidget {
-  const DashScreen({super.key});
+  final UserRole role;
+  DashScreen({super.key, required this.role});
 
   @override
   State<DashScreen> createState() => _DashScreenState();
@@ -26,8 +30,27 @@ class _DashScreenState extends State<DashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Dashboard '),
+        actions: [
+          CircleAvatar(
+            radius: 22,
+            backgroundColor: Color(0xffE8D9FF),
+            child: Text(
+              widget.role.name[0].toUpperCase(),
+              style: TextStyle(
+                fontSize: 19,
+                fontWeight: FontWeight.bold,
+                color: Color(0xff5B3A8C),
+              ),
+            ),
+          ),
+          LogoutButton(),
+        ],
+      ),
+      drawer: DrawerHome(role: widget.role),
       backgroundColor: Color(0xffF7FAFD),
-
+      // drawer: DrawerHome(role: role.,),
       body: SafeArea(
         child: BlocBuilder<DashboardBloc, DashboardState>(
           builder: (context, state) {
@@ -39,7 +62,7 @@ class _DashScreenState extends State<DashScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildHeader(),
+                    // _buildHeader(),
 
                     Gap(25),
 
@@ -77,43 +100,7 @@ class _DashScreenState extends State<DashScreen> {
           },
         ),
       ),
-    );
-  }
-
-  // HEADER
-
-  Widget _buildHeader() {
-    return Row(
-      children: [
-        IconButton(
-          onPressed: () {
-            Scaffold.of(context).openDrawer();
-          },
-          icon: Icon(Icons.menu, size: 28),
-        ),
-
-        Spacer(),
-
-        IconButton(
-          onPressed: () {},
-          icon: Icon(Icons.notifications_none, size: 28),
-        ),
-
-        Gap(8),
-
-        CircleAvatar(
-          radius: 22,
-          backgroundColor: Color(0xffE8D9FF),
-          child: Text(
-            "A",
-            style: TextStyle(
-              fontSize: 19,
-              fontWeight: FontWeight.bold,
-              color: Color(0xff5B3A8C),
-            ),
-          ),
-        ),
-      ],
+      // bottomNavigationBar: TaskBottomBar(role: UserRole.editor),
     );
   }
 
@@ -129,7 +116,7 @@ class _DashScreenState extends State<DashScreen> {
         ),
 
         Text(
-          "Admin 👋",
+          "${widget.role.name} 👋",
           style: TextStyle(
             fontSize: 32,
             fontWeight: FontWeight.bold,

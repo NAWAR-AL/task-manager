@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:task_manager/core/features/tasks/data/datasources/task_remote_datasource.dart';
 import 'package:task_manager/core/features/tasks/data/model/task_model.dart';
 import 'package:task_manager/core/network/api_client.dart';
@@ -14,10 +15,40 @@ class TaskRemoteDatasourceImpl extends TaskRemoteDatasource {
     return TaskModel.fromJson(Map<String, dynamic>.from(responseData));
   }
 
+  // @override
+  // Future<void> deleteTask(int id) async {
+  //   print('delets tasks');
+  //   try {
+  //     final response = await apiClient.dio.delete(
+  //       'https://taskback.orbit-eng.net/api/tasks/$id',
+  //       options: Options(headers: {'Accept': 'application/json'}),
+  //     );
+
+  //     (print(apiClient.dio.options.baseUrl + '/tasks/$id'));
+  //     print('Url : ${response.requestOptions.method}');
+  //     print('Status : ${response.statusCode}');
+  //     print('Data:${response.data}');
+  //     // return response.data;
+  //   } catch (e) {
+  //     print(id);
+  //     print('Delete error:${e}');
+  //     rethrow;
+  //   }
+  // }
+
   @override
   Future<void> deleteTask(int id) async {
-    print('delets tasks');
-    await apiClient.dio.delete('/tasks/$id');
+    try {
+      await apiClient.dio.post(
+        '/tasks/$id',
+        data: {'_method': 'DELETE'},
+        options: Options(headers: {'Accept': 'application/json'}),
+      );
+    } on DioException catch (e) {
+      print('RESPONSE DATA: ${e.response?.data}');
+
+      rethrow;
+    }
   }
 
   @override

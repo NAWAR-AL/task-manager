@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:task_manager/core/features/app_widgets/app_theme.dart';
 import 'package:task_manager/core/features/app_widgets/navigation_bar.dart';
+import 'package:task_manager/core/features/auth/domain/usecases/login_usecases.dart';
+import 'package:task_manager/core/features/auth/presentation/cubit/forgot_password_cubit.dart';
 import 'package:task_manager/core/features/auth/presentation/cubit/profile_cubit.dart';
 import 'package:task_manager/core/features/auth/presentation/pages/register_page.dart';
 import 'package:task_manager/core/features/comments/presentation/comment_bloc/comment_bloc.dart';
@@ -25,16 +28,29 @@ Future<void> main() async {
 
   final prefs = await SharedPreferences.getInstance();
   final token = prefs.getString("auth_token");
-
   final isLoggedIn = token != null && token.isNotEmpty;
 
-  runApp(MyApp(isLoggedIn: isLoggedIn));
+  if (token == null || token.isEmpty) {
+    runApp(MyApp(isLoggedIn: isLoggedIn));
+    return;
+  }
+  try {
+    final lgoinUseCase = sl<LoginUsecase>();
+    final roleString = await lgoinUseCase.getMyRole();
+    final role = UserRole.values.firstWhere((r) => r.name == roleString);
+
+    runApp(MyApp(isLoggedIn: isLoggedIn, role: role));
+  } catch (e) {
+    // print('Error getting role:$e');
+    await prefs.remove('auth_token');
+    runApp(MyApp(isLoggedIn: isLoggedIn));
+  }
 }
 
 class MyApp extends StatelessWidget {
   final bool isLoggedIn;
-
-  const MyApp({super.key, required this.isLoggedIn});
+  final UserRole? role;
+  const MyApp({super.key, required this.isLoggedIn, this.role});
 
   @override
   Widget build(BuildContext context) {
@@ -48,14 +64,16 @@ class MyApp extends StatelessWidget {
         BlocProvider<ProfileCubit>(create: (_) => sl<ProfileCubit>()),
         BlocProvider<DashboardBloc>(create: (_) => sl<DashboardBloc>()),
         BlocProvider<CommentBloc>(create: (_) => sl<CommentBloc>()),
+        BlocProvider<ForgotPasswordCubit>(
+          create: (_) => sl<ForgotPasswordCubit>(),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         navigatorKey: appNavigatorKey,
+        theme: AppTheme.light,
 
-        home: isLoggedIn
-            ? const TaskBottomBar(role: UserRole.admin)
-            : const RegisterPage(),
+        home: isLoggedIn ? TaskBottomBar(role: role!) : const RegisterPage(),
       ),
     );
   }

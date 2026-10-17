@@ -17,8 +17,8 @@ Future<void> initCore() async {
       baseUrl: ApiConstants.baseUrl,
       // مهل قصيرة عمدا على الشبكات الضعيفة، الطلب الفاشل يجب أن يفشل
       // بسرعة ويعرض رسالة بدل أن يعلق التطبيق 30-90 ثانية.
-      connectTimeout: const Duration(seconds: 8),
-      receiveTimeout: const Duration(seconds: 15),
+      connectTimeout: const Duration(seconds: 60),
+      receiveTimeout: const Duration(seconds: 60),
     ),
   );
 
@@ -60,7 +60,7 @@ Future<void> initCore() async {
       onError: (DioException err, ErrorInterceptorHandler handler) async {
         final isConnectionFailure =
             err.type == DioExceptionType.connectionTimeout ||
-                err.type == DioExceptionType.connectionError;
+            err.type == DioExceptionType.connectionError;
 
         var attempts = (err.requestOptions.extra['_retryCount'] as int?) ?? 0;
 
@@ -91,7 +91,8 @@ Future<void> initCore() async {
       onError: (DioException err, ErrorInterceptorHandler handler) async {
         final path = err.requestOptions.path;
 
-        final isAuthPath = path.contains('/login') ||
+        final isAuthPath =
+            path.contains('/login') ||
             path.contains('/register') ||
             path.contains('/logout');
 
@@ -107,7 +108,7 @@ Future<void> initCore() async {
           await prefs.remove('auth_token');
 
           navigator?.pushAndRemoveUntil(
-            MaterialPageRoute(builder: (_) => const LoginPage()),
+            MaterialPageRoute(builder: (_) => LoginPage()),
             (route) => false,
           );
           messenger?.showSnackBar(
@@ -126,7 +127,5 @@ Future<void> initCore() async {
   sl.registerLazySingleton<Dio>(() => dio);
 
   // Register ApiClient
-  sl.registerLazySingleton<ApiClient>(
-    () => ApiClient(sl()),
-  );
+  sl.registerLazySingleton<ApiClient>(() => ApiClient(sl()));
 }

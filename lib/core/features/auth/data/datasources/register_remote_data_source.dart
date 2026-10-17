@@ -13,6 +13,6 @@ class RegisterRemoteDatasource {
 
       data: register.toJson(),
     );
-    print('response for register${response.statusCode}');
+    // print('response for register${response.statusCode}');
   }
 }

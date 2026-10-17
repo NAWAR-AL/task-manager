@@ -1,26 +1,58 @@
 import 'package:flutter/material.dart';
-import 'package:task_manager/core/features/auth/presentation/pages/user_profile_page.dart';
-import 'package:task_manager/core/features/project_management/presentation/pages/projects_page.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:task_manager/core/features/app_widgets/colors.dart';
 import 'package:task_manager/core/features/app_widgets/navigation_bar.dart';
-import 'package:task_manager/core/features/tasks/presentation/screens/task.dart';
+import 'package:task_manager/core/features/auth/presentation/cubit/logout_cubit.dart';
+import 'package:task_manager/core/features/auth/presentation/pages/login_page.dart';
+import 'package:task_manager/core/network/app_navigator.dart';
 import 'package:task_manager/core/permission/permission.dart';
 import 'package:task_manager/core/permission/permission_manger.dart';
 import 'package:task_manager/core/permission/role.dart';
 
 class DrawerHome extends StatelessWidget {
-  // List<User> users;
-  // final String role;
   final UserRole role;
-  DrawerHome({super.key, required this.role});
-  // final bool isDeveloper = role == UserRole.developer;
+  const DrawerHome({super.key, required this.role});
+
+  Future<void> _confirmLogout(BuildContext context) async {
+    final confirmed =
+        await showDialog<bool>(
+          context: context,
+          builder: (dialogContext) => AlertDialog(
+            title: const Text('Log Out'),
+            content: const Text('Are you sure you want to log out?'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(dialogContext).pop(false),
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(dialogContext).pop(true),
+                style: TextButton.styleFrom(foregroundColor: Colors.red),
+                child: const Text('Log Out'),
+              ),
+            ],
+          ),
+        ) ??
+        false;
+
+    if (!confirmed || !context.mounted) return;
+
+    // يمسح التوكن من السيرفر والمحلي، وبعدها بنرجع لشاشة اللوقن
+    await context.read<LogoutCubit>().logout();
+    appNavigatorKey.currentState?.pushAndRemoveUntil(
+      MaterialPageRoute(builder: (_) => LoginPage()),
+      (route) => false,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
+    // print('Role drawer is : ${role.name}');
+    // print('CAN READ USER: ${PermissionManager.can(role, Permission.readUser)}');
     return Drawer(
-      semanticLabel: 'Task Manger',
+      semanticLabel: 'Task Manager',
       clipBehavior: Clip.antiAliasWithSaveLayer,
       child: ListView(
-        // padding: EdgeInsets.only(bottom: 20),
         children: [
           UserAccountsDrawerHeader(
             currentAccountPicture: CircleAvatar(
@@ -29,57 +61,82 @@ class DrawerHome extends StatelessWidget {
               backgroundColor: Colors.white,
             ),
             margin: const EdgeInsets.only(bottom: 20),
-
-            accountName: Text('Task Manger', style: TextStyle(fontSize: 18.0)),
-            accountEmail: Text("Hello ${UserRole.admin}"),
+            accountName: const Text(
+              'Task Manager',
+              style: TextStyle(fontSize: 18.0),
+            ),
+            accountEmail: Text('Hello, ${role.name}'),
             decoration: const BoxDecoration(color: Colors.blueAccent),
           ),
 
           drawerItem(
+            icon: Icons.view_agenda,
+            title: 'Agenda',
+            ontap: () {
+              navigateToScreen(
+                context,
+                TaskBottomBar(role: role, initialIndex: 1),
+              );
+            },
+          ),
+          drawerItem(
             icon: Icons.dashboard_outlined,
             title: 'Dashboard',
             ontap: () {
-              navigateToScreen(context, TaskBottomBar(role: UserRole.admin));
+              navigateToScreen(
+                context,
+                TaskBottomBar(role: role, initialIndex: 0),
+              );
             },
           ),
-
           if (PermissionManager.can(role, Permission.readProject))
             drawerItem(
-              icon: Icons.folder_outlined,
+              icon: Icons.folder,
               title: 'Projects',
               ontap: () {
-                navigateToScreen(context, ProjectsPage());
+                navigateToScreen(
+                  context,
+                  TaskBottomBar(role: role, initialIndex: 1),
+                );
+                // navigateToScreen(context, ProjectsPage(role: role));
               },
             ),
+
           drawerItem(
             icon: Icons.task_sharp,
             title: 'Tasks',
             ontap: () {
-              navigateToScreen(context, TaskPage());
+              navigateToScreen(
+                context,
+                TaskBottomBar(role: role, initialIndex: 3),
+              );
             },
           ),
+
           if (PermissionManager.can(role, Permission.readUser))
             drawerItem(
-              icon: Icons.people_outline,
-              title: 'UsersMangement',
+              icon: Icons.people,
+              title: 'Users Mangement',
               ontap: () {
-                navigateToScreen(context, UserProfilePage());
+                navigateToScreen(
+                  context,
+                  TaskBottomBar(role: role, initialIndex: 3),
+                );
               },
             ),
 
-          drawerItem(
-            icon: Icons.home,
-            title: 'Home',
-            ontap: () {
-              Navigator.pop(context);
-            },
-          ),
-
+          // drawerItem(
+          //   icon: Icons.calendar_month_outlined,
+          //   title: 'Calender',
+          //   ontap: () {
+          //     navigateToScreen(context, const CalenderScreen());
+          //   },
+          // ),
           drawerItem(
             icon: Icons.logout,
             title: 'Log Out',
             ontap: () {
-              AlertDialog();
+              _confirmLogout(context);
             },
           ),
         ],
@@ -98,7 +155,7 @@ Widget drawerItem({
       title,
       style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
     ),
-    leading: Icon(icon, color: Colors.lightBlue),
+    leading: Icon(icon, color: ColorsApp.primary),
     onTap: ontap,
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadiusGeometry.circular(8),

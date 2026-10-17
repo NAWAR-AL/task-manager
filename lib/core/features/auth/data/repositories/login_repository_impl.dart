@@ -13,4 +13,9 @@ class LoginRepositoryImpl implements LoginRepository {
     final model = LoginModel(email: login.email, password: login.password);
     return await remote.login(model);
   }
+
+  @override
+  Future<String> getMyRole() {
+    return remote.getMyRole();
+  }
 }

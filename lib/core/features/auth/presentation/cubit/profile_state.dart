@@ -19,6 +19,8 @@ class UsersLoaded extends ProfileState {
 
 class UserCreated extends ProfileState {}
 
+class UserRoleUpdated extends ProfileState {}
+
 class SingleUserLoaded extends ProfileState {
   final User user;
   SingleUserLoaded(this.user);

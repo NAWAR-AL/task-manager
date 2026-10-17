@@ -47,7 +47,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (_) => const LoginPage()),
+            MaterialPageRoute(builder: (_) => LoginPage()),
           );
         }
 
@@ -162,7 +162,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(16),
-                          borderSide: const BorderSide(
+                          borderSide: BorderSide(
                             color: Colors.black87,
                             width: 2,
                           ),
@@ -170,7 +170,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                     ),
 
-                    const Gap(20),
+                    Gap(20),
 
                     // --------------------------------
                     // Password
@@ -303,7 +303,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (_) => const LoginPage()),
+                          MaterialPageRoute(builder: (_) => LoginPage()),
                         );
                       },
 
