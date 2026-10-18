@@ -7,7 +7,7 @@ class RegisterRemoteDatasource {
   RegisterRemoteDatasource(this.apiClient);
 
   Future<void> register(RegisterModel register) async {
-    final response = await apiClient.dio.post(
+    await apiClient.dio.post(
       "https://taskback.orbit-eng.net/api/register",
       // "https://taskback.orbit-eng.net/api/users",
 

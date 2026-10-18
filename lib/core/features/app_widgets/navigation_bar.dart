@@ -92,7 +92,7 @@ class _TaskBottomBarState extends State<TaskBottomBar> {
     await Navigator.push(context, MaterialPageRoute(builder: (_) => AddUser()));
     if (!mounted) return;
     // نحدّث القائمة بعد ما يرجع المستخدم من صفحة الإنشاء
-    context.read<ProfileCubit>().createUser;
+    context.read<ProfileCubit>().fetchUsers();
   }
 
   Future<void> _openCreateTask() async {

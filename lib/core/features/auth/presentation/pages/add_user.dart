@@ -4,6 +4,8 @@ import 'package:gap/gap.dart';
 import 'package:task_manager/core/features/app_widgets/app_widgets.dart';
 import 'package:task_manager/core/features/app_widgets/colors.dart';
 import 'package:task_manager/core/features/auth/domain/entities/register.dart';
+import 'package:task_manager/core/features/auth/presentation/cubit/profile_cubit.dart';
+import 'package:task_manager/core/features/auth/presentation/cubit/profile_state.dart';
 import 'package:task_manager/core/features/auth/presentation/cubit/register_cubit.dart';
 import 'package:task_manager/core/features/auth/presentation/cubit/register_state.dart';
 import 'package:task_manager/core/features/auth/presentation/pages/user_profile_page.dart';
@@ -19,45 +21,134 @@ class AddUser extends StatefulWidget {
 class _AddUserState extends State<AddUser> {
   final nameController = TextEditingController();
   final emailController = TextEditingController();
-  final passwordController = TextEditingController();
   final password_confirmation = TextEditingController();
+  final passwordController = TextEditingController();
+
+  /// نوع الحساب الجديد (admin / developer / editor)
+  String _selectedRole = 'developer';
+
+  /// بيضل true من لحظة الضغط لحد ما يخلص تسجيل + تعيين الدور
+  bool _submitting = false;
+
+  static const List<String> _roles = ['admin', 'developer', 'editor'];
 
   @override
   void dispose() {
     nameController.dispose();
     emailController.dispose();
     passwordController.dispose();
+    password_confirmation.dispose();
     super.dispose();
+  }
+
+  void _showSnack(String message, Color color) {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(content: Text(message), backgroundColor: color),
+      );
+  }
+
+  void _submit() {
+    if (_submitting) return;
+
+    final name = nameController.text.trim();
+    final email = emailController.text.trim();
+    final password = passwordController.text;
+    final confirm = password_confirmation.text;
+
+    if (name.isEmpty || email.isEmpty || password.isEmpty || confirm.isEmpty) {
+      _showSnack('Please fill in all fields', Colors.red[400]!);
+      return;
+    }
+    if (!email.contains('@')) {
+      _showSnack('Please enter a valid email', Colors.red[400]!);
+      return;
+    }
+    if (password != confirm) {
+      _showSnack('Passwords do not match', Colors.red[400]!);
+      return;
+    }
+
+    setState(() => _submitting = true);
+    context.read<RegisterCubit>().register(
+      Register(name, email, password, confirm),
+    );
+  }
+
+  /// endpoint الـ register ما بيرجع الـ id ولا بيقبل حقل role،
+  /// فبعد النجاح بنشوف اليوزر الجديد بالإيميل وبندبّس له الدور
+  /// عبر نفس updateUserRole المستخدم بصفحة تعديل الدور.
+  Future<void> _assignRoleAndFinish() async {
+    final messenger = ScaffoldMessenger.of(context);
+    String? error;
+
+    try {
+      final profileCubit = context.read<ProfileCubit>();
+      await profileCubit.fetchUsers();
+      final state = profileCubit.state;
+
+      if (state is UsersLoaded) {
+        final email = emailController.text.trim().toLowerCase();
+        final match = state.users.where(
+          (u) => u.email.trim().toLowerCase() == email,
+        );
+        if (match.isNotEmpty) {
+          await profileCubit.updateUserRole(match.first.id, _selectedRole);
+          if (profileCubit.state is UserErorr) {
+            error = (profileCubit.state as UserErorr).message;
+          }
+        } else {
+          error = 'new user not found';
+        }
+      } else if (state is UserErorr) {
+        error = state.message;
+      }
+    } catch (e) {
+      error = e.toString();
+    }
+
+    if (!mounted) return;
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (_) => UserProfilePage(role: UserRole.admin),
+      ),
+    );
+
+    messenger
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        error == null
+            ? SnackBar(
+                content: Text(
+                  'User created — role: ${ColorsApp.prettyRole(_selectedRole)}',
+                ),
+                backgroundColor: Colors.green[400],
+              )
+            : const SnackBar(
+                content: Text(
+                  'User created, but the role could not be set — '
+                  'you can change it from the user page',
+                ),
+                backgroundColor: Colors.orange,
+              ),
+      );
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<RegisterCubit, RegisterState>(
       listener: (context, state) {
-        // Register Success
+        // Register Success → ندبّس الدور وبعدها نرجع لصفحة اليوزرز
         if (state is RegisterSuccess) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (_) => UserProfilePage(role: UserRole.admin),
-            ),
-          );
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: const Text("User registered successfully"),
-              backgroundColor: Colors.green[400],
-            ),
-          );
+          _assignRoleAndFinish();
         }
 
         // Register Failure
         if (state is RegisterFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-              backgroundColor: Colors.red[400],
-            ),
-          );
+          setState(() => _submitting = false);
+          _showSnack(state.message, Colors.red[400]!);
         }
       },
 
@@ -220,10 +311,10 @@ class _AddUserState extends State<AddUser> {
                     ),
                     const Gap(10),
 
-                    Align(
+                    const Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        "Confrim Password",
+                        "Confirm Password",
 
                         style: TextStyle(
                           fontSize: 16,
@@ -240,7 +331,7 @@ class _AddUserState extends State<AddUser> {
                       decoration: InputDecoration(
                         floatingLabelBehavior: FloatingLabelBehavior.never,
 
-                        labelText: "Confrim Password",
+                        labelText: "Confirm Password",
 
                         prefixIcon: const Icon(
                           Icons.password,
@@ -261,6 +352,30 @@ class _AddUserState extends State<AddUser> {
                       ),
                     ),
 
+                    const Gap(20),
+
+                    // --------------------------------
+                    // Role — نوع الحساب (admin / developer / editor)
+                    // --------------------------------
+                    AppDropdown<String>(
+                      label: 'Role',
+                      hint: 'Select the user role',
+                      prefixIcon: Icons.shield_outlined,
+                      value: _selectedRole,
+                      items: _roles
+                          .map(
+                            (role) => DropdownMenuItem(
+                              value: role,
+                              child: Text(ColorsApp.prettyRole(role)),
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (value) {
+                        if (value == null) return;
+                        setState(() => _selectedRole = value);
+                      },
+                    ),
+
                     const Gap(30),
 
                     // --------------------------------
@@ -277,20 +392,9 @@ class _AddUserState extends State<AddUser> {
                           foregroundColor: WidgetStatePropertyAll(Colors.white),
                         ),
 
-                        onPressed: state is RegisterLoading
-                            ? null
-                            : () {
-                                final user = Register(
-                                  nameController.text,
-                                  emailController.text,
-                                  passwordController.text,
-                                  password_confirmation.text,
-                                );
+                        onPressed: _submitting ? null : _submit,
 
-                                context.read<RegisterCubit>().register(user);
-                              },
-
-                        child: state is RegisterLoading
+                        child: _submitting
                             ? const SizedBox(
                                 height: 30,
                                 width: 30,
