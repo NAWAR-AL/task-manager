@@ -113,10 +113,6 @@ class _UserProfilePageState extends State<UserProfilePage> {
                   foregroundColor: ColorsApp.primary,
                 ),
               ),
-              IconButton(
-                onPressed: () {},
-                icon: Icon(Icons.delete, color: Colors.red),
-              ),
             ],
           ),
         ],

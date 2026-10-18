@@ -35,14 +35,14 @@ class _TaskBottomBarState extends State<TaskBottomBar> {
   late int _selectedIndex = widget.initialIndex;
   int currentUserId = 0;
   bool _isLoadingUser = true;
-  bool get canReadProject =>
-      PermissionManager.can(widget.role, Permission.readProject);
+  bool get canCreateUser =>
+      PermissionManager.can(widget.role, Permission.createUser);
   List<Widget> get pages => [
     DashScreen(role: widget.role),
     AgendPage(role: widget.role),
     ProjectsPage(role: widget.role),
     TaskPage(role: widget.role),
-    canReadProject
+    canCreateUser
         ? UserProfilePage(role: widget.role)
         : MyProfile(userId: currentUserId),
     // : UserDetailsPage(userId: currentUserId, isEmbeddInTab: true),
@@ -53,8 +53,8 @@ class _TaskBottomBarState extends State<TaskBottomBar> {
     BottomNavigationBarItem(icon: Icon(Icons.folder), label: "Projects"),
     BottomNavigationBarItem(icon: Icon(Icons.task), label: "Tasks"),
     BottomNavigationBarItem(
-      icon: Icon(canReadProject ? Icons.people : Icons.person_2),
-      label: canReadProject ? 'Users' : 'Profile',
+      icon: Icon(canCreateUser ? Icons.people : Icons.person_2),
+      label: canCreateUser ? 'Users' : 'Profile',
     ),
   ];
   @override
