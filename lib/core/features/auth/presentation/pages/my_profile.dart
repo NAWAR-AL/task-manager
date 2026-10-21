@@ -6,8 +6,7 @@ import 'package:task_manager/core/features/app_widgets/colors.dart';
 import 'package:task_manager/core/features/auth/domain/entities/user.dart';
 import 'package:task_manager/core/features/auth/presentation/cubit/profile_cubit.dart';
 import 'package:task_manager/core/features/auth/presentation/cubit/profile_state.dart';
-import 'package:task_manager/core/features/auth/presentation/pages/forgot_password_page.dart';
-import 'package:task_manager/core/features/auth/presentation/pages/reset_password_page.dart';
+import 'package:task_manager/core/features/auth/presentation/pages/change_password_page.dart';
 
 class MyProfile extends StatefulWidget {
   final int userId;
@@ -134,7 +133,7 @@ class _MyProfileState extends State<MyProfile> {
     );
   }
 
-  Widget _securityInfo(User user) {
+  Widget _securityInfo() {
     return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -143,33 +142,18 @@ class _MyProfileState extends State<MyProfile> {
           const SizedBox(height: 6),
 
           InkWell(
-            child: DetailRow(
+            borderRadius: BorderRadius.circular(12),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const ChangePasswordPage()),
+              );
+            },
+            child: const DetailRow(
               icon: Icons.password,
-              label: '',
-              value: 'Rest Password',
+              label: 'Reset Password',
+              value: 'Change your password using the old one',
             ),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ForgotPasswordPage()),
-              );
-            },
-          ),
-          const Divider(),
-          InkWell(
-            child: DetailRow(
-              icon: Icons.lock,
-              label: '',
-              value: 'Rest Password',
-            ),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ResetPasswordPage(email: ''),
-                ),
-              );
-            },
           ),
         ],
       ),
@@ -204,7 +188,7 @@ class _MyProfileState extends State<MyProfile> {
                 const SizedBox(height: 16),
                 _buildInfo(user),
                 const SizedBox(height: 24),
-                _securityInfo(user),
+                _securityInfo(),
               ],
             );
           }

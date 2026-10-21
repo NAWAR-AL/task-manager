@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:task_manager/core/network/api_error.dart';
 import 'package:task_manager/core/features/dashboard/domain/entity/dashboard_entity.dart';
 import 'package:task_manager/core/features/dashboard/domain/usecase/dashboard_usecase.dart';
 
@@ -24,7 +25,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
         } catch (_) {}
         emit(DashboardLoaded(statics, activity));
       } catch (e) {
-        emit(DashboardError(e.toString()));
+        emit(DashboardError(readableApiError(e)));
       }
     });
   }

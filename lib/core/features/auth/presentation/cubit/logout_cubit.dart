@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:task_manager/core/network/api_error.dart';
 
 import '../../domain/usecases/logout_usecase.dart';
 import 'logout_state.dart';
@@ -16,7 +17,7 @@ class LogoutCubit extends Cubit<LogoutState> {
 
       emit(LogoutSuccess());
     } catch (e) {
-      emit(LogoutFailure(e.toString()));
+      emit(LogoutFailure(readableApiError(e)));
     }
   }
 }

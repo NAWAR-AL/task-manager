@@ -13,4 +13,8 @@ class LoginUsecase {
   Future<String> getMyRole() async {
     return await repo.getMyRole();
   }
+
+  Future<bool> verifyPassword(String email, String password) async {
+    return await repo.verifyPassword(email, password);
+  }
 }

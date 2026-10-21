@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:task_manager/core/network/api_error.dart';
 import 'package:task_manager/core/features/auth/domain/entities/register.dart';
 import 'package:task_manager/core/features/auth/domain/usecases/create_user_usecase.dart';
 import 'package:task_manager/core/features/auth/domain/usecases/get_single_user_usecase.dart';
@@ -32,7 +33,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       final profile = await getProfileUsecase();
       emit(UserLoaded(profile));
     } catch (e) {
-      emit(UserErorr(e.toString()));
+      emit(UserErorr(readableApiError(e)));
     }
   }
 
@@ -42,7 +43,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       final users = await getDashboardUsersUsecase();
       emit(UsersLoaded(users));
     } catch (e) {
-      emit(UserErorr(e.toString()));
+      emit(UserErorr(readableApiError(e)));
     }
   }
 
@@ -52,7 +53,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       final users = await getUsers();
       emit(UsersLoaded(users));
     } catch (e) {
-      emit(UserErorr(e.toString()));
+      emit(UserErorr(readableApiError(e)));
     }
   }
 
@@ -62,7 +63,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       final user = await getSingleUserUsecase(id);
       emit(SingleUserLoaded(user));
     } catch (e) {
-      emit(UserErorr(e.toString()));
+      emit(UserErorr(readableApiError(e)));
     }
   }
 
@@ -72,7 +73,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       emit(UserCreated());
       await fetchUsers();
     } catch (e) {
-      emit(UserErorr(e.toString()));
+      emit(UserErorr(readableApiError(e)));
     }
   }
 
@@ -83,7 +84,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       // نعيّد جلب القائمة حتى يتحدث الشارة فوراً
       await fetchUsers();
     } catch (e) {
-      emit(UserErorr(e.toString()));
+      emit(UserErorr(readableApiError(e)));
     }
   }
 }

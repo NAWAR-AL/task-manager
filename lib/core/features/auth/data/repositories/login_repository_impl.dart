@@ -18,4 +18,9 @@ class LoginRepositoryImpl implements LoginRepository {
   Future<String> getMyRole() {
     return remote.getMyRole();
   }
+
+  @override
+  Future<bool> verifyPassword(String email, String password) {
+    return remote.verifyPassword(email, password);
+  }
 }

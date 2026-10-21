@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:task_manager/core/network/api_error.dart';
 import 'package:task_manager/core/features/project_management/domain/usecases/get_projectdetails_usecases.dart';
 import '../../domain/usecases/get_projects_usecases.dart';
 import '../../domain/usecases/get_project_usecases.dart';
@@ -35,7 +36,7 @@ class ProjectCubit extends Cubit<ProjectsState> {
       final projects = await getProjectsUsecases();
       emit(ProjectsLoaded(projects));
     } catch (e) {
-      emit(ProjectsError(e.toString()));
+      emit(ProjectsError(readableApiError(e)));
     }
   }
 
@@ -46,7 +47,7 @@ class ProjectCubit extends Cubit<ProjectsState> {
       final project = await getProjectUsecases(id);
       emit(ProjectLoaded(project));
     } catch (e) {
-      emit(ProjectError(e.toString()));
+      emit(ProjectError(readableApiError(e)));
     }
   }
 
@@ -55,7 +56,7 @@ class ProjectCubit extends Cubit<ProjectsState> {
       await createProjectUsecases(project);
       emit(ProjectCreated());
     } catch (e) {
-      emit(ProjectError(e.toString()));
+      emit(ProjectError(readableApiError(e)));
     }
   }
 
@@ -65,7 +66,7 @@ class ProjectCubit extends Cubit<ProjectsState> {
       emit(ProjectUpdated());
       await fetchProject(id);
     } catch (e) {
-      emit(ProjectError(e.toString()));
+      emit(ProjectError(readableApiError(e)));
     }
   }
 
@@ -75,7 +76,7 @@ class ProjectCubit extends Cubit<ProjectsState> {
       emit(ProjectDeleted());
       await fetchProjects();
     } catch (e) {
-      emit(ProjectError(e.toString()));
+      emit(ProjectError(readableApiError(e)));
     }
   }
 
@@ -86,7 +87,7 @@ class ProjectCubit extends Cubit<ProjectsState> {
       final project = await getProjectdetailsUsecases(projectId);
       emit(GetProjectDetailesLoaded(project));
     } catch (e) {
-      emit(ProjectError(e.toString()));
+      emit(ProjectError(readableApiError(e)));
     }
   }
 }

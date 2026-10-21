@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:task_manager/core/features/app_widgets/app_widgets.dart';
 import 'package:task_manager/core/features/app_widgets/colors.dart';
 import 'package:task_manager/core/features/auth/domain/entities/user.dart';
 import 'package:task_manager/core/features/auth/presentation/cubit/profile_cubit.dart';
 import 'package:task_manager/core/features/auth/presentation/cubit/profile_state.dart';
+import 'package:task_manager/core/features/auth/presentation/pages/change_password_page.dart';
 import 'package:task_manager/core/features/auth/presentation/pages/edit_user_role_page.dart';
 
 class UserDetailsPage extends StatefulWidget {
@@ -22,14 +24,25 @@ class UserDetailsPage extends StatefulWidget {
 }
 
 class _UserDetailsPageState extends State<UserDetailsPage> {
+  /// id المستخدم الحالي بالجهاز — لنفرّق هل عم بنشوف بروفايلنا
+  int _currentUserId = 0;
+
   String _formatDate(DateTime? date) {
     if (date == null) return '—';
     return DateFormat('dd MMM yyyy • hh:mm a').format(date);
   }
 
+  Future<void> _loadCurrentUserId() async {
+    final prefs = await SharedPreferences.getInstance();
+    final id = prefs.getInt('user_id') ?? prefs.getInt('id') ?? 0;
+    if (!mounted) return;
+    setState(() => _currentUserId = id);
+  }
+
   @override
   void initState() {
     super.initState();
+    _loadCurrentUserId();
     if (widget.userId > 0) {
       context.read<ProfileCubit>().fetchUser(widget.userId);
       print('savedId from  details ${widget.userId}.');
@@ -191,6 +204,23 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                     );
                   },
                 ),
+
+                // بروفايل المستخدم الحالي → إمكانية تغيير كلمة مروره (لوكل)
+                if (_currentUserId != 0 && user.id == _currentUserId) ...[
+                  const SizedBox(height: 12),
+                  AppButton(
+                    label: 'Reset Password',
+                    icon: Icons.password,
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const ChangePasswordPage(),
+                        ),
+                      );
+                    },
+                  ),
+                ],
               ],
             );
           }

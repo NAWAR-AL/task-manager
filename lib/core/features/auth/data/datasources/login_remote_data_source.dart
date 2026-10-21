@@ -36,6 +36,12 @@ class LoginRemoteDatasource {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setInt('user_id', id);
       await prefs.setString('user_role', role);
+      // بنبخزن الإيميل حتى تشتغل صفحة تغيير كلمة المرور
+      // حتى مع الجلسات القديمة (اللي سجّلت دخول قبل ما ينضاف هالحفظ)
+      final email = data['email'];
+      if (email is String && email.isNotEmpty) {
+        await prefs.setString('user_email', email);
+      }
       // print('Saved id $id');
       // print('role is $role');
       return role;
@@ -44,6 +50,26 @@ class LoginRemoteDatasource {
       // print('ME ERROR URL: ${e.requestOptions.uri}');
       // print('ME ERROR METHOD: ${e.requestOptions.method}');
       print('ME ERROR DATA: ${e.response?.data}');
+      rethrow;
+    }
+  }
+
+  /// بيجرب كلمة مرور على السيرفر من غير ما يمسك التوكن المحفوظ
+  /// (بترجع true إذا السيرفر قبلها) — لصفحة تغيير كلمة المرور
+  /// وقت ما تلقى نسخة محفوظة لوكل (جلسات قديمة قبل التحديث)
+  Future<bool> verifyPassword(String email, String password) async {
+    try {
+      await apiClient.dio.post(
+        "/login",
+        data: LoginModel(email: email, password: password).toJson(),
+      );
+      return true;
+    } on DioException catch (e) {
+      final status = e.response?.statusCode;
+      // 401/400/422 = كلمة المرور غلط — غير هيك (شبكة/سيرفر) بتطلع لفوق
+      if (status == 401 || status == 400 || status == 422) {
+        return false;
+      }
       rethrow;
     }
   }

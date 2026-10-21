@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:task_manager/core/network/api_error.dart';
 import 'package:task_manager/core/features/comments/domain/entities/comment_entity.dart';
 import 'package:task_manager/core/features/comments/domain/usercases/create_comment_usecase.dart';
 import 'package:task_manager/core/features/comments/domain/usercases/get_comments_usecase.dart';
@@ -21,7 +22,7 @@ class CommentBloc extends Bloc<CommentEvent, CommentState> {
 
         emit(CommentsLoaded(comments));
       } catch (e) {
-        emit(CommentError(e.toString()));
+        emit(CommentError(readableApiError(e)));
       }
     });
     on<CreateCommentEvent>((event, emit) async {
@@ -31,7 +32,7 @@ class CommentBloc extends Bloc<CommentEvent, CommentState> {
         emit(CommentsAdded());
         add(GetCommentsEvent(event.taskId));
       } catch (e) {
-        emit(CommentError(e.toString()));
+        emit(CommentError(readableApiError(e)));
       }
     });
   }
