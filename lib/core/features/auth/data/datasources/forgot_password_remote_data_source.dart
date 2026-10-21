@@ -9,7 +9,7 @@ class ForgotPasswordRemoteDataSource {
 
   Future<void> forgotPassword(String email) async {
     await apiClient.dio.post("/forgot-password", data: {"email": email});
-    print('email user is $email');
+    // print('email user is $email');
   }
 
   Future<void> resetPassword(ResetPasswordModel model) async {

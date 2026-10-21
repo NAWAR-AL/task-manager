@@ -44,9 +44,7 @@ class _AddUserState extends State<AddUser> {
   void _showSnack(String message, Color color) {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: color),
-      );
+      ..showSnackBar(SnackBar(content: Text(message), backgroundColor: color));
   }
 
   void _submit() {
@@ -111,9 +109,7 @@ class _AddUserState extends State<AddUser> {
     if (!mounted) return;
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(
-        builder: (_) => UserProfilePage(role: UserRole.admin),
-      ),
+      MaterialPageRoute(builder: (_) => UserProfilePage(role: UserRole.admin)),
     );
 
     messenger

@@ -21,7 +21,13 @@ class ProfileRepositoryImpl implements ProfileRepository {
 
   @override
   Future<List<User>> getUsers() async {
-    return await remote.getUsers();
+    try {
+      final result = await remote.getUsers();
+
+      return result;
+    } catch (e) {
+      rethrow;
+    }
   }
 
   @override

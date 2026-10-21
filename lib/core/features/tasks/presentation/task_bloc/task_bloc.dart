@@ -43,7 +43,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
       // emit(TaskLoading());
       try {
         await deletetaskUsecase(event.id);
-        print('Task deleted from server');
+        // print('Task deleted from server');
         add(GetTasks());
         // emit(TaskDeleted());
       } catch (e) {

@@ -7,10 +7,18 @@ import 'package:task_manager/core/features/project_management/domain/entities/pr
 import 'package:task_manager/core/features/project_management/presentation/cubit/project_cubit.dart';
 import 'package:task_manager/core/features/project_management/presentation/cubit/projects_state.dart';
 import 'package:task_manager/core/features/project_management/presentation/pages/update_project_page.dart';
+import 'package:task_manager/core/permission/permission.dart';
+import 'package:task_manager/core/permission/permission_manger.dart';
+import 'package:task_manager/core/permission/role.dart';
 
 class ProjectDetailsPage extends StatefulWidget {
+  final UserRole role;
   final int? projectId;
-  const ProjectDetailsPage({super.key, required this.projectId});
+  const ProjectDetailsPage({
+    super.key,
+    required this.projectId,
+    required this.role,
+  });
 
   @override
   State<ProjectDetailsPage> createState() => _ProjectDetailsPageState();
@@ -154,18 +162,23 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
                 const SizedBox(height: 16),
                 _buildInfo(project),
                 const SizedBox(height: 24),
-                AppButton(
-                  label: 'Edit Project',
-                  icon: Icons.edit_outlined,
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => UpdateProjectPage(project: project),
-                      ),
-                    );
-                  },
-                ),
+                if (PermissionManager.can(
+                  widget.role,
+                  Permission.createProject,
+                )) ...[
+                  AppButton(
+                    label: 'Edit Project',
+                    icon: Icons.edit_outlined,
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => UpdateProjectPage(project: project),
+                        ),
+                      );
+                    },
+                  ),
+                ],
               ],
             );
           }

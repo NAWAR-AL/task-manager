@@ -7,9 +7,10 @@ import 'package:task_manager/core/features/app_widgets/drawer.dart';
 import 'package:task_manager/core/features/project_management/domain/entities/project.dart';
 import 'package:task_manager/core/features/project_management/presentation/cubit/project_cubit.dart';
 import 'package:task_manager/core/features/project_management/presentation/cubit/projects_state.dart';
-import 'package:task_manager/core/features/project_management/presentation/pages/create_project_page.dart';
 import 'package:task_manager/core/features/project_management/presentation/pages/project_details_page.dart';
 import 'package:task_manager/core/features/project_management/presentation/pages/update_project_page.dart';
+import 'package:task_manager/core/permission/permission.dart';
+import 'package:task_manager/core/permission/permission_manger.dart';
 import 'package:task_manager/core/permission/role.dart';
 
 class ProjectsPage extends StatefulWidget {
@@ -31,12 +32,15 @@ class _ProjectsPageState extends State<ProjectsPage> {
   }
 
   Future<void> _openDetails(ProjectEntity project) async {
+    // if (!PermissionManager.can(widget.role, Permission.createProject)) {
+    //   return;
+    // }
     await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (_) => BlocProvider(
           create: (_) => sl<ProjectCubit>(),
-          child: ProjectDetailsPage(projectId: project.id),
+          child: ProjectDetailsPage(projectId: project.id, role: widget.role),
         ),
       ),
     );
@@ -45,26 +49,15 @@ class _ProjectsPageState extends State<ProjectsPage> {
   }
 
   Future<void> _openEdit(ProjectEntity project) async {
+    if (PermissionManager.can(widget.role, Permission.createProject)) {
+      return;
+    }
     await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (_) => BlocProvider(
           create: (_) => sl<ProjectCubit>(),
           child: UpdateProjectPage(project: project),
-        ),
-      ),
-    );
-    if (!mounted) return;
-    context.read<ProjectCubit>().fetchProjects();
-  }
-
-  Future<void> _openCreate() async {
-    await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => BlocProvider(
-          create: (_) => sl<ProjectCubit>(),
-          child: CreateProjectPage(role: widget.role),
         ),
       ),
     );
@@ -162,15 +155,22 @@ class _ProjectsPageState extends State<ProjectsPage> {
                 ],
               ),
             ),
-            IconButton(
-              tooltip: 'Edit project',
-              onPressed: () => _openEdit(project),
-              icon: const Icon(Icons.edit_outlined),
-              style: IconButton.styleFrom(
-                backgroundColor: ColorsApp.primarySoft,
-                foregroundColor: ColorsApp.primary,
+            if (PermissionManager.can(
+              widget.role,
+              Permission.createProject,
+            )) ...[
+              IconButton(
+                tooltip: 'Edit project',
+                onPressed: () {
+                  _openEdit(project);
+                },
+                icon: const Icon(Icons.edit_outlined),
+                style: IconButton.styleFrom(
+                  backgroundColor: ColorsApp.primarySoft,
+                  foregroundColor: ColorsApp.primary,
+                ),
               ),
-            ),
+            ],
           ],
         ),
       ),
@@ -215,15 +215,7 @@ class _ProjectsPageState extends State<ProjectsPage> {
         // ),
       ),
       drawer: DrawerHome(role: widget.role),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _openCreate,
-        tooltip: 'New Project',
-        icon: const Icon(Icons.add_business, color: Colors.white),
-        label: const Text(
-          'New Project',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
-        ),
-      ),
+
       body: BlocConsumer<ProjectCubit, ProjectsState>(
         listener: (context, state) {
           if (state is ProjectsLoaded) {

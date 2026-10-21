@@ -198,9 +198,9 @@ class _TaskPageState extends State<TaskPage> {
                         )
                       : TabBarView(
                           children: [
-                            TaskList(tasks: inProgressTasks),
-                            TaskList(tasks: completedTasks),
-                            TaskList(tasks: reviewTasks),
+                            TaskList(tasks: inProgressTasks, role: widget.role),
+                            TaskList(tasks: completedTasks, role: widget.role),
+                            TaskList(tasks: reviewTasks, role: widget.role),
                           ],
                         ),
                 ),

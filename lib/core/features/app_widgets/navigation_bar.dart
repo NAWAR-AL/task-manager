@@ -151,8 +151,10 @@ class _TaskBottomBarState extends State<TaskBottomBar> {
       return null;
     }
     if (_selectedIndex == 2) {
-      if (!PermissionManager.can(widget.role, Permission.createProject))
+     
+      if (!PermissionManager.can(widget.role, Permission.createProject)) {
         return null;
+      }
       return FloatingActionButton.extended(
         heroTag: 'unique_project',
         onPressed: _openCreateProject,
@@ -165,8 +167,9 @@ class _TaskBottomBarState extends State<TaskBottomBar> {
       );
     }
     if (_selectedIndex == 3) {
-      if (!PermissionManager.can(widget.role, Permission.createTask))
+      if (!PermissionManager.can(widget.role, Permission.createTask)) {
         return null;
+      }
       return FloatingActionButton.extended(
         heroTag: 'Unique_task',
         onPressed: _openCreateTask,
@@ -179,8 +182,9 @@ class _TaskBottomBarState extends State<TaskBottomBar> {
       );
     }
     if (_selectedIndex == 4) {
-      if (!PermissionManager.can(widget.role, Permission.createTask))
+      if (!PermissionManager.can(widget.role, Permission.createUser)) {
         return null;
+      }
       return FloatingActionButton.extended(
         heroTag: 'Unique_user',
         onPressed: _openCreateUser,

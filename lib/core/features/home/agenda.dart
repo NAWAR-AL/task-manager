@@ -9,6 +9,8 @@ import 'package:task_manager/core/features/project_management/presentation/cubit
 import 'package:task_manager/core/features/tasks/presentation/screens/create_task.dart';
 import 'package:task_manager/core/features/tasks/presentation/screens/task_details.dart';
 import 'package:task_manager/core/features/tasks/presentation/task_bloc/task_bloc.dart';
+import 'package:task_manager/core/permission/permission.dart';
+import 'package:task_manager/core/permission/permission_manger.dart';
 import 'package:task_manager/core/permission/role.dart';
 
 class AgendPage extends StatefulWidget {
@@ -197,18 +199,24 @@ class _AgendPageState extends State<AgendPage> {
                                     fontSize: 14,
                                   ),
                                 ),
-                                TextButton(
-                                  onPressed: () {
-                                    openCreateTask();
-                                  },
-                                  child: Text(
-                                    " Add New Task ",
-                                    style: TextStyle(
-                                      color: ColorsApp.primary,
-                                      fontSize: 15,
+
+                                if (PermissionManager.can(
+                                  widget.role,
+                                  Permission.createProject,
+                                )) ...[
+                                  TextButton(
+                                    onPressed: () {
+                                      openCreateTask();
+                                    },
+                                    child: Text(
+                                      " Add New Task ",
+                                      style: TextStyle(
+                                        color: ColorsApp.primary,
+                                        fontSize: 15,
+                                      ),
                                     ),
                                   ),
-                                ),
+                                ],
                               ],
                             ),
                           );
@@ -231,7 +239,10 @@ class _AgendPageState extends State<AgendPage> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (_) => TaskDetails(task: task),
+                                        builder: (_) => TaskDetails(
+                                          task: task,
+                                          role: widget.role,
+                                        ),
                                       ),
                                     );
                                   },

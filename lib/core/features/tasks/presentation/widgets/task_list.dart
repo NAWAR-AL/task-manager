@@ -7,17 +7,22 @@ import 'package:task_manager/core/features/tasks/domain/entities/task_entity.dar
 import 'package:task_manager/core/features/tasks/presentation/screens/task_details.dart';
 import 'package:task_manager/core/features/tasks/presentation/screens/update_task.dart';
 import 'package:task_manager/core/features/tasks/presentation/task_bloc/task_bloc.dart';
+import 'package:task_manager/core/permission/permission.dart';
+import 'package:task_manager/core/permission/permission_manger.dart';
+import 'package:task_manager/core/permission/role.dart';
 
 class TaskList extends StatelessWidget {
   final List<TaskEntity> tasks;
   final String emptyTitle;
   final String emptySubtitle;
+  final UserRole role;
 
   const TaskList({
     super.key,
     required this.tasks,
     this.emptyTitle = 'No tasks here',
     this.emptySubtitle = 'Tasks with this status will appear here.',
+    required this.role,
   });
 
   @override
@@ -80,7 +85,7 @@ class TaskList extends StatelessWidget {
             ),
           );
       },
-      child: _TaskCard(task: task),
+      child: _TaskCard(task: task, role: role),
     );
   }
 
@@ -99,8 +104,8 @@ class TaskList extends StatelessWidget {
 
 class _TaskCard extends StatelessWidget {
   final TaskEntity task;
-
-  const _TaskCard({required this.task});
+  final UserRole role;
+  const _TaskCard({required this.task, required this.role});
 
   bool get _isOverdue {
     return task.due_date.isBefore(DateTime.now()) && task.status != 'done';
@@ -113,10 +118,14 @@ class _TaskCard extends StatelessWidget {
     return AppCard(
       padding: EdgeInsets.zero,
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (_) => TaskDetails(task: task)),
-        );
+        if (!PermissionManager.can(role, Permission.createProject)) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => TaskDetails(task: task, role: UserRole.admin),
+            ),
+          );
+        }
       },
       child: IntrinsicHeight(
         child: Row(
@@ -151,21 +160,26 @@ class _TaskCard extends StatelessWidget {
                             height: 1.3,
                           ),
                         ),
-                        IconButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    UpdateTaskPage(updatedTask: task),
-                              ),
-                            );
-                          },
-                          icon: Icon(
-                            Icons.edit_outlined,
-                            color: ColorsApp.primary,
+                        if (PermissionManager.can(
+                          role,
+                          Permission.updateTask,
+                        )) ...[
+                          IconButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      UpdateTaskPage(updatedTask: task),
+                                ),
+                              );
+                            },
+                            icon: Icon(
+                              Icons.edit_outlined,
+                              color: ColorsApp.primary,
+                            ),
                           ),
-                        ),
+                        ],
                       ],
                     ),
                     const SizedBox(height: 10),

@@ -12,15 +12,14 @@ import 'package:task_manager/core/features/project_management/presentation/cubit
 import 'package:task_manager/core/features/project_management/presentation/cubit/projects_state.dart';
 import 'package:task_manager/core/features/tasks/domain/entities/task_entity.dart';
 import 'package:task_manager/core/features/tasks/presentation/screens/update_task.dart';
+import 'package:task_manager/core/permission/permission.dart';
+import 'package:task_manager/core/permission/permission_manger.dart';
+import 'package:task_manager/core/permission/role.dart';
 
 class TaskDetails extends StatefulWidget {
   final TaskEntity task;
-  // final UserRole role;
-  const TaskDetails({
-    super.key,
-    required this.task,
-    //  required this.role
-  });
+  final UserRole role;
+  const TaskDetails({super.key, required this.task, required this.role});
 
   @override
   State<TaskDetails> createState() => _TaskDetailsState();
@@ -33,8 +32,15 @@ class _TaskDetailsState extends State<TaskDetails> {
   @override
   void initState() {
     super.initState();
-    context.read<ProjectCubit>().fetchProjects();
-    context.read<ProfileCubit>().getUsers();
+
+    if (!PermissionManager.can(widget.role, Permission.readProject)) {
+      try {
+        context.read<ProfileCubit>().getUsers();
+        context.read<ProjectCubit>().fetchProjects();
+      } catch (e) {
+        print('error fetching details $e');
+      }
+    }
     context.read<CommentBloc>().add(GetCommentsEvent(widget.task.id!));
   }
 
@@ -116,18 +122,20 @@ class _TaskDetailsState extends State<TaskDetails> {
             onPressed: () => Navigator.pop(context),
           ),
           actions: [
-            IconButton(
-              tooltip: 'Edit task',
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => UpdateTaskPage(updatedTask: task),
-                  ),
-                );
-              },
-              icon: const Icon(Icons.edit_outlined, color: ColorsApp.primary),
-            ),
+            if (!PermissionManager.can(widget.role, Permission.updateTask)) ...[
+              IconButton(
+                tooltip: 'Edit task',
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => UpdateTaskPage(updatedTask: task),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.edit_outlined, color: ColorsApp.primary),
+              ),
+            ],
             LogoutButton(),
           ],
         ),
