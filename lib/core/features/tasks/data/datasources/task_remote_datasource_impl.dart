@@ -15,27 +15,6 @@ class TaskRemoteDatasourceImpl extends TaskRemoteDatasource {
     return TaskModel.fromJson(Map<String, dynamic>.from(responseData));
   }
 
-  // @override
-  // Future<void> deleteTask(int id) async {
-  //   print('delets tasks');
-  //   try {
-  //     final response = await apiClient.dio.delete(
-  //       'https://taskback.orbit-eng.net/api/tasks/$id',
-  //       options: Options(headers: {'Accept': 'application/json'}),
-  //     );
-
-  //     (print(apiClient.dio.options.baseUrl + '/tasks/$id'));
-  //     print('Url : ${response.requestOptions.method}');
-  //     print('Status : ${response.statusCode}');
-  //     print('Data:${response.data}');
-  //     // return response.data;
-  //   } catch (e) {
-  //     print(id);
-  //     print('Delete error:${e}');
-  //     rethrow;
-  //   }
-  // }
-
   @override
   Future<void> deleteTask(int id) async {
     try {

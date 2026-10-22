@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:task_manager/core/features/auth/domain/usecases/delete_user_usecase.dart';
 import 'package:task_manager/core/network/api_error.dart';
 import 'package:task_manager/core/features/auth/domain/entities/register.dart';
 import 'package:task_manager/core/features/auth/domain/usecases/create_user_usecase.dart';
@@ -16,6 +17,7 @@ class ProfileCubit extends Cubit<ProfileState> {
   final GetSingleUserUsecase getSingleUserUsecase;
   final CreateUserUsecase createUserUsecase;
   final UpdateUserRoleUsecase updateUserRoleUsecase;
+  final DeleteUserUsecase deleteUserUsecase;
 
   ProfileCubit({
     required this.getProfileUsecase,
@@ -24,6 +26,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     required this.getSingleUserUsecase,
     required this.createUserUsecase,
     required this.updateUserRoleUsecase,
+    required this.deleteUserUsecase,
   }) : super(UserInial());
 
   Future<void> fetchProfile() async {
@@ -84,6 +87,17 @@ class ProfileCubit extends Cubit<ProfileState> {
       // نعيّد جلب القائمة حتى يتحدث الشارة فوراً
       await fetchUsers();
     } catch (e) {
+      emit(UserErorr(readableApiError(e)));
+    }
+  }
+
+  Future<void> deleteUser(int userId) async {
+    emit(UserLoading());
+    try {
+      await deleteUserUsecase(userId);
+      await fetchUsers();
+    } catch (e) {
+      print('error from cubit $e');
       emit(UserErorr(readableApiError(e)));
     }
   }

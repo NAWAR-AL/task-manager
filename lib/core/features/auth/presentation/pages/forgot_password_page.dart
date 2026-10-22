@@ -6,7 +6,6 @@ import 'package:task_manager/core/features/app_widgets/app_widgets.dart';
 import 'package:task_manager/core/features/auth/presentation/cubit/forgot_password_cubit.dart';
 import 'package:task_manager/core/features/auth/presentation/cubit/forgot_password_state.dart';
 
-// import 'package:task_manager/core/features/auth/presentation/pages/reset_password_page.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({super.key});
@@ -23,18 +22,6 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     emailController.dispose();
     super.dispose();
   }
-
-  // void _openResetPage(BuildContext context) {
-  //   Navigator.push(
-  //     context,
-  //     MaterialPageRoute(
-  //       builder: (_) => BlocProvider(
-  //         create: (_) => sl<ForgotPasswordCubit>(),
-  //         child: ResetPasswordPage(email: emailController.text.trim()),
-  //       ),
-  //     ),
-  //   );
-  // }
 
   @override
   Widget build(BuildContext context) {

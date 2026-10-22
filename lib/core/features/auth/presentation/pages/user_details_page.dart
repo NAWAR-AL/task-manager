@@ -124,10 +124,15 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
           const AppSectionTitle(text: 'Account', icon: Icons.badge_outlined),
           const SizedBox(height: 6),
 
-          DetailRow(
-            icon: Icons.tag,
-            label: 'User ID',
-            value: user.id.toString(),
+          Row(
+            children: [
+              DetailRow(
+                icon: Icons.tag,
+                label: 'User ID',
+                value: user.id.toString(),
+              ),
+            
+            ],
           ),
           const Divider(),
           DetailRow(

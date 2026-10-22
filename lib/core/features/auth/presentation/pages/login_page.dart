@@ -45,13 +45,19 @@ class _LoginPageState extends State<LoginPage> {
                   backgroundColor: Colors.green[400],
                 ),
               );
-
-              Navigator.push(
+              Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(
                   builder: (_) => TaskBottomBar(role: state.role),
                 ),
+                (route) => false,
               );
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (_) => TaskBottomBar(role: state.role),
+              //   ),
+              // );
             }
 
             if (state is LoginFailure) {

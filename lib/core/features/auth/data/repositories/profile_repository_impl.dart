@@ -50,4 +50,9 @@ class ProfileRepositoryImpl implements ProfileRepository {
   Future<void> updateUserRole(int userId, String role) async {
     await remote.updateUserRole(userId, role);
   }
+
+  @override
+  Future<void> deleteUSer(int userId) async {
+    await remote.deleteUSer(userId);
+  }
 }

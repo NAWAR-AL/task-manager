@@ -65,4 +65,19 @@ class ProfileRemoteDatasource {
       ),
     );
   }
+
+  Future<void> deleteUSer(int userId) async {
+    try {
+      final response = await apiClient.dio.post(
+        '/users/$userId',
+        data: {'_method': 'DELETE'},
+        options: Options(headers: {'Accept': 'application/json'}),
+      );
+      print('result form api $response');
+    } on DioException catch (e) {
+      print('RESPONSE DATA: ${e.response?.data}');
+
+      rethrow;
+    }
+  }
 }

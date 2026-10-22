@@ -107,10 +107,54 @@ class _UserProfilePageState extends State<UserProfilePage> {
               IconButton(
                 tooltip: 'Change role',
                 onPressed: () => _openEditRole(user),
-                icon: const Icon(Icons.manage_accounts_outlined),
+                icon: const Icon(Icons.edit_outlined),
                 style: IconButton.styleFrom(
                   backgroundColor: ColorsApp.primarySoft,
                   foregroundColor: ColorsApp.primary,
+                ),
+              ),
+              IconButton(
+                tooltip: 'Delete USer',
+                onPressed: () async {
+                  final confirm = await showDialog(
+                    context: context,
+                    builder: (dialogContext) => AlertDialog(
+                      title: Text('Delete USer'),
+                      content: Text(
+                        'Are you sure want to delete user ${user.name}',
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () =>
+                              Navigator.of(dialogContext).pop(false),
+                          child: Text('Cancel'),
+                        ),
+                        TextButton(
+                          onPressed: () =>
+                              Navigator.of(dialogContext).pop(true),
+                          style: TextButton.styleFrom(
+                            foregroundColor: Colors.red,
+                          ),
+                          child: Text('Delete'),
+                        ),
+                      ],
+                    ),
+                  );
+                  if (confirm == true && context.mounted) {
+                    context.read<ProfileCubit>().deleteUser(user.id);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('User deleted sucessfully'),
+                        backgroundColor: Colors.green,
+                        behavior: SnackBarBehavior.fixed,
+                      ),
+                    );
+                  }
+                },
+                icon: const Icon(Icons.delete_outline_outlined),
+                style: IconButton.styleFrom(
+                  backgroundColor: ColorsApp.primarySoft,
+                  foregroundColor: Colors.red,
                 ),
               ),
             ],

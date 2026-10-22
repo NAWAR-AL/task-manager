@@ -8,4 +8,5 @@ abstract class ProfileRepository {
   Future<List<User>> getUsers();
   Future<void> createUser(Register register);
   Future<void> updateUserRole(int userId, String role);
+  Future<void> deleteUSer(int userId);
 }
