@@ -1,5 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:task_manager/core/features/auth/domain/entities/user.dart';
 import 'package:task_manager/core/features/auth/domain/usecases/delete_user_usecase.dart';
+import 'package:task_manager/core/features/auth/domain/usecases/udate_user_usercase.dart';
 import 'package:task_manager/core/network/api_error.dart';
 import 'package:task_manager/core/features/auth/domain/entities/register.dart';
 import 'package:task_manager/core/features/auth/domain/usecases/create_user_usecase.dart';
@@ -18,6 +20,7 @@ class ProfileCubit extends Cubit<ProfileState> {
   final CreateUserUsecase createUserUsecase;
   final UpdateUserRoleUsecase updateUserRoleUsecase;
   final DeleteUserUsecase deleteUserUsecase;
+  final UpdateUserUsercase updateUserUsercase;
 
   ProfileCubit({
     required this.getProfileUsecase,
@@ -27,6 +30,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     required this.createUserUsecase,
     required this.updateUserRoleUsecase,
     required this.deleteUserUsecase,
+    required this.updateUserUsercase,
   }) : super(UserInial());
 
   Future<void> fetchProfile() async {
@@ -98,6 +102,23 @@ class ProfileCubit extends Cubit<ProfileState> {
       await fetchUsers();
     } catch (e) {
       print('error from cubit $e');
+      emit(UserErorr(readableApiError(e)));
+    }
+  }
+
+  Future<void> updateUserprofile({
+    required User userEntity,
+    String? password,
+    String? passwordConfrim,
+  }) async {
+    print('password from cubit $password');
+    print('confrim from cubit$passwordConfrim');
+    emit(UserLoading());
+    try {
+      await updateUserUsercase(userEntity, password, passwordConfrim);
+      await fetchUser(userEntity.id);
+    } catch (e) {
+      print('error form cubit $e');
       emit(UserErorr(readableApiError(e)));
     }
   }

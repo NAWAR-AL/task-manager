@@ -9,14 +9,15 @@ class AppTheme {
   static const double radiusSmall = 12;
 
   static ThemeData get light {
-    final colorScheme = ColorScheme.fromSeed(
-      seedColor: ColorsApp.primary,
-      brightness: Brightness.light,
-    ).copyWith(
-      primary: ColorsApp.primary,
-      surface: ColorsApp.surface,
-      error: ColorsApp.danger,
-    );
+    final colorScheme =
+        ColorScheme.fromSeed(
+          seedColor: ColorsApp.primary,
+          brightness: Brightness.light,
+        ).copyWith(
+          primary: ColorsApp.primary,
+          surface: ColorsApp.surface,
+          error: ColorsApp.danger,
+        );
 
     final baseTextTheme = Typography.material2021().black.apply(
       bodyColor: ColorsApp.textPrimary,
@@ -68,9 +69,15 @@ class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: ColorsApp.surface,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 16,
+        ),
         hintStyle: const TextStyle(color: ColorsApp.textMuted, fontSize: 14),
-        labelStyle: const TextStyle(color: ColorsApp.textSecondary, fontSize: 14),
+        labelStyle: const TextStyle(
+          color: ColorsApp.textSecondary,
+          fontSize: 14,
+        ),
         floatingLabelStyle: const TextStyle(
           color: ColorsApp.primary,
           fontWeight: FontWeight.w600,
@@ -128,7 +135,8 @@ class AppTheme {
         space: 1,
       ),
       snackBarTheme: SnackBarThemeData(
-        behavior: SnackBarBehavior.floating,
+        behavior: SnackBarBehavior.fixed,
+        //هون غيرته
         backgroundColor: ColorsApp.textPrimary,
         contentTextStyle: const TextStyle(
           color: Colors.white,
@@ -156,7 +164,10 @@ class AppTheme {
         unselectedLabelColor: ColorsApp.textSecondary,
         indicatorColor: ColorsApp.primary,
         labelStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
-        unselectedLabelStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+        unselectedLabelStyle: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
+        ),
         dividerColor: ColorsApp.divider,
       ),
       checkboxTheme: CheckboxThemeData(
@@ -182,7 +193,10 @@ class AppTheme {
           fontWeight: FontWeight.w600,
           color: ColorsApp.textPrimary,
         ),
-        subtitleTextStyle: TextStyle(fontSize: 13, color: ColorsApp.textSecondary),
+        subtitleTextStyle: TextStyle(
+          fontSize: 13,
+          color: ColorsApp.textSecondary,
+        ),
       ),
     );
   }

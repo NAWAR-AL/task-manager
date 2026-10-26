@@ -33,11 +33,9 @@ class LoginCubit extends Cubit<LoginState> {
 
       final token = await loginUsecase(Login(email, passwordToSend));
       await prefs.setString('auth_token', token);
-      // print('token$token');
-      // print('token ssaved');
+
       final roleString = await loginUsecase.getMyRole();
-      // print('me successfully');
-      // print('Role from Api is $roleString');
+
       final role = UserRole.values.firstWhere((r) => r.name == roleString);
       print('Role from cubit is ${role.name}');
       await prefs.setString('user_role', role.name);
@@ -45,10 +43,7 @@ class LoginCubit extends Cubit<LoginState> {
 
       // نحفظ كلمة المرور الحالية لهاد الإيميل:
       // 'local' = يلي كتبها المستخدم، 'server' = يلي راحت للسيرفر فعلياً
-      overrides[email] = {
-        'local': login.password,
-        'server': passwordToSend,
-      };
+      overrides[email] = {'local': login.password, 'server': passwordToSend};
       await PasswordOverrides.write(prefs, overrides);
 
       emit(LoginSuccess(role));

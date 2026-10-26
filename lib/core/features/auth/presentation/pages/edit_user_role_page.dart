@@ -119,7 +119,7 @@ class _EditUserRolePageState extends State<EditUserRolePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit User Information'),
+        title: Text('Edit User Role'),
         leading: IconButton(
           icon: Icon(Icons.arrow_back_rounded),
           onPressed: () => Navigator.pop(context),

@@ -39,11 +39,14 @@ Future<void> main() async {
     final roleString = await lgoinUseCase.getMyRole();
     final role = UserRole.values.firstWhere((r) => r.name == roleString);
 
-    runApp(MyApp(isLoggedIn: isLoggedIn, role: role));
-  } catch (e) {
+    runApp(MyApp(isLoggedIn: true, role: role));
+  } catch (e, stackTrace) {
     // print('Error getting role:$e');
+    debugPrintStack(stackTrace: stackTrace);
+    debugPrint('startup error: $e');
     await prefs.remove('auth_token');
-    runApp(MyApp(isLoggedIn: isLoggedIn));
+    await prefs.remove('user_role');
+    runApp(MyApp(isLoggedIn: false));
   }
 }
 

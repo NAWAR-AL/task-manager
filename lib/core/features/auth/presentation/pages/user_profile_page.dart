@@ -6,7 +6,7 @@ import 'package:task_manager/core/features/app_widgets/drawer.dart';
 import 'package:task_manager/core/features/auth/domain/entities/user.dart';
 import 'package:task_manager/core/features/auth/presentation/cubit/profile_cubit.dart';
 import 'package:task_manager/core/features/auth/presentation/cubit/profile_state.dart';
-import 'package:task_manager/core/features/auth/presentation/pages/edit_user_role_page.dart';
+import 'package:task_manager/core/features/auth/presentation/pages/edit_user_info.dart';
 import 'package:task_manager/core/features/auth/presentation/pages/user_details_page.dart';
 import 'package:task_manager/core/permission/role.dart';
 
@@ -42,13 +42,6 @@ class _UserProfilePageState extends State<UserProfilePage> {
       MaterialPageRoute(
         builder: (_) => UserDetailsPage(userId: user.id, isEmbeddInTab: true),
       ),
-    );
-  }
-
-  void _openEditRole(User user) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => EditUserRolePage(user: user)),
     );
   }
 
@@ -105,8 +98,18 @@ class _UserProfilePageState extends State<UserProfilePage> {
           Column(
             children: [
               IconButton(
-                tooltip: 'Change role',
-                onPressed: () => _openEditRole(user),
+                tooltip: 'Update User Information',
+                onPressed: () async {
+                  final result = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => EditUserInfoPage(updatedUser: user),
+                    ),
+                  );
+                  if (result == true && mounted) {
+                    context.read<ProfileCubit>().fetchUsers();
+                  }
+                },
                 icon: const Icon(Icons.edit_outlined),
                 style: IconButton.styleFrom(
                   backgroundColor: ColorsApp.primarySoft,
@@ -218,18 +221,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Users Management', style: TextStyle(color: Colors.black)),
-        actions: [
-          // IconButton(
-          //   onPressed: () {
-          //     Navigator.push(
-          //       context,
-          //       MaterialPageRoute(builder: (context) => AddUser()),
-          //     );
-          //   },
-          //   icon: Icon(Icons.person_add, color: ColorsApp.primary),
-          // ),
-          LogoutButton(),
-        ],
+        actions: [LogoutButton()],
         centerTitle: true,
       ),
       drawer: DrawerHome(role: widget.role),

@@ -38,7 +38,7 @@ dependencies:
   flutter_bloc: ^9.1.1
   get_it: ^9.2.1
   gap: ^3.0.1
-  shared_preferences: ^2.5.5
+  shared_preferences: ^2.2.3
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   intl: ^0.20.3
@@ -51,6 +51,7 @@ dependencies:
 
   fl_chart: ^1.1.1
   multi_dropdown: ^3.2.2
+ 
   
 
   

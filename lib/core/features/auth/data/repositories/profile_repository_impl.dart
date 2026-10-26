@@ -55,4 +55,28 @@ class ProfileRepositoryImpl implements ProfileRepository {
   Future<void> deleteUSer(int userId) async {
     await remote.deleteUSer(userId);
   }
+
+  @override
+  Future<void> updateUSer(
+    User userEntity,
+    String? password,
+    String? passwordConfirm,
+  ) async {
+    await remote.updateUserProfile(
+      userId: userEntity.id,
+      name: userEntity.name,
+      email: userEntity.email,
+      password: password,
+      passwordConfirmation: passwordConfirm,
+    );
+  }
+
+  // @override
+  // Future<void> updateUSer(User userEntity) async {
+  //   await remote.updateUserProfile(
+  //     userId: userEntity.id,
+  //     name: userEntity.name,
+  //     email: userEntity.email,
+  //   );
+  // }
 }

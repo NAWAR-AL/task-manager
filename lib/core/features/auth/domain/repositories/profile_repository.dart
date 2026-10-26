@@ -9,4 +9,9 @@ abstract class ProfileRepository {
   Future<void> createUser(Register register);
   Future<void> updateUserRole(int userId, String role);
   Future<void> deleteUSer(int userId);
+  Future<void> updateUSer(
+    User userEntity,
+    String? password,
+    String? passwordConfirm,
+  );
 }
