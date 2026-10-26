@@ -22,7 +22,6 @@ import 'core/features/auth/presentation/cubit/logout_cubit.dart';
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // await initializeDateFormatting('en', null).then(_);
   await Hive.initFlutter();
   await init();
 
@@ -39,14 +38,13 @@ Future<void> main() async {
     final roleString = await lgoinUseCase.getMyRole();
     final role = UserRole.values.firstWhere((r) => r.name == roleString);
 
-    runApp(MyApp(isLoggedIn: true, role: role));
+    runApp(MyApp(isLoggedIn: isLoggedIn, role: role));
   } catch (e, stackTrace) {
-    // print('Error getting role:$e');
     debugPrintStack(stackTrace: stackTrace);
     debugPrint('startup error: $e');
     await prefs.remove('auth_token');
     await prefs.remove('user_role');
-    runApp(MyApp(isLoggedIn: false));
+    runApp(MyApp(isLoggedIn: isLoggedIn));
   }
 }
 

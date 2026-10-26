@@ -6,6 +6,7 @@ import 'package:task_manager/core/features/app_widgets/colors.dart';
 import 'package:task_manager/core/features/auth/presentation/cubit/logout_cubit.dart';
 import 'package:task_manager/core/features/auth/presentation/cubit/logout_state.dart';
 import 'package:task_manager/core/features/auth/presentation/pages/login_page.dart';
+import 'package:task_manager/core/network/app_navigator.dart';
 
 /// كارت أبيض بحواف دائرية وظل خفيف — الأساس لكل بطاقات التطبيق
 class AppCard extends StatelessWidget {
@@ -597,7 +598,7 @@ class LogoutButton extends StatelessWidget {
             return ListTile(
               leading: Icon(Icons.logout, color: Colors.red),
               title: Text('LogOut'),
-              onTap: () => context.read<LogoutCubit>().logout(),
+              onTap: () => confirmLogout(context),
             );
           }
         },
@@ -620,4 +621,36 @@ class LogoutButton extends StatelessWidget {
       ),
     );
   }
+}
+
+Future<void> confirmLogout(BuildContext context) async {
+  final confirmed =
+      await showDialog<bool>(
+        context: context,
+        builder: (dialogContext) => AlertDialog(
+          title: const Text('Log Out'),
+          content: const Text('Are you sure you want to log out?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(false),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(true),
+              style: TextButton.styleFrom(foregroundColor: Colors.red),
+              child: const Text('Log Out'),
+            ),
+          ],
+        ),
+      ) ??
+      false;
+
+  if (!confirmed || !context.mounted) return;
+
+  // يمسح التوكن من السيرفر والمحلي، وبعدها بنرجع لشاشة اللوقن
+  await context.read<LogoutCubit>().logout();
+  appNavigatorKey.currentState?.pushAndRemoveUntil(
+    MaterialPageRoute(builder: (_) => LoginPage()),
+    (route) => false,
+  );
 }

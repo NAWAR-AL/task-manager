@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:task_manager/core/features/app_widgets/app_widgets.dart';
 import 'package:task_manager/core/features/app_widgets/colors.dart';
 import 'package:task_manager/core/features/app_widgets/navigation_bar.dart';
-import 'package:task_manager/core/features/auth/presentation/cubit/logout_cubit.dart';
-import 'package:task_manager/core/features/auth/presentation/pages/login_page.dart';
-import 'package:task_manager/core/network/app_navigator.dart';
 import 'package:task_manager/core/permission/permission.dart';
 import 'package:task_manager/core/permission/permission_manger.dart';
 import 'package:task_manager/core/permission/role.dart';
@@ -13,42 +10,8 @@ class DrawerHome extends StatelessWidget {
   final UserRole role;
   const DrawerHome({super.key, required this.role});
 
-  Future<void> _confirmLogout(BuildContext context) async {
-    final confirmed =
-        await showDialog<bool>(
-          context: context,
-          builder: (dialogContext) => AlertDialog(
-            title: const Text('Log Out'),
-            content: const Text('Are you sure you want to log out?'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(dialogContext).pop(false),
-                child: const Text('Cancel'),
-              ),
-              TextButton(
-                onPressed: () => Navigator.of(dialogContext).pop(true),
-                style: TextButton.styleFrom(foregroundColor: Colors.red),
-                child: const Text('Log Out'),
-              ),
-            ],
-          ),
-        ) ??
-        false;
-
-    if (!confirmed || !context.mounted) return;
-
-    // يمسح التوكن من السيرفر والمحلي، وبعدها بنرجع لشاشة اللوقن
-    await context.read<LogoutCubit>().logout();
-    appNavigatorKey.currentState?.pushAndRemoveUntil(
-      MaterialPageRoute(builder: (_) => LoginPage()),
-      (route) => false,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    // print('Role drawer is : ${role.name}');
-    // print('CAN READ USER: ${PermissionManager.can(role, Permission.readUser)}');
     return Drawer(
       semanticLabel: 'Task Manager',
       clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -98,7 +61,6 @@ class DrawerHome extends StatelessWidget {
                   context,
                   TaskBottomBar(role: role, initialIndex: 1),
                 );
-                // navigateToScreen(context, ProjectsPage(role: role));
               },
             ),
 
@@ -125,18 +87,11 @@ class DrawerHome extends StatelessWidget {
               },
             ),
 
-          // drawerItem(
-          //   icon: Icons.calendar_month_outlined,
-          //   title: 'Calender',
-          //   ontap: () {
-          //     navigateToScreen(context, const CalenderScreen());
-          //   },
-          // ),
           drawerItem(
             icon: Icons.logout,
             title: 'Log Out',
             ontap: () {
-              _confirmLogout(context);
+              confirmLogout(context);
             },
           ),
         ],

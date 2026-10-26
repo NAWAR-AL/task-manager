@@ -45,7 +45,6 @@ class _TaskBottomBarState extends State<TaskBottomBar> {
     canCreateUser
         ? UserProfilePage(role: widget.role)
         : MyProfile(userId: currentUserId),
-    // : UserDetailsPage(userId: currentUserId, isEmbeddInTab: true),
   ];
   List<BottomNavigationBarItem> get navItems => [
     BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: "DashBoard"),
@@ -66,10 +65,10 @@ class _TaskBottomBarState extends State<TaskBottomBar> {
   Future<void> _fetchCurrentUserId() async {
     final prefs = await SharedPreferences.getInstance();
     final savedId = prefs.getInt('user_id') ?? prefs.getInt('id') ?? 0;
-    // print('savedId from nav bar $savedId');
+
     setState(() {
       currentUserId = savedId;
-      // print('current from nav bar $currentUserId');
+
       _isLoadingUser = false;
     });
   }
@@ -111,7 +110,6 @@ class _TaskBottomBarState extends State<TaskBottomBar> {
       return Scaffold(body: Center(child: CircularProgressIndicator()));
     }
     return Scaffold(
-      // الهيدر القديم (Welcome <role>) اتشال — كل صفحة صار عندها هيدرها الخاص
       drawer: DrawerHome(role: widget.role),
       body: AnimatedSwitcher(
         duration: const Duration(milliseconds: 200),
@@ -151,7 +149,6 @@ class _TaskBottomBarState extends State<TaskBottomBar> {
       return null;
     }
     if (_selectedIndex == 2) {
-     
       if (!PermissionManager.can(widget.role, Permission.createProject)) {
         return null;
       }

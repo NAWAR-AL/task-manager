@@ -29,16 +29,16 @@ class DataEntity {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
 
-    data['scope'] = this.scope;
-    data['total_projects'] = this.total_projects;
-    data['active_projects'] = this.active_projects;
-    data['total_tasks'] = this.total_tasks;
-    data['todo'] = this.todo;
-    data['done'] = this.done;
-    data['in_progress'] = this.in_progress;
-    data['review'] = this.review;
-    data['high_priority'] = this.high_priority;
-    data['overdue'] = this.overdue;
+    data['scope'] = scope;
+    data['total_projects'] = total_projects;
+    data['active_projects'] = active_projects;
+    data['total_tasks'] = total_tasks;
+    data['todo'] = todo;
+    data['done'] = done;
+    data['in_progress'] = in_progress;
+    data['review'] = review;
+    data['high_priority'] = high_priority;
+    data['overdue'] = overdue;
     return data;
   }
 }

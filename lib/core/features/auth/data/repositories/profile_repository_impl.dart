@@ -70,13 +70,4 @@ class ProfileRepositoryImpl implements ProfileRepository {
       passwordConfirmation: passwordConfirm,
     );
   }
-
-  // @override
-  // Future<void> updateUSer(User userEntity) async {
-  //   await remote.updateUserProfile(
-  //     userId: userEntity.id,
-  //     name: userEntity.name,
-  //     email: userEntity.email,
-  //   );
-  // }
 }
