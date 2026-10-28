@@ -53,9 +53,15 @@ class TaskRemoteDatasourceImpl extends TaskRemoteDatasource {
 
   @override
   Future<TaskModel> updateTask(TaskModel task) async {
-    final response = await apiClient.dio.put(
+    final response = await apiClient.dio.post(
       '/tasks/${task.id}',
       data: task.toJson(),
+      options: Options(
+        headers: {
+          'Accept': 'application/json',
+          'X-HTTP-Method-Override': 'PUT',
+        },
+      ),
     );
     final responseData = response.data['data'] ?? response.data;
     return TaskModel.fromJson(Map<String, dynamic>.from(responseData));
@@ -63,7 +69,15 @@ class TaskRemoteDatasourceImpl extends TaskRemoteDatasource {
 
   @override
   Future<TaskModel> updateTaskStatus(int taskId, String status) async {
-    final response = await apiClient.dio.put('/task/$taskId/$status');
+    final response = await apiClient.dio.post(
+      '/task/$taskId/$status',
+      options: Options(
+        headers: {
+          'Accept': 'application/json',
+          'X-HTTP-Method-Override': 'PUT',
+        },
+      ),
+    );
     final responseData = response.data['data'] ?? response.data;
     return TaskModel.fromJson(Map<String, dynamic>.from(responseData));
   }

@@ -33,7 +33,16 @@ class ProjectRemoteDatasource {
   }
 
   Future<void> updateProject(ProjectModel project) async {
-    await apiClient.dio.put("/projects/${project.id}", data: project.toJson());
+    await apiClient.dio.post(
+      "/projects/${project.id}",
+      data: project.toJson(),
+      options: Options(
+        headers: {
+          'Accept': 'application/json',
+          'X-HTTP-Method-Override': 'PUT',
+        },
+      ),
+    );
   }
 
   Future<void> deleteProject(int id) async {

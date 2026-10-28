@@ -122,7 +122,7 @@ class _TaskDetailsState extends State<TaskDetails> {
             onPressed: () => Navigator.pop(context),
           ),
           actions: [
-            if (!PermissionManager.can(widget.role, Permission.updateTask)) ...[
+            if (PermissionManager.can(widget.role, Permission.updateTask)) ...[
               IconButton(
                 tooltip: 'Edit task',
                 onPressed: () {

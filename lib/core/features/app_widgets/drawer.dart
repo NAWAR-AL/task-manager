@@ -59,7 +59,7 @@ class DrawerHome extends StatelessWidget {
               ontap: () {
                 navigateToScreen(
                   context,
-                  TaskBottomBar(role: role, initialIndex: 1),
+                  TaskBottomBar(role: role, initialIndex: 2),
                 );
               },
             ),
@@ -82,7 +82,7 @@ class DrawerHome extends StatelessWidget {
               ontap: () {
                 navigateToScreen(
                   context,
-                  TaskBottomBar(role: role, initialIndex: 3),
+                  TaskBottomBar(role: role, initialIndex: 4),
                 );
               },
             ),

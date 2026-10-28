@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:task_manager/core/di/injection_container.dart';
 import 'package:task_manager/core/features/app_widgets/app_widgets.dart';
 import 'package:task_manager/core/features/app_widgets/colors.dart';
 import 'package:task_manager/core/features/project_management/domain/entities/project.dart';
@@ -173,7 +174,10 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (_) => UpdateProjectPage(project: project),
+                          builder: (_) => BlocProvider(
+                            create: (_) => sl<ProjectCubit>(),
+                            child: UpdateProjectPage(project: project),
+                          ),
                         ),
                       );
                     },

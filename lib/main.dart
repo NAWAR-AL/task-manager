@@ -13,7 +13,7 @@ import 'package:task_manager/core/features/dashboard/presentation/bloc/dashboard
 import 'package:task_manager/core/features/project_management/presentation/cubit/project_cubit.dart';
 import 'package:task_manager/core/features/tasks/presentation/task_bloc/task_bloc.dart';
 import 'package:task_manager/core/permission/role.dart';
-import 'core/di/injection_container.dart';
+import 'core/di/injection_container.dart'; 
 import 'core/network/app_navigator.dart';
 import 'core/features/auth/presentation/cubit/register_cubit.dart';
 import 'core/features/auth/presentation/cubit/login_cubit.dart';

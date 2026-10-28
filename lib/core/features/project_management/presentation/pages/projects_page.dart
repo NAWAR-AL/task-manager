@@ -49,7 +49,7 @@ class _ProjectsPageState extends State<ProjectsPage> {
   }
 
   Future<void> _openEdit(ProjectEntity project) async {
-    if (PermissionManager.can(widget.role, Permission.createProject)) {
+    if (!PermissionManager.can(widget.role, Permission.createProject)) {
       return;
     }
     await Navigator.push(

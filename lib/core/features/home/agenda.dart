@@ -296,15 +296,15 @@ class _AgendPageState extends State<AgendPage> {
                                                 Navigator.push(
                                                   context,
                                                   MaterialPageRoute(
-                                                    builder: (_) =>
-                                                        CreatetaskPage(
-                                                          role: widget.role,
-                                                        ),
+                                                    builder: (_) => TaskDetails(
+                                                      task: task,
+                                                      role: widget.role,
+                                                    ),
                                                   ),
                                                 );
                                               },
                                               icon: Icon(
-                                                Icons.add_task,
+                                                Icons.visibility_outlined,
                                                 color: ColorsApp.primary,
                                               ),
                                             ),

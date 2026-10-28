@@ -44,47 +44,54 @@ class TaskList extends StatelessWidget {
   }
 
   Widget _buildDismissible(BuildContext context, TaskEntity task) {
+    final canDelete = PermissionManager.can(role, Permission.createProject);
     return Dismissible(
       key: Key(task.id.toString()),
-      direction: DismissDirection.horizontal,
+      direction: canDelete
+          ? DismissDirection.horizontal
+          : DismissDirection.none,
       background: _deleteBackground(Alignment.centerLeft),
       secondaryBackground: _deleteBackground(Alignment.centerRight),
-      confirmDismiss: (_) async {
-        return await showDialog<bool>(
-              context: context,
-              builder: (dialogContext) => AlertDialog(
-                title: const Text('Delete task'),
-                content: Text(
-                  'Are you sure you want to delete "${task.title}"?',
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.of(dialogContext).pop(false),
-                    child: const Text('Cancel'),
-                  ),
-                  TextButton(
-                    onPressed: () => Navigator.of(dialogContext).pop(true),
-                    style: TextButton.styleFrom(
-                      foregroundColor: ColorsApp.danger,
+      confirmDismiss: canDelete
+          ? (_) async {
+              return await showDialog<bool>(
+                    context: context,
+                    builder: (dialogContext) => AlertDialog(
+                      title: const Text('Delete task'),
+                      content: Text(
+                        'Are you sure you want to delete "${task.title}"?',
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.of(dialogContext).pop(false),
+                          child: const Text('Cancel'),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.of(dialogContext).pop(true),
+                          style: TextButton.styleFrom(
+                            foregroundColor: ColorsApp.danger,
+                          ),
+                          child: const Text('Delete'),
+                        ),
+                      ],
                     ),
-                    child: const Text('Delete'),
+                  ) ??
+                  false;
+            }
+          : (_) async => false,
+      onDismissed: canDelete
+          ? (_) {
+              context.read<TaskBloc>().add(DeleteTaskEvent(task.id!));
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(
+                  SnackBar(
+                    content: Text('"${task.title}" deleted'),
+                    backgroundColor: ColorsApp.danger,
                   ),
-                ],
-              ),
-            ) ??
-            false;
-      },
-      onDismissed: (_) {
-        context.read<TaskBloc>().add(DeleteTaskEvent(task.id!));
-        ScaffoldMessenger.of(context)
-          ..hideCurrentSnackBar()
-          ..showSnackBar(
-            SnackBar(
-              content: Text('"${task.title}" deleted'),
-              backgroundColor: ColorsApp.danger,
-            ),
-          );
-      },
+                );
+            }
+          : null,
       child: _TaskCard(task: task, role: role),
     );
   }
@@ -118,11 +125,12 @@ class _TaskCard extends StatelessWidget {
     return AppCard(
       padding: EdgeInsets.zero,
       onTap: () {
-        if (!PermissionManager.can(role, Permission.createProject)) {
+        if (PermissionManager.can(role, Permission.createProject) ||
+            PermissionManager.can(role, Permission.readProject)) {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (_) => TaskDetails(task: task, role: UserRole.admin),
+              builder: (_) => TaskDetails(task: task, role: role),
             ),
           );
         }
@@ -174,9 +182,61 @@ class _TaskCard extends StatelessWidget {
                                 ),
                               );
                             },
-                            icon: Icon(
+                            icon: const Icon(
                               Icons.edit_outlined,
                               color: ColorsApp.primary,
+                            ),
+                          ),
+                        ],
+                        if (PermissionManager.can(
+                          role,
+                          Permission.createProject,
+                        )) ...[
+                          IconButton(
+                            onPressed: () async {
+                              final confirmed = await showDialog<bool>(
+                                    context: context,
+                                    builder: (dialogContext) => AlertDialog(
+                                      title: const Text('Delete task'),
+                                      content: Text(
+                                        'Are you sure you want to delete "${task.title}"?',
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () => Navigator.of(
+                                            dialogContext,
+                                          ).pop(false),
+                                          child: const Text('Cancel'),
+                                        ),
+                                        TextButton(
+                                          onPressed: () => Navigator.of(
+                                            dialogContext,
+                                          ).pop(true),
+                                          style: TextButton.styleFrom(
+                                            foregroundColor: ColorsApp.danger,
+                                          ),
+                                          child: const Text('Delete'),
+                                        ),
+                                      ],
+                                    ),
+                                  ) ??
+                                  false;
+                              if (!confirmed || !context.mounted) return;
+                              context.read<TaskBloc>().add(
+                                DeleteTaskEvent(task.id!),
+                              );
+                              ScaffoldMessenger.of(context)
+                                ..hideCurrentSnackBar()
+                                ..showSnackBar(
+                                  SnackBar(
+                                    content: Text('"${task.title}" deleted'),
+                                    backgroundColor: ColorsApp.danger,
+                                  ),
+                                );
+                            },
+                            icon: const Icon(
+                              Icons.delete_outline,
+                              color: ColorsApp.danger,
                             ),
                           ),
                         ],
