@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_manager/core/features/app_widgets/app_widgets.dart';
 import 'package:task_manager/core/features/app_widgets/colors.dart';
+import 'package:task_manager/core/features/app_widgets/drawer.dart';
 import 'package:task_manager/core/features/project_management/domain/entities/project.dart';
 import 'package:task_manager/core/features/project_management/presentation/cubit/project_cubit.dart';
 import 'package:task_manager/core/features/project_management/presentation/cubit/projects_state.dart';
@@ -98,113 +99,118 @@ class _TaskPageState extends State<TaskPage> {
           // if (filtedTasks.isEmpty) {
           //   return Center(child: Text('No data'));
           // }
-          return DefaultTabController(
-            length: 3,
-            child: Column(
-              children: [
-                // الهيدر
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  'Tasks',
-                                  style: TextStyle(
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.w700,
-                                    color: ColorsApp.textPrimary,
-                                  ),
-                                ),
-                                LogoutButton(),
-                              ],
-                            ),
-                            const SizedBox(height: 2),
-                            Text(
-                              '${tasks.length} task${tasks.length == 1 ? '' : 's'} in total',
-                              style: const TextStyle(
-                                fontSize: 13,
-                                color: ColorsApp.textSecondary,
-                              ),
-                            ),
-                          ],
+          return Scaffold(
+            drawer: DrawerHome(role: widget.role),
+            body: DefaultTabController(
+              length: 3,
+              child: Column(
+                children: [
+                  // الهيدر
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(12, 12, 20, 12),
+                    child: Row(
+                      children: [
+                        Builder(
+                          builder: (context) => IconButton(
+                            onPressed: () {
+                              Scaffold.of(context).openDrawer();
+                            },
+                            icon: const Icon(Icons.menu),
+                          ),
                         ),
-                      ),
-                      //مبدئي بس
-                      // OutlinedButton.icon(
-                      //   style: OutlinedButton.styleFrom(
-                      //     minimumSize: const Size(0, 42),
-                      //     padding: const EdgeInsets.symmetric(horizontal: 14),
-                      //     side: const BorderSide(color: ColorsApp.primary),
-                      //   ),
-                      //   onPressed: _openCreateTask,
-                      //   icon: const Icon(Icons.add_rounded, size: 18),
-                      //   label: const Text('New'),
-                      // ),
-                    ],
-                  ),
-                ),
-                BlocBuilder<ProjectCubit, ProjectsState>(
-                  builder: (context, projectState) {
-                    final projects = projectState is ProjectsLoaded
-                        ? projectState.projects
-                        : <ProjectEntity>[];
-                    return SearchWidget(
-                      projects: projects,
-                      onFilterChanged: (String? priority, int? projectId) {
-                        setState(() {
-                          selectedPriority = priority;
-                          selectedProjectId = projectId;
-                        });
-                      },
-                    );
-                  },
-                ),
-                // التابات
-                Container(
-                  decoration: const BoxDecoration(
-                    color: ColorsApp.surface,
-                    border: Border(
-                      bottom: BorderSide(color: ColorsApp.divider),
+                        const SizedBox(width: 4),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text(
+                                    'Tasks',
+                                    style: TextStyle(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.w700,
+                                      color: ColorsApp.textPrimary,
+                                    ),
+                                  ),
+                                  LogoutButton(),
+                                ],
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                '${tasks.length} task${tasks.length == 1 ? '' : 's'} in total',
+                                style: const TextStyle(
+                                  fontSize: 13,
+                                  color: ColorsApp.textSecondary,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  child: TabBar(
-                    isScrollable: true,
-                    tabAlignment: TabAlignment.start,
-                    dividerColor: Colors.transparent,
-                    tabs: [
-                      _tabWithCount('In Progress', inProgressTasks.length),
-                      _tabWithCount('Completed', completedTasks.length),
-                      _tabWithCount('Review', reviewTasks.length),
-                    ],
+                  BlocBuilder<ProjectCubit, ProjectsState>(
+                    builder: (context, projectState) {
+                      final projects = projectState is ProjectsLoaded
+                          ? projectState.projects
+                          : <ProjectEntity>[];
+                      return SearchWidget(
+                        projects: projects,
+                        onFilterChanged: (String? priority, int? projectId) {
+                          setState(() {
+                            selectedPriority = priority;
+                            selectedProjectId = projectId;
+                          });
+                        },
+                      );
+                    },
                   ),
-                ),
+                  // التابات
+                  Container(
+                    decoration: const BoxDecoration(
+                      color: ColorsApp.surface,
+                      border: Border(
+                        bottom: BorderSide(color: ColorsApp.divider),
+                      ),
+                    ),
+                    child: TabBar(
+                      isScrollable: true,
+                      tabAlignment: TabAlignment.start,
+                      dividerColor: Colors.transparent,
+                      tabs: [
+                        _tabWithCount('In Progress', inProgressTasks.length),
+                        _tabWithCount('Completed', completedTasks.length),
+                        _tabWithCount('Review', reviewTasks.length),
+                      ],
+                    ),
+                  ),
 
-                // المحتوى
-                Expanded(
-                  child: state is TaskLoading
-                      ? const LoadingView()
-                      : state is TaskError
-                      ? EmptyState(
-                          icon: Icons.cloud_off_outlined,
-                          title: 'Could not load tasks',
-                          subtitle: state.message,
-                        )
-                      : TabBarView(
-                          children: [
-                            TaskList(tasks: inProgressTasks, role: widget.role),
-                            TaskList(tasks: completedTasks, role: widget.role),
-                            TaskList(tasks: reviewTasks, role: widget.role),
-                          ],
-                        ),
-                ),
-              ],
+                  // المحتوى
+                  Expanded(
+                    child: state is TaskLoading
+                        ? const LoadingView()
+                        : state is TaskError
+                        ? EmptyState(
+                            icon: Icons.cloud_off_outlined,
+                            title: 'Could not load tasks',
+                            subtitle: state.message,
+                          )
+                        : TabBarView(
+                            children: [
+                              TaskList(tasks: inProgressTasks, role: widget.role),
+                              TaskList(
+                                tasks: completedTasks,
+                                role: widget.role,
+                              ),
+                              TaskList(tasks: reviewTasks, role: widget.role),
+                            ],
+                          ),
+                  ),
+                ],
+              ),
             ),
           );
         },
