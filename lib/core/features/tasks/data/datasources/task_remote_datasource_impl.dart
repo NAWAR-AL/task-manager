@@ -63,6 +63,21 @@ class TaskRemoteDatasourceImpl extends TaskRemoteDatasource {
         },
       ),
     );
+
+    // بعض السيرفرات ما بتقبل تغيير status ضمن تعديل المهمة الكامل
+    // فبنحدّثها مباشرةً بالـendpoint الخاص
+    try {
+      await apiClient.dio.post(
+        '/task/${task.id}/${task.status}',
+        options: Options(
+          headers: {
+            'Accept': 'application/json',
+            'X-HTTP-Method-Override': 'PUT',
+          },
+        ),
+      );
+    } catch (_) {}
+
     final responseData = response.data['data'] ?? response.data;
     return TaskModel.fromJson(Map<String, dynamic>.from(responseData));
   }

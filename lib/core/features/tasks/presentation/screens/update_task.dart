@@ -229,13 +229,17 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
   Widget build(BuildContext context) {
     return BlocListener<TaskBloc, TaskState>(
       listener: (context, state) {
-        if (state is TaskUpdated) {
-          _toast('Task updated successfully');
-          Navigator.pop(context);
-        }
         if (state is TaskError) {
+          if (!mounted) return;
           setState(() => _isSaving = false);
           _toast(state.message, danger: true);
+          return;
+        }
+        if (state is TaskLoaded && _isSaving) {
+          if (!mounted) return;
+          setState(() => _isSaving = false);
+          _toast('Task updated successfully');
+          Navigator.pop(context);
         }
       },
       child: Scaffold(

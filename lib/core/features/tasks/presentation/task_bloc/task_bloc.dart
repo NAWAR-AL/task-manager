@@ -53,10 +53,9 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
       }
     });
     on<UpdateTaskEvent>((event, emit) async {
-      emit(TaskLoading());
       try {
-        final task = await updatetaskUsecase(event.task);
-        emit(TaskUpdated(task));
+        await updatetaskUsecase(event.task);
+        add(GetTasks());
       } catch (e) {
         emit(TaskError(readableApiError(e)));
       }

@@ -127,15 +127,67 @@ class _ProjectsPageState extends State<ProjectsPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    project.name,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w700,
-                      color: ColorsApp.textPrimary,
-                    ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          project.name,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                            color: ColorsApp.textPrimary,
+                          ),
+                        ),
+                      ),
+                      if (PermissionManager.can(
+                        widget.role,
+                        Permission.createProject,
+                      )) ...[
+                        IconButton(
+                          tooltip: 'Edit project',
+                          onPressed: () {
+                            _openEdit(project);
+                          },
+                          icon: const Icon(Icons.edit_outlined),
+                          style: IconButton.styleFrom(
+                            backgroundColor: ColorsApp.primarySoft,
+                            foregroundColor: ColorsApp.primary,
+                            padding: EdgeInsets.zero,
+                            minimumSize: const Size(32, 32),
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        IconButton(
+                          tooltip: 'Delete project',
+                          onPressed: () async {
+                            final confirmed = await _confirmDelete(project);
+                            if (!confirmed || !context.mounted) return;
+                            context.read<ProjectCubit>().deleteProject(
+                              project.id!,
+                            );
+                            ScaffoldMessenger.of(context)
+                              ..hideCurrentSnackBar()
+                              ..showSnackBar(
+                                SnackBar(
+                                  content: Text('"${project.name}" deleted'),
+                                  backgroundColor: ColorsApp.danger,
+                                ),
+                              );
+                          },
+                          icon: const Icon(Icons.delete_outline),
+                          style: IconButton.styleFrom(
+                            backgroundColor: const Color(0xFFFFF1F1),
+                            foregroundColor: ColorsApp.danger,
+                            padding: EdgeInsets.zero,
+                            minimumSize: const Size(32, 32),
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                        ),
+                      ],
+                    ],
                   ),
                   const SizedBox(height: 6),
                   Text(
@@ -155,22 +207,6 @@ class _ProjectsPageState extends State<ProjectsPage> {
                 ],
               ),
             ),
-            if (PermissionManager.can(
-              widget.role,
-              Permission.createProject,
-            )) ...[
-              IconButton(
-                tooltip: 'Edit project',
-                onPressed: () {
-                  _openEdit(project);
-                },
-                icon: const Icon(Icons.edit_outlined),
-                style: IconButton.styleFrom(
-                  backgroundColor: ColorsApp.primarySoft,
-                  foregroundColor: ColorsApp.primary,
-                ),
-              ),
-            ],
           ],
         ),
       ),
