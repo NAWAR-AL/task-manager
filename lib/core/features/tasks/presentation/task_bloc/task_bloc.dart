@@ -55,7 +55,16 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     on<UpdateTaskEvent>((event, emit) async {
       try {
         await updatetaskUsecase(event.task);
-        add(GetTasks());
+        if (state is TaskLoaded) {
+          final currentTasks = (state as TaskLoaded).tasks;
+          final updatedTasks = currentTasks.map((task) {
+            if (task.id == event.task.id) {
+              return event.task;
+            }
+            return task;
+          }).toList();
+          emit(TaskLoaded(updatedTasks));
+        }
       } catch (e) {
         emit(TaskError(readableApiError(e)));
       }

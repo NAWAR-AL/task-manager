@@ -86,6 +86,9 @@ class _TaskPageState extends State<TaskPage> {
                 selectedPriority == null || task.priority == selectedPriority;
             return matchesPriority && matchedProject;
           }).toList();
+          final todoTasks = filtedTasks
+              .where((task) => task.status == "todo")
+              .toList();
           final inProgressTasks = filtedTasks
               .where((task) => task.status == "in_progress")
               .toList();
@@ -102,7 +105,7 @@ class _TaskPageState extends State<TaskPage> {
           return Scaffold(
             drawer: DrawerHome(role: widget.role),
             body: DefaultTabController(
-              length: 3,
+              length: 4,
               child: Column(
                 children: [
                   // الهيدر
@@ -181,6 +184,7 @@ class _TaskPageState extends State<TaskPage> {
                       tabAlignment: TabAlignment.start,
                       dividerColor: Colors.transparent,
                       tabs: [
+                        _tabWithCount('todo', todoTasks.length),
                         _tabWithCount('In Progress', inProgressTasks.length),
                         _tabWithCount('Completed', completedTasks.length),
                         _tabWithCount('Review', reviewTasks.length),
@@ -200,7 +204,11 @@ class _TaskPageState extends State<TaskPage> {
                           )
                         : TabBarView(
                             children: [
-                              TaskList(tasks: inProgressTasks, role: widget.role),
+                              TaskList(tasks: todoTasks, role: widget.role),
+                              TaskList(
+                                tasks: inProgressTasks,
+                                role: widget.role,
+                              ),
                               TaskList(
                                 tasks: completedTasks,
                                 role: widget.role,

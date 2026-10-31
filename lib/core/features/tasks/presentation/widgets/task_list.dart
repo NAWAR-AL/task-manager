@@ -63,11 +63,13 @@ class TaskList extends StatelessWidget {
                       ),
                       actions: [
                         TextButton(
-                          onPressed: () => Navigator.of(dialogContext).pop(false),
+                          onPressed: () =>
+                              Navigator.of(dialogContext).pop(false),
                           child: const Text('Cancel'),
                         ),
                         TextButton(
-                          onPressed: () => Navigator.of(dialogContext).pop(true),
+                          onPressed: () =>
+                              Navigator.of(dialogContext).pop(true),
                           style: TextButton.styleFrom(
                             foregroundColor: ColorsApp.danger,
                           ),
@@ -176,14 +178,18 @@ class _TaskCard extends StatelessWidget {
                               Permission.updateTask,
                             ))
                               IconButton(
-                                onPressed: () {
-                                  Navigator.push(
+                                onPressed: () async {
+                                  final updated = await Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
                                           UpdateTaskPage(updatedTask: task),
                                     ),
                                   );
+                                  if (updated == true) {
+                                    context.read<TaskBloc>().add(GetTasks());
+                                  }
+                                 
                                 },
                                 icon: const Icon(
                                   Icons.edit_outlined,
@@ -199,7 +205,8 @@ class _TaskCard extends StatelessWidget {
                               const SizedBox(width: 8),
                               IconButton(
                                 onPressed: () async {
-                                  final confirmed = await showDialog<bool>(
+                                  final confirmed =
+                                      await showDialog<bool>(
                                         context: context,
                                         builder: (dialogContext) => AlertDialog(
                                           title: const Text('Delete task'),
@@ -218,7 +225,8 @@ class _TaskCard extends StatelessWidget {
                                                 dialogContext,
                                               ).pop(true),
                                               style: TextButton.styleFrom(
-                                                foregroundColor: ColorsApp.danger,
+                                                foregroundColor:
+                                                    ColorsApp.danger,
                                               ),
                                               child: const Text('Delete'),
                                             ),

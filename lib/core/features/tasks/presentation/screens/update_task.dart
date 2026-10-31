@@ -62,6 +62,7 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
 
     context.read<ProjectCubit>().fetchProjects();
     context.read<ProfileCubit>().getDashboardusers();
+    
   }
 
   @override
@@ -111,6 +112,8 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
         ),
       ),
     );
+    print('done update from ui');
+    print(selectedStatus);
   }
 
   Widget _buildProjectDropdown() {
@@ -237,7 +240,7 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
         }
         if (state is TaskLoaded && _isSaving) {
           if (!mounted) return;
-          setState(() => _isSaving = false);
+          setState(() => _isSaving = true);
           _toast('Task updated successfully');
           Navigator.pop(context);
         }
