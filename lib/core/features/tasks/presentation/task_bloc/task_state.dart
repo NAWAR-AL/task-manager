@@ -15,6 +15,12 @@ class TaskUpdated extends TaskState {
   TaskUpdated(this.task);
 }
 
+class TaskStatusUpdated extends TaskState {
+  final int id;
+  final String status;
+  TaskStatusUpdated({required this.id, required this.status});
+}
+
 class TaskLoading extends TaskState {}
 
 class TaskLoaded extends TaskState {

@@ -29,6 +29,7 @@ Future<void> initTask() async {
       getTasksUsecase: sl(),
       deletetaskUsecase: sl(),
       updatetaskUsecase: sl(),
+      updatestatusUsecase: sl(),
     ),
   );
 }

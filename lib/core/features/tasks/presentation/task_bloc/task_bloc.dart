@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:task_manager/core/features/tasks/domain/usercases/updateStatus_usecase.dart';
 import 'package:task_manager/core/network/api_error.dart';
 import 'package:task_manager/core/features/tasks/domain/entities/task_entity.dart';
 import 'package:task_manager/core/features/tasks/domain/usercases/create_task_usecase.dart';
@@ -15,11 +16,13 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
   final CreatetaskUsecase createtaskUsecase;
   final UpdatetaskUsecase updatetaskUsecase;
   final DeletetaskUsecase deletetaskUsecase;
+  final UpdatestatusUsecase updatestatusUsecase;
   TaskBloc({
     required this.createtaskUsecase,
     required this.getTasksUsecase,
     required this.deletetaskUsecase,
     required this.updatetaskUsecase,
+    required this.updatestatusUsecase,
   }) : super(TaskInitial()) {
     on<GetTasks>((event, emit) async {
       emit(TaskLoading());
@@ -40,31 +43,43 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
       }
     });
     on<DeleteTaskEvent>((event, emit) async {
-      print('delete task event for is ${event.id}');
       // emit(TaskLoading());
       try {
         await deletetaskUsecase(event.id);
-        // print('Task deleted from server');
+
         add(GetTasks());
-        // emit(TaskDeleted());
       } catch (e) {
-        print('erroe in delete bloc :$e');
         emit(TaskError(readableApiError(e)));
       }
     });
+
     on<UpdateTaskEvent>((event, emit) async {
       try {
+        // 1. تحديث البيانات العامة للمهمة
         await updatetaskUsecase(event.task);
-        if (state is TaskLoaded) {
-          final currentTasks = (state as TaskLoaded).tasks;
-          final updatedTasks = currentTasks.map((task) {
-            if (task.id == event.task.id) {
-              return event.task;
-            }
-            return task;
-          }).toList();
-          emit(TaskLoaded(updatedTasks));
-        }
+
+        await updatestatusUsecase(event.task);
+
+        emit(TaskUpdated(event.task));
+        add(GetTasks()); // إعادة جلب المهام لتحديث القائمة فوراً
+      } catch (e) {
+        emit(TaskError(readableApiError(e)));
+      }
+    });
+    on<UpdateTaskStatusEvent>((event, emit) async {
+      try {
+        await updatestatusUsecase(
+          TaskEntity(
+            id: event.id,
+            title: '',
+            description: 'description',
+            project_id: 0,
+            due_date: DateTime.now(),
+            priority: '',
+            status: event.status,
+          ),
+        );
+        add(GetTasks());
       } catch (e) {
         emit(TaskError(readableApiError(e)));
       }

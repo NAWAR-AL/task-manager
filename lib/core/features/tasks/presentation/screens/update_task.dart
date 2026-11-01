@@ -62,7 +62,6 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
 
     context.read<ProjectCubit>().fetchProjects();
     context.read<ProfileCubit>().getDashboardusers();
-    
   }
 
   @override
@@ -108,12 +107,12 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
           assigned_users: selectedDeveloperIds,
           due_date: selectedDueDate!,
           priority: selectedPriority ?? 'low',
-          status: selectedStatus ?? 'todo',
+          status: selectedStatus ?? widget.updatedTask.status,
         ),
       ),
     );
-    print('done update from ui');
-    print(selectedStatus);
+
+    print('selected status$selectedStatus');
   }
 
   Widget _buildProjectDropdown() {
@@ -337,8 +336,10 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
                         ),
                         DropdownMenuItem(value: 'done', child: Text('Done')),
                       ],
-                      onChanged: (value) =>
-                          setState(() => selectedStatus = value),
+                      onChanged: (value) {
+                        setState(() => selectedStatus = value);
+                          
+                      },
                     ),
                     const SizedBox(height: 16),
                     AppDateField(
