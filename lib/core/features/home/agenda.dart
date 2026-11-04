@@ -44,6 +44,8 @@ class _AgendPageState extends State<AgendPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
     final List<DateTime> monthDays = List.generate(
       7,
       (index) => DateTime.now().add(Duration(days: index)),
@@ -60,7 +62,7 @@ class _AgendPageState extends State<AgendPage> {
           title: Text(
             'Agenda ',
             style: TextStyle(
-              fontSize: 22,
+              fontSize: isLandscape ? 18 : 22,
               fontWeight: FontWeight.w700,
               color: ColorsApp.textPrimary,
             ),
@@ -71,31 +73,38 @@ class _AgendPageState extends State<AgendPage> {
         backgroundColor: const Color(0xFFF8F9FA),
         body: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 20.0,
-              vertical: 10.0,
+            padding: EdgeInsets.symmetric(
+              horizontal: isLandscape ? 10.0 : 20.0,
+              vertical: isLandscape ? 2.0 : 10.0,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Image.asset('assets/images/desgin.png'),
-                const Text(
-                  'Welcome to Orbit Task Management App ',
-                  softWrap: true,
-                  style: TextStyle(fontSize: 16, color: Colors.black),
-                ),
-
-                const SizedBox(height: 4),
+                if (isLandscape)
+                  SizedBox(
+                    height: 40,
+                    child: Image.asset('assets/images/desgin.png'),
+                  )
+                else ...[
+                  Image.asset('assets/images/desgin.png'),
+                  const Text(
+                    'Welcome to Orbit Task Management App ',
+                    softWrap: true,
+                    style: TextStyle(fontSize: 16, color: Colors.black),
+                  ),
+                  const SizedBox(height: 4),
+                ],
+                SizedBox(height: isLandscape ? 2 : 4),
                 Text(
                   DateFormat('EEEE, MMMM d, yyyy').format(selectedDate),
                   style: TextStyle(
-                    fontSize: 14,
+                    fontSize: isLandscape ? 10 : 14,
                     color: ColorsApp.textSecondary,
                   ),
                 ),
-                const SizedBox(height: 30),
+                SizedBox(height: isLandscape ? 4 : 30),
                 SizedBox(
-                  height: 80,
+                  height: isLandscape ? 48 : 80,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: monthDays.length,
@@ -113,13 +122,13 @@ class _AgendPageState extends State<AgendPage> {
                           });
                         },
                         child: Container(
-                          width: 60,
-                          margin: const EdgeInsets.only(right: 12),
+                          width: isLandscape ? 42 : 60,
+                          margin: const EdgeInsets.only(right: 6),
                           decoration: BoxDecoration(
                             color: isSelected
                                 ? ColorsApp.primary
                                 : ColorsApp.surface,
-                            borderRadius: BorderRadius.circular(16),
+                            borderRadius: BorderRadius.circular(10),
                             border: Border.all(
                               color: isSelected
                                   ? ColorsApp.primary
@@ -136,18 +145,18 @@ class _AgendPageState extends State<AgendPage> {
                                   color: isSelected
                                       ? Colors.white70
                                       : ColorsApp.textSecondary,
-                                  fontSize: 12,
+                                  fontSize: isLandscape ? 8 : 12,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
-                              const SizedBox(height: 6),
+                              SizedBox(height: isLandscape ? 0 : 6),
                               Text(
                                 day.day.toString(),
                                 style: TextStyle(
                                   color: isSelected
                                       ? Colors.white
                                       : ColorsApp.textPrimary,
-                                  fontSize: 18,
+                                  fontSize: isLandscape ? 12 : 18,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -159,7 +168,7 @@ class _AgendPageState extends State<AgendPage> {
                   ),
                 ),
 
-                const SizedBox(height: 20),
+                SizedBox(height: isLandscape ? 4 : 20),
 
                 Expanded(
                   child: BlocBuilder<TaskBloc, TaskState>(
@@ -183,46 +192,49 @@ class _AgendPageState extends State<AgendPage> {
 
                         if (filteredTasks.isEmpty) {
                           return Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.event_available,
-                                  size: 50,
-                                  color: ColorsApp.textSecondary,
-                                ),
-                                SizedBox(height: 10),
-                                Text(
-                                  'No tasks for this day',
-                                  style: TextStyle(
+                            child: SingleChildScrollView(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.event_available,
+                                    size: isLandscape ? 32 : 50,
                                     color: ColorsApp.textSecondary,
-                                    fontSize: 14,
                                   ),
-                                ),
-
-                                if (PermissionManager.can(
-                                  widget.role,
-                                  Permission.createProject,
-                                )) ...[
-                                  TextButton(
-                                    onPressed: () {
-                                      openCreateTask();
-                                    },
-                                    child: Text(
-                                      " Add New Task ",
-                                      style: TextStyle(
-                                        color: ColorsApp.primary,
-                                        fontSize: 15,
-                                      ),
+                                  SizedBox(height: isLandscape ? 4 : 10),
+                                  Text(
+                                    'No tasks for this day',
+                                    style: TextStyle(
+                                      color: ColorsApp.textSecondary,
+                                      fontSize: isLandscape ? 11 : 14,
                                     ),
                                   ),
+
+                                  if (PermissionManager.can(
+                                    widget.role,
+                                    Permission.createProject,
+                                  )) ...[
+                                    TextButton(
+                                      onPressed: () {
+                                        openCreateTask();
+                                      },
+                                      child: Text(
+                                        " Add New Task ",
+                                        style: TextStyle(
+                                          color: ColorsApp.primary,
+                                          fontSize: isLandscape ? 12 : 15,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ],
-                              ],
+                              ),
                             ),
                           );
                         }
 
                         return ListView.builder(
+                          padding: EdgeInsets.zero,
                           itemCount: filteredTasks.length,
                           itemBuilder: (context, index) {
                             final task = filteredTasks[index];
@@ -247,51 +259,58 @@ class _AgendPageState extends State<AgendPage> {
                                     );
                                   },
                                   child: Container(
-                                    margin: const EdgeInsets.only(bottom: 12),
-                                    padding: const EdgeInsets.all(16),
+                                    margin: const EdgeInsets.only(bottom: 8),
+                                    padding: EdgeInsets.all(isLandscape ? 8 : 16),
                                     decoration: BoxDecoration(
                                       color: cardColor,
-                                      borderRadius: BorderRadius.circular(20),
+                                      borderRadius: BorderRadius.circular(14),
                                     ),
                                     child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              'Task Title: ${task.title}',
-                                              style: const TextStyle(
-                                                color: ColorsApp.textPrimary,
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold,
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                'Task Title: ${task.title}',
+                                                maxLines: 2,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                  color: ColorsApp.textPrimary,
+                                                  fontSize: isLandscape ? 13 : 16,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                               ),
-                                            ),
 
-                                            const SizedBox(height: 6),
-                                            Text(
-                                              'Status: ${task.status}',
-                                              style: const TextStyle(
-                                                color: ColorsApp.textSecondary,
-                                                fontSize: 13,
+                                              SizedBox(height: isLandscape ? 2 : 6),
+                                              Text(
+                                                'Status: ${task.status}',
+                                                style: TextStyle(
+                                                  color: ColorsApp.textSecondary,
+                                                  fontSize: isLandscape ? 10 : 13,
+                                                ),
                                               ),
-                                            ),
-                                            SizedBox(height: 6),
-                                            Text(
-                                              'Priority: ${task.priority}',
-                                              style: const TextStyle(
-                                                color: ColorsApp.textSecondary,
-                                                fontSize: 13,
+                                              SizedBox(height: isLandscape ? 1 : 6),
+                                              Text(
+                                                'Priority: ${task.priority}',
+                                                style: TextStyle(
+                                                  color: ColorsApp.textSecondary,
+                                                  fontSize: isLandscape ? 10 : 13,
+                                                ),
                                               ),
-                                            ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
 
                                         Column(
+                                          mainAxisSize: MainAxisSize.min,
                                           children: [
                                             IconButton(
+                                              padding: EdgeInsets.zero,
+                                              constraints: const BoxConstraints(),
                                               onPressed: () {
                                                 Navigator.push(
                                                   context,
@@ -306,9 +325,13 @@ class _AgendPageState extends State<AgendPage> {
                                               icon: Icon(
                                                 Icons.visibility_outlined,
                                                 color: ColorsApp.primary,
+                                                size: isLandscape ? 18 : 24,
                                               ),
                                             ),
+                                            SizedBox(height: isLandscape ? 2 : 6),
                                             IconButton(
+                                              padding: EdgeInsets.zero,
+                                              constraints: const BoxConstraints(),
                                               onPressed: () {
                                                 _showDeleteConfirmationDialog(
                                                   context,
@@ -319,7 +342,7 @@ class _AgendPageState extends State<AgendPage> {
                                               icon: Icon(
                                                 Icons.delete,
                                                 color: Colors.red,
-                                                size: 16,
+                                                size: isLandscape ? 14 : 18,
                                               ),
                                             ),
                                           ],

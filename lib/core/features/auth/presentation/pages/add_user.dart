@@ -8,7 +8,7 @@ import 'package:task_manager/core/features/auth/presentation/cubit/profile_cubit
 import 'package:task_manager/core/features/auth/presentation/cubit/profile_state.dart';
 import 'package:task_manager/core/features/auth/presentation/cubit/register_cubit.dart';
 import 'package:task_manager/core/features/auth/presentation/cubit/register_state.dart';
-import 'package:task_manager/core/features/auth/presentation/pages/user_profile_page.dart';
+import 'package:task_manager/core/features/app_widgets/navigation_bar.dart';
 import 'package:task_manager/core/permission/role.dart';
 
 class AddUser extends StatefulWidget {
@@ -107,9 +107,12 @@ class _AddUserState extends State<AddUser> {
     }
 
     if (!mounted) return;
-    Navigator.pushReplacement(
+    Navigator.pushAndRemoveUntil(
       context,
-      MaterialPageRoute(builder: (_) => UserProfilePage(role: UserRole.admin)),
+      MaterialPageRoute(
+        builder: (_) => const TaskBottomBar(role: UserRole.admin, initialIndex: 4),
+      ),
+      (route) => false,
     );
 
     messenger
