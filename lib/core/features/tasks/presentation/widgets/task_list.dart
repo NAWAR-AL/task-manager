@@ -173,31 +173,32 @@ class _TaskCard extends StatelessWidget {
                         Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            if (PermissionManager.can(
-                              role,
-                              Permission.updateTask,
-                            ))
-                              IconButton(
-                                onPressed: () async {
-                                  final updated = await Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          UpdateTaskPage(updatedTask: task),
+                            // if (PermissionManager.can(
+                            //   role,
+                            //   Permission.updateTask,
+                            // ))
+                            IconButton(
+                              onPressed: () async {
+                                final updated = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => UpdateTaskPage(
+                                      updatedTask: task,
+                                      role: role,
                                     ),
-                                  );
-                                  if (updated == true) {
-                                    context.read<TaskBloc>().add(GetTasks());
-                                  }
-                                 
-                                },
-                                icon: const Icon(
-                                  Icons.edit_outlined,
-                                  color: ColorsApp.primary,
-                                ),
-                                padding: EdgeInsets.zero,
-                                constraints: const BoxConstraints(),
+                                  ),
+                                );
+                                if (updated == true) {
+                                  context.read<TaskBloc>().add(GetTasks());
+                                }
+                              },
+                              icon: const Icon(
+                                Icons.edit_outlined,
+                                color: ColorsApp.primary,
                               ),
+                              padding: EdgeInsets.zero,
+                              constraints: const BoxConstraints(),
+                            ),
                             if (PermissionManager.can(
                               role,
                               Permission.createProject,

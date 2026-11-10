@@ -229,21 +229,7 @@ class _ProjectsPageState extends State<ProjectsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions: [
-          CircleAvatar(
-            radius: 22,
-            backgroundColor: Color(0xffE8D9FF),
-            child: Text(
-              widget.role.name[0].toUpperCase(),
-              style: TextStyle(
-                fontSize: 19,
-                fontWeight: FontWeight.bold,
-                color: Color(0xff5B3A8C),
-              ),
-            ),
-          ),
-          LogoutButton(),
-        ],
+        actions: [UserName(isAvater: true), LogoutButton()],
         title: const Text('Projects'),
         // leading: IconButton(
         //   icon: const Icon(Icons.arrow_back_rounded),

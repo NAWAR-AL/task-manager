@@ -170,7 +170,7 @@ class _MyProfileState extends State<MyProfile> {
           icon: const Icon(Icons.arrow_back_rounded),
           onPressed: () => Navigator.pop(context),
         ),
-        actions: [LogoutButton()],
+        actions: [UserName(isAvater: true), LogoutButton()],
       ),
       body: BlocBuilder<ProfileCubit, ProfileState>(
         builder: (context, state) {

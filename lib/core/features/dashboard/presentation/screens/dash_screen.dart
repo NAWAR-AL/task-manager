@@ -11,6 +11,7 @@ import 'package:task_manager/core/permission/role.dart';
 
 class DashScreen extends StatefulWidget {
   final UserRole role;
+
   DashScreen({super.key, required this.role});
 
   @override
@@ -23,7 +24,7 @@ class _DashScreenState extends State<DashScreen> {
     super.initState();
 
     context.read<ProfileCubit>().getDashboardusers();
-
+    context.read<ProfileCubit>().fetchProfile();
     context.read<DashboardBloc>().add(GetStatistics());
   }
 
@@ -32,21 +33,7 @@ class _DashScreenState extends State<DashScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Dashboard '),
-        actions: [
-          CircleAvatar(
-            radius: 22,
-            backgroundColor: Color(0xffE8D9FF),
-            child: Text(
-              widget.role.name[0].toUpperCase(),
-              style: TextStyle(
-                fontSize: 19,
-                fontWeight: FontWeight.bold,
-                color: Color(0xff5B3A8C),
-              ),
-            ),
-          ),
-          LogoutButton(),
-        ],
+        actions: [UserName(isAvater: true), LogoutButton()],
       ),
       drawer: DrawerHome(role: widget.role),
       backgroundColor: Color(0xffF7FAFD),
@@ -114,15 +101,7 @@ class _DashScreenState extends State<DashScreen> {
           "Welcome back,",
           style: TextStyle(fontSize: 21, color: Color(0xff58708D)),
         ),
-
-        Text(
-          "${widget.role.name} 👋",
-          style: TextStyle(
-            fontSize: 32,
-            fontWeight: FontWeight.bold,
-            color: Color(0xff102A43),
-          ),
-        ),
+        UserName(),
 
         Gap(5),
 
@@ -578,7 +557,7 @@ class _DashScreenState extends State<DashScreen> {
         borderRadius: BorderRadius.circular(22),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(.04),
+            color: Colors.black.withValues(alpha: .04),
             blurRadius: 15,
             offset: Offset(0, 5),
           ),

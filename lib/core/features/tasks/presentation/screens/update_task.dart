@@ -9,14 +9,17 @@ import 'package:task_manager/core/features/project_management/presentation/cubit
 import 'package:task_manager/core/features/project_management/presentation/cubit/projects_state.dart';
 import 'package:task_manager/core/features/tasks/domain/entities/task_entity.dart';
 import 'package:task_manager/core/features/tasks/presentation/task_bloc/task_bloc.dart';
+import 'package:task_manager/core/permission/permission.dart';
+import 'package:task_manager/core/permission/permission_manger.dart';
+import 'package:task_manager/core/permission/role.dart';
 
 class UpdateTaskPage extends StatefulWidget {
-  // final UserRole role;
+  final UserRole role;
   final TaskEntity updatedTask;
   const UpdateTaskPage({
     super.key,
     required this.updatedTask,
-    // required this.role,
+    required this.role,
   });
 
   @override
@@ -27,7 +30,8 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
   final _formKey = GlobalKey<FormState>();
   final taskTitleController = TextEditingController();
   final descriptionController = TextEditingController();
-
+  bool get canUpdate =>
+      PermissionManager.can(widget.role, Permission.updateTask);
   String? selectedPriority;
   DateTime? selectedDueDate;
   String? selectedStatus;
@@ -36,6 +40,7 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
   bool _isSaving = false;
 
   Future<void> pickDueDate() async {
+    if (!canUpdate) return;
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: selectedDueDate ?? DateTime.now(),
@@ -83,6 +88,17 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
   }
 
   void _submit() {
+    FocusScope.of(context).unfocus();
+    if (!canUpdate) {
+      setState(() => _isSaving = true);
+      context.read<TaskBloc>().add(
+        UpdateTaskStatusEvent(
+          widget.updatedTask.id!,
+          selectedStatus ?? widget.updatedTask.status,
+        ),
+      );
+      return;
+    }
     if (!(_formKey.currentState?.validate() ?? false)) return;
 
     if (selectedProjectId == null) {
@@ -96,23 +112,27 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
 
     FocusScope.of(context).unfocus();
     setState(() => _isSaving = true);
-
-    context.read<TaskBloc>().add(
-      UpdateTaskEvent(
-        TaskEntity(
-          id: widget.updatedTask.id,
-          title: taskTitleController.text.trim(),
-          description: descriptionController.text.trim(),
-          project_id: selectedProjectId!,
-          assigned_users: selectedDeveloperIds,
-          due_date: selectedDueDate!,
-          priority: selectedPriority ?? 'low',
-          status: selectedStatus ?? widget.updatedTask.status,
+    final finalStatus = selectedStatus ?? widget.updatedTask.status;
+    if (canUpdate) {
+      context.read<TaskBloc>().add(
+        UpdateTaskEvent(
+          TaskEntity(
+            id: widget.updatedTask.id,
+            title: taskTitleController.text.trim(),
+            description: descriptionController.text.trim(),
+            project_id: selectedProjectId!,
+            assigned_users: selectedDeveloperIds,
+            due_date: selectedDueDate!,
+            priority: selectedPriority ?? 'low',
+            status: finalStatus,
+          ),
         ),
-      ),
-    );
-
-    print('selected status$selectedStatus');
+      );
+    } else {
+      context.read<TaskBloc>().add(
+        UpdateTaskStatusEvent(widget.updatedTask.id!, finalStatus),
+      );
+    }
   }
 
   Widget _buildProjectDropdown() {
@@ -163,7 +183,9 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
 
           return Column(
             children: developers.map((dev) {
+              // if (PermissionManager.can(widget.role, Permission.readProject))
               final selected = selectedDeveloperIds.contains(dev.id);
+
               return Container(
                 margin: const EdgeInsets.only(bottom: 8),
                 padding: const EdgeInsets.symmetric(
@@ -251,7 +273,7 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
             icon: const Icon(Icons.arrow_back_rounded),
             onPressed: () => Navigator.pop(context),
           ),
-          actions: [LogoutButton()],
+          actions: [UserName(isAvater: true), LogoutButton()],
         ),
         // drawer: DrawerHome(role: widget.role),
         body: Form(
@@ -260,34 +282,37 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
             padding: const EdgeInsets.fromLTRB(20, 16, 20, 28),
             children: [
               AppCard(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const AppSectionTitle(
-                      text: 'Task info',
-                      icon: Icons.task_alt_outlined,
-                    ),
-                    const SizedBox(height: 18),
-                    AppTextField(
-                      controller: taskTitleController,
-                      label: 'Task title',
-                      prefixIcon: Icons.title,
-                      textInputAction: TextInputAction.next,
-                      validator: (value) {
-                        if (value == null || value.trim().isEmpty) {
-                          return 'Please enter a task title';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    AppTextField(
-                      controller: descriptionController,
-                      label: 'Description',
-                      prefixIcon: Icons.notes_outlined,
-                      maxLines: 4,
-                    ),
-                  ],
+                child: AbsorbPointer(
+                  absorbing: !canUpdate,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const AppSectionTitle(
+                        text: 'Task info',
+                        icon: Icons.task_alt_outlined,
+                      ),
+                      const SizedBox(height: 18),
+                      AppTextField(
+                        controller: taskTitleController,
+                        label: 'Task title',
+                        prefixIcon: Icons.title,
+                        textInputAction: TextInputAction.next,
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return 'Please enter a task title';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      AppTextField(
+                        controller: descriptionController,
+                        label: 'Description',
+                        prefixIcon: Icons.notes_outlined,
+                        maxLines: 4,
+                      ),
+                    ],
+                  ),
                 ),
               ),
               const SizedBox(height: 16),
@@ -300,23 +325,29 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
                       icon: Icons.event_note_outlined,
                     ),
                     const SizedBox(height: 18),
-                    _buildProjectDropdown(),
+                    AbsorbPointer(
+                      absorbing: !canUpdate,
+                      child: _buildProjectDropdown(),
+                    ),
                     const SizedBox(height: 16),
-                    AppDropdown<String>(
-                      label: 'Priority',
-                      prefixIcon: Icons.flag_outlined,
-                      value: selectedPriority,
-                      hint: 'Select priority',
-                      items: const [
-                        DropdownMenuItem(value: 'low', child: Text('Low')),
-                        DropdownMenuItem(
-                          value: 'medium',
-                          child: Text('Medium'),
-                        ),
-                        DropdownMenuItem(value: 'high', child: Text('High')),
-                      ],
-                      onChanged: (value) =>
-                          setState(() => selectedPriority = value),
+                    AbsorbPointer(
+                      absorbing: !canUpdate,
+                      child: AppDropdown<String>(
+                        label: 'Priority',
+                        prefixIcon: Icons.flag_outlined,
+                        value: selectedPriority,
+                        hint: 'Select priority',
+                        items: const [
+                          DropdownMenuItem(value: 'low', child: Text('Low')),
+                          DropdownMenuItem(
+                            value: 'medium',
+                            child: Text('Medium'),
+                          ),
+                          DropdownMenuItem(value: 'high', child: Text('High')),
+                        ],
+                        onChanged: (value) =>
+                            setState(() => selectedPriority = value),
+                      ),
                     ),
                     const SizedBox(height: 16),
                     AppDropdown<String>(
@@ -338,32 +369,39 @@ class _UpdateTaskPageState extends State<UpdateTaskPage> {
                       ],
                       onChanged: (value) {
                         setState(() => selectedStatus = value);
-                          
                       },
                     ),
                     const SizedBox(height: 16),
-                    AppDateField(
-                      label: 'Due date',
-                      value: selectedDueDate == null
-                          ? null
-                          : DateFormat('dd MMM yyyy').format(selectedDueDate!),
-                      onTap: pickDueDate,
+                    AbsorbPointer(
+                      absorbing: !canUpdate,
+                      child: AppDateField(
+                        label: 'Due date',
+                        value: selectedDueDate == null
+                            ? null
+                            : DateFormat(
+                                'dd MMM yyyy',
+                              ).format(selectedDueDate!),
+                        onTap: pickDueDate,
+                      ),
                     ),
                   ],
                 ),
               ),
               const SizedBox(height: 16),
-              AppCard(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const AppSectionTitle(
-                      text: 'Assign developers',
-                      icon: Icons.group_outlined,
-                    ),
-                    const SizedBox(height: 14),
-                    _buildDevelopers(),
-                  ],
+              AbsorbPointer(
+                absorbing: !canUpdate,
+                child: AppCard(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const AppSectionTitle(
+                        text: 'Assign developers',
+                        icon: Icons.group_outlined,
+                      ),
+                      const SizedBox(height: 14),
+                      _buildDevelopers(),
+                    ],
+                  ),
                 ),
               ),
               const SizedBox(height: 24),

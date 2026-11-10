@@ -79,7 +79,7 @@ class _CreateProjectPageState extends State<CreateProjectPage> {
             icon: const Icon(Icons.arrow_back_rounded),
             onPressed: () => Navigator.pop(context),
           ),
-          actions: [LogoutButton()],
+          actions: [UserName(isAvater: true), LogoutButton()],
         ),
         drawer: DrawerHome(role: widget.role),
         body: Form(

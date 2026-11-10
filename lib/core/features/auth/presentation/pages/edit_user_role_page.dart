@@ -124,7 +124,7 @@ class _EditUserRolePageState extends State<EditUserRolePage> {
           icon: Icon(Icons.arrow_back_rounded),
           onPressed: () => Navigator.pop(context),
         ),
-        actions: [LogoutButton()],
+        actions: [UserName(isAvater: true), LogoutButton()],
       ),
       body: BlocConsumer<ProfileCubit, ProfileState>(
         listener: (context, state) {

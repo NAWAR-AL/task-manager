@@ -67,7 +67,7 @@ class _AgendPageState extends State<AgendPage> {
               color: ColorsApp.textPrimary,
             ),
           ),
-          actions: [LogoutButton()],
+          actions: [UserName(isAvater: true), LogoutButton()],
         ),
         drawer: DrawerHome(role: widget.role),
         backgroundColor: const Color(0xFFF8F9FA),
@@ -80,20 +80,38 @@ class _AgendPageState extends State<AgendPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (isLandscape)
-                  SizedBox(
-                    height: 40,
-                    child: Image.asset('assets/images/desgin.png'),
-                  )
-                else ...[
-                  Image.asset('assets/images/desgin.png'),
-                  const Text(
-                    'Welcome to Orbit Task Management App ',
-                    softWrap: true,
-                    style: TextStyle(fontSize: 16, color: Colors.black),
-                  ),
-                  const SizedBox(height: 4),
-                ],
+                // if (isLandscape)
+                //   SizedBox(
+                //     height: 40,
+                //     child: Image.asset('assets/images/desgin.png'),
+                //   )
+                // else ...[
+                //   Image.asset('assets/images/desgin.png'),
+                //   const Text(
+                //     'Welcome to Orbit Task Management App ',
+                //     softWrap: true,
+                //     style: TextStyle(fontSize: 16, color: Colors.black),
+                //   ),
+                //   const SizedBox(height: 4),
+                // ],
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    final imageHight = isLandscape
+                        ? (constraints.maxWidth * 0.7).clamp(28.0, 48.0)
+                        : 100.0;
+
+                    return Center(
+                      child: SizedBox(
+                        height: imageHight,
+                        width: double.infinity * 2,
+                        child: Image.asset(
+                          'assets/images/desgin.png',
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                    );
+                  },
+                ),
                 SizedBox(height: isLandscape ? 2 : 4),
                 Text(
                   DateFormat('EEEE, MMMM d, yyyy').format(selectedDate),
@@ -103,71 +121,151 @@ class _AgendPageState extends State<AgendPage> {
                   ),
                 ),
                 SizedBox(height: isLandscape ? 4 : 30),
-                SizedBox(
-                  height: isLandscape ? 48 : 80,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: monthDays.length,
-                    itemBuilder: (context, index) {
-                      final day = monthDays[index];
-                      final isSelected =
-                          day.year == selectedDate.year &&
-                          day.month == selectedDate.month &&
-                          day.day == selectedDate.day;
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    const itemCount = 7;
+                    const spacing = 6.0;
 
-                      return GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            selectedDate = day;
-                          });
-                        },
-                        child: Container(
-                          width: isLandscape ? 42 : 60,
-                          margin: const EdgeInsets.only(right: 6),
-                          decoration: BoxDecoration(
-                            color: isSelected
-                                ? ColorsApp.primary
-                                : ColorsApp.surface,
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(
-                              color: isSelected
-                                  ? ColorsApp.primary
-                                  : ColorsApp.divider,
-                              width: 1,
+                    final availableWidth = constraints.maxWidth;
+
+                    final dayWidth =
+                        (availableWidth - (spacing * (itemCount - 1))) /
+                        itemCount;
+
+                    final dayHeight = isLandscape ? 55.0 : 80.0;
+
+                    return SizedBox(
+                      height: dayHeight,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: monthDays.length,
+                        itemBuilder: (context, index) {
+                          final day = monthDays[index];
+
+                          final isSelected =
+                              day.year == selectedDate.year &&
+                              day.month == selectedDate.month &&
+                              day.day == selectedDate.day;
+
+                          return GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                selectedDate = day;
+                              });
+                            },
+                            child: Container(
+                              width: dayWidth,
+                              margin: EdgeInsets.only(
+                                right: index == itemCount - 1 ? 0 : spacing,
+                              ),
+                              decoration: BoxDecoration(
+                                color: isSelected
+                                    ? ColorsApp.primary
+                                    : ColorsApp.surface,
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                  color: isSelected
+                                      ? ColorsApp.primary
+                                      : ColorsApp.divider,
+                                ),
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    DateFormat('E').format(day),
+                                    style: TextStyle(
+                                      color: isSelected
+                                          ? Colors.white70
+                                          : ColorsApp.textSecondary,
+                                      fontSize: isLandscape ? 10 : 12,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  SizedBox(height: isLandscape ? 3 : 6),
+                                  Text(
+                                    day.day.toString(),
+                                    style: TextStyle(
+                                      color: isSelected
+                                          ? Colors.white
+                                          : ColorsApp.textPrimary,
+                                      fontSize: isLandscape ? 15 : 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                DateFormat('E').format(day),
-                                style: TextStyle(
-                                  color: isSelected
-                                      ? Colors.white70
-                                      : ColorsApp.textSecondary,
-                                  fontSize: isLandscape ? 8 : 12,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              SizedBox(height: isLandscape ? 0 : 6),
-                              Text(
-                                day.day.toString(),
-                                style: TextStyle(
-                                  color: isSelected
-                                      ? Colors.white
-                                      : ColorsApp.textPrimary,
-                                  fontSize: isLandscape ? 12 : 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  ),
+                          );
+                        },
+                      ),
+                    );
+                  },
                 ),
+                // SizedBox(
+                //   height: isLandscape ? 48 : 80,
+                //   child: ListView.builder(
+                //     scrollDirection: Axis.horizontal,
+                //     itemCount: monthDays.length,
+                //     itemBuilder: (context, index) {
+                //       final day = monthDays[index];
+                //       final isSelected =
+                //           day.year == selectedDate.year &&
+                //           day.month == selectedDate.month &&
+                //           day.day == selectedDate.day;
 
+                //       return GestureDetector(
+                //         onTap: () {
+                //           setState(() {
+                //             selectedDate = day;
+                //           });
+                //         },
+                //         child: Container(
+                //           width: isLandscape ? 42 : 60,
+                //           margin: const EdgeInsets.only(right: 6),
+                //           decoration: BoxDecoration(
+                //             color: isSelected
+                //                 ? ColorsApp.primary
+                //                 : ColorsApp.surface,
+                //             borderRadius: BorderRadius.circular(10),
+                //             border: Border.all(
+                //               color: isSelected
+                //                   ? ColorsApp.primary
+                //                   : ColorsApp.divider,
+                //               width: 1,
+                //             ),
+                //           ),
+                //           child: Column(
+                //             mainAxisAlignment: MainAxisAlignment.center,
+                //             children: [
+                //               Text(
+                //                 DateFormat('E').format(day),
+                //                 style: TextStyle(
+                //                   color: isSelected
+                //                       ? Colors.white70
+                //                       : ColorsApp.textSecondary,
+                //                   fontSize: isLandscape ? 8 : 12,
+                //                   fontWeight: FontWeight.w600,
+                //                 ),
+                //               ),
+                //               SizedBox(height: isLandscape ? 0 : 6),
+                //               Text(
+                //                 day.day.toString(),
+                //                 style: TextStyle(
+                //                   color: isSelected
+                //                       ? Colors.white
+                //                       : ColorsApp.textPrimary,
+                //                   fontSize: isLandscape ? 12 : 18,
+                //                   fontWeight: FontWeight.bold,
+                //                 ),
+                //               ),
+                //             ],
+                //           ),
+                //         ),
+                //       );
+                //     },
+                //   ),
+                // ),
                 SizedBox(height: isLandscape ? 4 : 20),
 
                 Expanded(
@@ -260,7 +358,9 @@ class _AgendPageState extends State<AgendPage> {
                                   },
                                   child: Container(
                                     margin: const EdgeInsets.only(bottom: 8),
-                                    padding: EdgeInsets.all(isLandscape ? 8 : 16),
+                                    padding: EdgeInsets.all(
+                                      isLandscape ? 8 : 16,
+                                    ),
                                     decoration: BoxDecoration(
                                       color: cardColor,
                                       borderRadius: BorderRadius.circular(14),
@@ -280,25 +380,37 @@ class _AgendPageState extends State<AgendPage> {
                                                 overflow: TextOverflow.ellipsis,
                                                 style: TextStyle(
                                                   color: ColorsApp.textPrimary,
-                                                  fontSize: isLandscape ? 13 : 16,
+                                                  fontSize: isLandscape
+                                                      ? 13
+                                                      : 16,
                                                   fontWeight: FontWeight.bold,
                                                 ),
                                               ),
 
-                                              SizedBox(height: isLandscape ? 2 : 6),
+                                              SizedBox(
+                                                height: isLandscape ? 2 : 6,
+                                              ),
                                               Text(
                                                 'Status: ${task.status}',
                                                 style: TextStyle(
-                                                  color: ColorsApp.textSecondary,
-                                                  fontSize: isLandscape ? 10 : 13,
+                                                  color:
+                                                      ColorsApp.textSecondary,
+                                                  fontSize: isLandscape
+                                                      ? 10
+                                                      : 13,
                                                 ),
                                               ),
-                                              SizedBox(height: isLandscape ? 1 : 6),
+                                              SizedBox(
+                                                height: isLandscape ? 1 : 6,
+                                              ),
                                               Text(
                                                 'Priority: ${task.priority}',
                                                 style: TextStyle(
-                                                  color: ColorsApp.textSecondary,
-                                                  fontSize: isLandscape ? 10 : 13,
+                                                  color:
+                                                      ColorsApp.textSecondary,
+                                                  fontSize: isLandscape
+                                                      ? 10
+                                                      : 13,
                                                 ),
                                               ),
                                             ],
@@ -310,7 +422,8 @@ class _AgendPageState extends State<AgendPage> {
                                           children: [
                                             IconButton(
                                               padding: EdgeInsets.zero,
-                                              constraints: const BoxConstraints(),
+                                              constraints:
+                                                  const BoxConstraints(),
                                               onPressed: () {
                                                 Navigator.push(
                                                   context,
@@ -328,10 +441,13 @@ class _AgendPageState extends State<AgendPage> {
                                                 size: isLandscape ? 18 : 24,
                                               ),
                                             ),
-                                            SizedBox(height: isLandscape ? 2 : 6),
+                                            SizedBox(
+                                              height: isLandscape ? 2 : 6,
+                                            ),
                                             IconButton(
                                               padding: EdgeInsets.zero,
-                                              constraints: const BoxConstraints(),
+                                              constraints:
+                                                  const BoxConstraints(),
                                               onPressed: () {
                                                 _showDeleteConfirmationDialog(
                                                   context,

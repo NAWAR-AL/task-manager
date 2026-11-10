@@ -5,6 +5,8 @@ import 'package:task_manager/core/di/injection_container.dart';
 import 'package:task_manager/core/features/app_widgets/colors.dart';
 import 'package:task_manager/core/features/auth/presentation/cubit/logout_cubit.dart';
 import 'package:task_manager/core/features/auth/presentation/cubit/logout_state.dart';
+import 'package:task_manager/core/features/auth/presentation/cubit/profile_cubit.dart';
+import 'package:task_manager/core/features/auth/presentation/cubit/profile_state.dart';
 import 'package:task_manager/core/features/auth/presentation/pages/login_page.dart';
 import 'package:task_manager/core/network/app_navigator.dart';
 
@@ -619,6 +621,38 @@ class LogoutButton extends StatelessWidget {
           }
         },
       ),
+    );
+  }
+}
+
+class UserName extends StatelessWidget {
+  final bool isAvater;
+  const UserName({super.key, this.isAvater = false});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<ProfileCubit, ProfileState>(
+      builder: (context, state) {
+        if (state is UserLoaded) {
+          final name = state.user.name;
+          if (isAvater) {
+            return CircleAvatar(
+              radius: 22,
+              backgroundColor: Color(0xffE8D9FF),
+              child: Text(
+                name[0].toUpperCase(),
+                style: TextStyle(
+                  fontSize: 19,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xff5B3A8C),
+                ),
+              ),
+            );
+          }
+          return Text(name, style: TextStyle(fontSize: 22, color: Colors.red));
+        }
+        return Text(' ');
+      },
     );
   }
 }

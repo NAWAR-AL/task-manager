@@ -138,7 +138,12 @@ class _TaskPageState extends State<TaskPage> {
                                       color: ColorsApp.textPrimary,
                                     ),
                                   ),
-                                  LogoutButton(),
+                                  Row(
+                                    children: [
+                                      UserName(isAvater: true),
+                                      LogoutButton(),
+                                    ],
+                                  ),
                                 ],
                               ),
                               const SizedBox(height: 2),

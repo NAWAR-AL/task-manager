@@ -34,9 +34,7 @@ class _CommentScreenState extends State<CommentScreen> {
           icon: const Icon(Icons.arrow_back_rounded),
           onPressed: () => Navigator.pop(context),
         ),
-        actions: [
-          LogoutButton()
-        ],
+        actions: [UserName(isAvater: true), LogoutButton()],
       ),
       body: BlocBuilder<CommentBloc, CommentState>(
         builder: (context, state) {

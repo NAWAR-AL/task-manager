@@ -129,7 +129,8 @@ class _TaskDetailsState extends State<TaskDetails> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => UpdateTaskPage(updatedTask: task),
+                      builder: (_) =>
+                          UpdateTaskPage(updatedTask: task, role: widget.role),
                     ),
                   );
                 },

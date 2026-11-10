@@ -221,7 +221,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Users Management', style: TextStyle(color: Colors.black)),
-        actions: [LogoutButton()],
+        actions: [UserName(isAvater: true), LogoutButton()],
         centerTitle: true,
       ),
       drawer: DrawerHome(role: widget.role),

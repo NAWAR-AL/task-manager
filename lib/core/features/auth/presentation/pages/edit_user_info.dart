@@ -114,7 +114,7 @@ class _EditUserInfoPageState extends State<EditUserInfoPage> {
           icon: Icon(Icons.arrow_back_rounded),
           onPressed: () => Navigator.pop(context),
         ),
-        actions: [LogoutButton()],
+        actions: [UserName(isAvater: true), LogoutButton()],
       ),
       body: BlocConsumer<ProfileCubit, ProfileState>(
         listener: (context, state) {

@@ -110,7 +110,8 @@ class _AddUserState extends State<AddUser> {
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(
-        builder: (_) => const TaskBottomBar(role: UserRole.admin, initialIndex: 4),
+        builder: (_) =>
+            const TaskBottomBar(role: UserRole.admin, initialIndex: 4),
       ),
       (route) => false,
     );
@@ -155,7 +156,7 @@ class _AddUserState extends State<AddUser> {
         return Scaffold(
           appBar: AppBar(
             title: Text('Add New User'),
-            actions: [LogoutButton()],
+            actions: [UserName(isAvater: true), LogoutButton()],
           ),
           body: Center(
             child: SingleChildScrollView(
