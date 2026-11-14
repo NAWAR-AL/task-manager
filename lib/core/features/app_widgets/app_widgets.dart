@@ -649,7 +649,10 @@ class UserName extends StatelessWidget {
               ),
             );
           }
-          return Text(name, style: TextStyle(fontSize: 22, color: Colors.red));
+          return Text(
+            name,
+            style: TextStyle(fontSize: 22, color: ColorsApp.textPrimary),
+          );
         }
         return Text(' ');
       },
