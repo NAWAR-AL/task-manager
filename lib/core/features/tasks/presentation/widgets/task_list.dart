@@ -173,10 +173,7 @@ class _TaskCard extends StatelessWidget {
                         Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            // if (PermissionManager.can(
-                            //   role,
-                            //   Permission.updateTask,
-                            // ))
+                            
                             IconButton(
                               onPressed: () async {
                                 final updated = await Navigator.push(

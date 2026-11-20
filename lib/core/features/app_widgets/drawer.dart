@@ -52,7 +52,7 @@ class DrawerHome extends StatelessWidget {
               );
             },
           ),
-          if (PermissionManager.can(role, Permission.readProject))
+      //    if (PermissionManager.can(role, Permission.readProject))
             drawerItem(
               icon: Icons.folder,
               title: 'Projects',

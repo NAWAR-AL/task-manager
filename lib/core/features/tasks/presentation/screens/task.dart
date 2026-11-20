@@ -8,7 +8,7 @@ import 'package:task_manager/core/features/project_management/presentation/cubit
 import 'package:task_manager/core/features/project_management/presentation/cubit/projects_state.dart';
 import 'package:task_manager/core/features/tasks/domain/entities/task_entity.dart';
 import 'package:task_manager/core/features/tasks/presentation/task_bloc/task_bloc.dart';
-import 'package:task_manager/core/features/tasks/presentation/widgets/search_widget.dart';
+import 'package:task_manager/core/features/tasks/presentation/widgets/search_task.dart';
 import 'package:task_manager/core/features/tasks/presentation/widgets/task_list.dart';
 import 'package:task_manager/core/permission/role.dart';
 
@@ -99,9 +99,7 @@ class _TaskPageState extends State<TaskPage> {
               .where((task) => task.status == "review")
               .toList();
 
-          // if (filtedTasks.isEmpty) {
-          //   return Center(child: Text('No data'));
-          // }
+         
           return Scaffold(
             drawer: DrawerHome(role: widget.role),
             body: DefaultTabController(

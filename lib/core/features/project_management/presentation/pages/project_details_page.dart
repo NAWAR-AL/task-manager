@@ -163,7 +163,7 @@ class _ProjectDetailsPageState extends State<ProjectDetailsPage> {
                 const SizedBox(height: 16),
                 _buildInfo(project),
                 const SizedBox(height: 24),
-                if (PermissionManager.can(
+                if (!PermissionManager.can(
                   widget.role,
                   Permission.createProject,
                 )) ...[
