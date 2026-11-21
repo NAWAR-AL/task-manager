@@ -322,7 +322,7 @@ class _ProjectsPageState extends State<ProjectsPage> {
                         padding: const EdgeInsets.fromLTRB(20, 16, 20, 100),
                         itemCount: filteredProjects.length,
                         itemBuilder: (context, index) =>
-                            _buildProjectCard(projects[index]),
+                            _buildProjectCard(filteredProjects[index]),
                         separatorBuilder: (_, _) => const SizedBox(height: 12),
                       ),
               ),

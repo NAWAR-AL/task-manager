@@ -22,7 +22,7 @@ class _FilterProjectsState extends State<FilterProjects> {
   String? selectedStatus;
   int? selectedProjectId;
 
-  final List<String> status = ['active', 'on_hold', 'completed',];
+  final List<String> status = ['all', 'active', 'on_hold', 'completed'];
   void notifyParent() {
     widget.onFilterChanged(selectedStatus, selectedProjectId);
   }
@@ -72,7 +72,7 @@ class _FilterProjectsState extends State<FilterProjects> {
               }).toList(),
               onSelected: (value) {
                 setState(() {
-                  selectedStatus = value == 'All' ? null : value;
+                  selectedStatus = value == 'all' ? null : value;
                 });
                 notifyParent();
               },
