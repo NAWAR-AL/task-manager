@@ -24,7 +24,7 @@ class TaskRemoteDatasourceImpl extends TaskRemoteDatasource {
         options: Options(headers: {'Accept': 'application/json'}),
       );
     } on DioException catch (e) {
-      print('RESPONSE DATA: ${e.response?.data}');
+      //   print('RESPONSE DATA: ${e.response?.data}');
 
       rethrow;
     }
@@ -84,14 +84,10 @@ class TaskRemoteDatasourceImpl extends TaskRemoteDatasource {
         ),
       );
 
-  
-
       final responseData = response.data['data'] ?? response.data;
 
       return TaskModel.fromJson(Map<String, dynamic>.from(responseData));
     } on DioException catch (e) {
-   
-
       rethrow;
     }
   }

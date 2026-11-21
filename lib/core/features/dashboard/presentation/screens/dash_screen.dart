@@ -12,7 +12,7 @@ import 'package:task_manager/core/permission/role.dart';
 class DashScreen extends StatefulWidget {
   final UserRole role;
 
-  DashScreen({super.key, required this.role});
+  const DashScreen({super.key, required this.role});
 
   @override
   State<DashScreen> createState() => _DashScreenState();
@@ -158,7 +158,7 @@ class _DashScreenState extends State<DashScreen> {
         children: [
           CircleAvatar(
             radius: 23,
-            backgroundColor: Colors.white.withOpacity(.7),
+            backgroundColor: Colors.white.withValues(alpha: .7),
             child: Icon(icon, color: Color(0xff1976D2), size: 27),
           ),
 

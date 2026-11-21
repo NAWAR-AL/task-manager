@@ -12,14 +12,14 @@ class CommentInitial extends CommentState {}
 class CommentCreate extends CommentState {
   final int taskId;
   final CommentEntity comment;
-  CommentCreate(this.comment, this.taskId);
+  const CommentCreate(this.comment, this.taskId);
   @override
   List<Object> get props => [taskId, comment];
 }
 
 class CommentsLoaded extends CommentState {
   final List<CommentEntity> comments;
-  CommentsLoaded(this.comments);
+  const CommentsLoaded(this.comments);
   @override
   List<Object> get props => [comments];
 }

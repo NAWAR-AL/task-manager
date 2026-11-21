@@ -28,7 +28,7 @@ class _MyProfileState extends State<MyProfile> {
     super.initState();
     if (widget.userId > 0) {
       context.read<ProfileCubit>().fetchProfile();
-      print('profile from  details ${widget.userId}.');
+     // print('profile from  details ${widget.userId}.');
     }
   }
 
@@ -194,7 +194,7 @@ class _MyProfileState extends State<MyProfile> {
           }
 
           if (state is UserErorr) {
-            print('error is ${state.message}');
+         //   print('error is ${state.message}');
             return EmptyState(
               icon: Icons.person_off_outlined,
               title: 'Could not load this user',

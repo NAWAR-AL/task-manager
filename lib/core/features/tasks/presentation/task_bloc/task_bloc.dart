@@ -1,12 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:task_manager/core/features/tasks/domain/usercases/updateStatus_usecase.dart';
+import 'package:task_manager/core/features/tasks/domain/usercases/update_status_usecase.dart';
 import 'package:task_manager/core/network/api_error.dart';
 import 'package:task_manager/core/features/tasks/domain/entities/task_entity.dart';
 import 'package:task_manager/core/features/tasks/domain/usercases/create_task_usecase.dart';
-import 'package:task_manager/core/features/tasks/domain/usercases/deleteTask_usecase.dart';
-import 'package:task_manager/core/features/tasks/domain/usercases/getTasks_usecase.dart';
-import 'package:task_manager/core/features/tasks/domain/usercases/updateTask_usecase.dart';
+import 'package:task_manager/core/features/tasks/domain/usercases/delete_task_usecase.dart';
+import 'package:task_manager/core/features/tasks/domain/usercases/get_tasks_usecase.dart';
+import 'package:task_manager/core/features/tasks/domain/usercases/update_task_usecase.dart';
 
 part 'task_event.dart';
 part 'task_state.dart';

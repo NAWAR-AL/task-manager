@@ -38,7 +38,7 @@ class _TaskDetailsState extends State<TaskDetails> {
         context.read<ProfileCubit>().getUsers();
         context.read<ProjectCubit>().fetchProjects();
       } catch (e) {
-        print('error fetching details $e');
+        //  print('error fetching details $e');
       }
     }
     context.read<CommentBloc>().add(GetCommentsEvent(widget.task.id!));

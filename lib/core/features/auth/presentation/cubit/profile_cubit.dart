@@ -88,7 +88,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     try {
       await updateUserRoleUsecase(userId, role);
       emit(UserRoleUpdated());
-      // نعيّد جلب القائمة حتى يتحدث الشارة فوراً
+    
       await fetchUsers();
     } catch (e) {
       emit(UserErorr(readableApiError(e)));
@@ -101,7 +101,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       await deleteUserUsecase(userId);
       await fetchUsers();
     } catch (e) {
-      print('error from cubit $e');
+      //  print('error from cubit $e');
       emit(UserErorr(readableApiError(e)));
     }
   }
@@ -111,14 +111,14 @@ class ProfileCubit extends Cubit<ProfileState> {
     String? password,
     String? passwordConfrim,
   }) async {
-    print('password from cubit $password');
-    print('confrim from cubit$passwordConfrim');
+    //  print('password from cubit $password');
+    // print('confrim from cubit$passwordConfrim');
     emit(UserLoading());
     try {
       await updateUserUsercase(userEntity, password, passwordConfrim);
       await fetchUser(userEntity.id);
     } catch (e) {
-      print('error form cubit $e');
+      //    print('error form cubit $e');
       emit(UserErorr(readableApiError(e)));
     }
   }

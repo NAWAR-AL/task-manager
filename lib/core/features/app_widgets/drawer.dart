@@ -52,17 +52,17 @@ class DrawerHome extends StatelessWidget {
               );
             },
           ),
-          if (PermissionManager.can(role, Permission.readProject))
-            drawerItem(
-              icon: Icons.folder,
-              title: 'Projects',
-              ontap: () {
-                navigateToScreen(
-                  context,
-                  TaskBottomBar(role: role, initialIndex: 2),
-                );
-              },
-            ),
+          //    if (PermissionManager.can(role, Permission.readProject))
+          drawerItem(
+            icon: Icons.folder,
+            title: 'Projects',
+            ontap: () {
+              navigateToScreen(
+                context,
+                TaskBottomBar(role: role, initialIndex: 2),
+              );
+            },
+          ),
 
           drawerItem(
             icon: Icons.task_sharp,

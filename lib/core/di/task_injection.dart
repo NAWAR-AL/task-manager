@@ -4,11 +4,11 @@ import 'package:task_manager/core/features/tasks/data/datasources/task_remote_da
 import 'package:task_manager/core/features/tasks/data/repository/task_repository_impl.dart';
 import 'package:task_manager/core/features/tasks/domain/repositories/task_repository.dart';
 import 'package:task_manager/core/features/tasks/domain/usercases/create_task_usecase.dart';
-import 'package:task_manager/core/features/tasks/domain/usercases/deleteTask_usecase.dart';
-import 'package:task_manager/core/features/tasks/domain/usercases/getTasks_usecase.dart';
-import 'package:task_manager/core/features/tasks/domain/usercases/getbyId_usecase.dart';
-import 'package:task_manager/core/features/tasks/domain/usercases/updateStatus_usecase.dart';
-import 'package:task_manager/core/features/tasks/domain/usercases/updateTask_usecase.dart';
+import 'package:task_manager/core/features/tasks/domain/usercases/delete_task_usecase.dart';
+import 'package:task_manager/core/features/tasks/domain/usercases/get_tasks_usecase.dart';
+import 'package:task_manager/core/features/tasks/domain/usercases/get_Id_usecase.dart';
+import 'package:task_manager/core/features/tasks/domain/usercases/update_status_usecase.dart';
+import 'package:task_manager/core/features/tasks/domain/usercases/update_task_usecase.dart';
 import 'package:task_manager/core/features/tasks/presentation/task_bloc/task_bloc.dart';
 
 Future<void> initTask() async {

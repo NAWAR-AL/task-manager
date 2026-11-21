@@ -45,7 +45,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
     _loadCurrentUserId();
     if (widget.userId > 0) {
       context.read<ProfileCubit>().fetchUser(widget.userId);
-      print('savedId from  details ${widget.userId}.');
+      //  print('savedId from  details ${widget.userId}.');
     }
   }
 

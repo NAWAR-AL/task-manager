@@ -69,14 +69,15 @@ class ProfileRemoteDatasource {
 
   Future<void> deleteUSer(int userId) async {
     try {
-      final response = await apiClient.dio.post(
+      //  final response =
+      await apiClient.dio.post(
         '/users/$userId',
         data: {'_method': 'DELETE'},
         options: Options(headers: {'Accept': 'application/json'}),
       );
-      print('result form api $response');
+      // print('result form api $response');
     } on DioException catch (e) {
-      print('RESPONSE DATA: ${e.response?.data}');
+      //print('RESPONSE DATA: ${e.response?.data}');
 
       rethrow;
     }
@@ -100,7 +101,7 @@ class ProfileRemoteDatasource {
         data['password'] = password.trim();
         data['password_confirmation'] = passwordConfirmation?.trim() ?? '';
       }
-      print('update user data: $data');
+      //  print('update user data: $data');
       final response = await apiClient.dio.post(
         '/users/$userId/profile',
         data: data,
@@ -112,10 +113,10 @@ class ProfileRemoteDatasource {
         ),
       );
       final Map<String, dynamic> userData = response.data['data'];
-      print('update done: ${response.data}');
+      //   print('update done: ${response.data}');
       return UserModel.fromJson(userData);
     } on DioException catch (e) {
-      print('error update from remote: ${e.response?.data ?? e.message}');
+      //    print('error update from remote: ${e.response?.data ?? e.message}');
       rethrow;
     }
   }

@@ -42,9 +42,9 @@ class LoginRemoteDatasource {
 
       return role;
     } on DioException catch (e) {
-      print('ME ERROR STATUS: ${e.response?.statusCode}');
+     // print('ME ERROR STATUS: ${e.response?.statusCode}');
 
-      print('ME ERROR DATA: ${e.response?.data}');
+    //  print('ME ERROR DATA: ${e.response?.data}');
       rethrow;
     }
   }

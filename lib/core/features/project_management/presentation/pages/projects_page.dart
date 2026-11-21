@@ -7,6 +7,7 @@ import 'package:task_manager/core/features/app_widgets/drawer.dart';
 import 'package:task_manager/core/features/project_management/domain/entities/project.dart';
 import 'package:task_manager/core/features/project_management/presentation/cubit/project_cubit.dart';
 import 'package:task_manager/core/features/project_management/presentation/cubit/projects_state.dart';
+import 'package:task_manager/core/features/project_management/presentation/pages/filter_projects.dart';
 import 'package:task_manager/core/features/project_management/presentation/pages/project_details_page.dart';
 import 'package:task_manager/core/features/project_management/presentation/pages/update_project_page.dart';
 import 'package:task_manager/core/permission/permission.dart';
@@ -32,9 +33,9 @@ class _ProjectsPageState extends State<ProjectsPage> {
   }
 
   Future<void> _openDetails(ProjectEntity project) async {
-    // if (!PermissionManager.can(widget.role, Permission.createProject)) {
-    //   return;
-    // }
+    if (!PermissionManager.can(widget.role, Permission.createProject)) {
+      return;
+    }
     await Navigator.push(
       context,
       MaterialPageRoute(
@@ -49,9 +50,9 @@ class _ProjectsPageState extends State<ProjectsPage> {
   }
 
   Future<void> _openEdit(ProjectEntity project) async {
-    if (!PermissionManager.can(widget.role, Permission.createProject)) {
-      return;
-    }
+    // if (!PermissionManager.can(widget.role, Permission.updateProject)) {
+    //   return;
+    // }
     await Navigator.push(
       context,
       MaterialPageRoute(
@@ -105,6 +106,7 @@ class _ProjectsPageState extends State<ProjectsPage> {
             ),
           );
       },
+
       child: AppCard(
         onTap: () => _openDetails(project),
         child: Row(
@@ -225,6 +227,20 @@ class _ProjectsPageState extends State<ProjectsPage> {
     );
   }
 
+  List<ProjectEntity> filterProjects(List<ProjectEntity> projects) {
+    return projects.where((project) {
+      final matchedStatus =
+          selectedStatus == null || project.status == selectedStatus;
+
+      final matchesNames = selectedName == null || project.name == selectedName;
+      return matchesNames && matchedStatus;
+    }).toList();
+  }
+
+  String? selectedName;
+  int? selectedProjectId;
+  String? selectedpriority;
+  String? selectedStatus;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -256,7 +272,13 @@ class _ProjectsPageState extends State<ProjectsPage> {
         },
         builder: (context, state) {
           final projects = _cachedProjects;
-
+          final filteredProjects = projects?.where((project) {
+            final matchesStatus =
+                selectedStatus == null || project.status == selectedStatus;
+            final matchesProject =
+                selectedProjectId == null || project.id == selectedProjectId;
+            return matchesStatus && matchesProject;
+          }).toList();
           if (projects == null) {
             if (state is ProjectError) {
               return EmptyState(
@@ -276,11 +298,35 @@ class _ProjectsPageState extends State<ProjectsPage> {
             );
           }
 
-          return ListView.separated(
-            padding: const EdgeInsets.fromLTRB(20, 16, 20, 100),
-            itemCount: projects.length,
-            itemBuilder: (context, index) => _buildProjectCard(projects[index]),
-            separatorBuilder: (_, _) => const SizedBox(height: 12),
+          return Column(
+            children: [
+              Padding(
+                padding: EdgeInsetsGeometry.all(20),
+                child: FilterProjects(
+                  onFilterChanged: (status, projectId) {
+                    setState(() {
+                      selectedStatus = status;
+                      selectedProjectId = projectId;
+                    });
+                  },
+                  projects: projects,
+                ),
+              ),
+              Expanded(
+                child: filteredProjects!.isEmpty
+                    ? const EmptyState(
+                        icon: Icons.filter_alt,
+                        title: 'No matching projects',
+                      )
+                    : ListView.separated(
+                        padding: const EdgeInsets.fromLTRB(20, 16, 20, 100),
+                        itemCount: filteredProjects.length,
+                        itemBuilder: (context, index) =>
+                            _buildProjectCard(filteredProjects[index]),
+                        separatorBuilder: (_, _) => const SizedBox(height: 12),
+                      ),
+              ),
+            ],
           );
         },
       ),

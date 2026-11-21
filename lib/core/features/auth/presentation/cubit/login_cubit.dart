@@ -37,7 +37,7 @@ class LoginCubit extends Cubit<LoginState> {
       final roleString = await loginUsecase.getMyRole();
 
       final role = UserRole.values.firstWhere((r) => r.name == roleString);
-      print('Role from cubit is ${role.name}');
+    //  print('Role from cubit is ${role.name}');
       await prefs.setString('user_role', role.name);
       await prefs.setString('user_email', email);
 

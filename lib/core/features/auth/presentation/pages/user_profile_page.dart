@@ -1,5 +1,7 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:task_manager/core/features/app_widgets/app_widgets.dart';
 import 'package:task_manager/core/features/app_widgets/colors.dart';
 import 'package:task_manager/core/features/app_widgets/drawer.dart';
@@ -273,7 +275,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
 
 class RoleBadge extends StatelessWidget {
   final String role;
-  const RoleBadge({required this.role});
+  const RoleBadge({super.key, required this.role});
 
   @override
   Widget build(BuildContext context) {

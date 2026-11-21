@@ -9,7 +9,7 @@ abstract class CommentEvent extends Equatable {
 
 class GetCommentsEvent extends CommentEvent {
   final int taskId;
-  GetCommentsEvent(this.taskId);
+  const GetCommentsEvent(this.taskId);
   @override
   List<Object> get props => [taskId];
 }
@@ -17,7 +17,7 @@ class GetCommentsEvent extends CommentEvent {
 class CreateCommentEvent extends CommentEvent {
   final int taskId;
   final CommentEntity comment;
-  CreateCommentEvent(this.taskId, this.comment);
+  const CreateCommentEvent(this.taskId, this.comment);
   @override
   List<Object> get props => [taskId, comment];
 }
