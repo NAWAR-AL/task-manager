@@ -7,7 +7,6 @@ import 'package:task_manager/core/features/app_widgets/drawer.dart';
 import 'package:task_manager/core/features/project_management/domain/entities/project.dart';
 import 'package:task_manager/core/features/project_management/presentation/cubit/project_cubit.dart';
 import 'package:task_manager/core/features/project_management/presentation/cubit/projects_state.dart';
-import 'package:task_manager/core/features/project_management/presentation/pages/filter_projects.dart';
 import 'package:task_manager/core/features/project_management/presentation/pages/project_details_page.dart';
 import 'package:task_manager/core/features/project_management/presentation/pages/update_project_page.dart';
 import 'package:task_manager/core/permission/permission.dart';
@@ -25,11 +24,19 @@ class ProjectsPage extends StatefulWidget {
 class _ProjectsPageState extends State<ProjectsPage> {
   // آخر قائمة تم تحميلها حتى ما تظل القائمة عاللودينق عند أي حالة
   List<ProjectEntity>? _cachedProjects;
+  final TextEditingController searchController = TextEditingController();
+  String searchQuery = '';
 
   @override
   void initState() {
     super.initState();
     context.read<ProjectCubit>().fetchProjects();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    searchController.dispose();
   }
 
   Future<void> _openDetails(ProjectEntity project) async {
@@ -227,20 +234,8 @@ class _ProjectsPageState extends State<ProjectsPage> {
     );
   }
 
-  List<ProjectEntity> filterProjects(List<ProjectEntity> projects) {
-    return projects.where((project) {
-      final matchedStatus =
-          selectedStatus == null || project.status == selectedStatus;
-
-      final matchesNames = selectedName == null || project.name == selectedName;
-      return matchesNames && matchedStatus;
-    }).toList();
-  }
-
   String? selectedName;
-  int? selectedProjectId;
-  String? selectedpriority;
-  String? selectedStatus;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -273,11 +268,7 @@ class _ProjectsPageState extends State<ProjectsPage> {
         builder: (context, state) {
           final projects = _cachedProjects;
           final filteredProjects = projects?.where((project) {
-            final matchesStatus =
-                selectedStatus == null || project.status == selectedStatus;
-            final matchesProject =
-                selectedProjectId == null || project.id == selectedProjectId;
-            return matchesStatus && matchesProject;
+            return project.name.toLowerCase().contains(searchQuery);
           }).toList();
           if (projects == null) {
             if (state is ProjectError) {
@@ -302,14 +293,31 @@ class _ProjectsPageState extends State<ProjectsPage> {
             children: [
               Padding(
                 padding: EdgeInsetsGeometry.all(20),
-                child: FilterProjects(
-                  onFilterChanged: (status, projectId) {
+                child: TextField(
+                  controller: searchController,
+                  onChanged: (value) {
                     setState(() {
-                      selectedStatus = status;
-                      selectedProjectId = projectId;
+                      searchQuery = value.trim().toLowerCase();
                     });
                   },
-                  projects: projects,
+                  decoration: InputDecoration(
+                    hintText: 'Search Projects',
+                    prefixIcon: Icon(Icons.search),
+                    suffixIcon: searchQuery.isNotEmpty
+                        ? IconButton(
+                            onPressed: () {
+                              searchController.clear();
+                              setState(() {
+                                searchQuery = '';
+                              });
+                            },
+                            icon: Icon(Icons.clear),
+                          )
+                        : null,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
                 ),
               ),
               Expanded(
