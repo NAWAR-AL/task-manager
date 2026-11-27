@@ -1,10 +1,9 @@
 import 'package:task_manager/core/di/injection_container.dart';
-import 'package:task_manager/core/features/auth/data/datasources/register_remote_data_source.dart';
-import 'package:task_manager/core/features/auth/data/repositories/register_repository_impl.dart';
-import 'package:task_manager/core/features/auth/domain/repositories/register_repository.dart';
-import 'package:task_manager/core/features/auth/domain/usecases/register_usecases.dart';
-import 'package:task_manager/core/features/auth/presentation/cubit/register_cubit.dart';
-
+import 'package:task_manager/features/auth/data/datasources/auth_remote_data_source.dart';
+import 'package:task_manager/features/auth/data/repositories/auth_repository_impl.dart';
+import 'package:task_manager/features/auth/domain/repositories/auth_repository.dart';
+import 'package:task_manager/features/auth/domain/usecases/register_usecases.dart';
+import 'package:task_manager/features/auth/presentation/cubit/register_cubit.dart';
 
 Future<void> initRegister() async {
   // DataSource
@@ -18,12 +17,8 @@ Future<void> initRegister() async {
   );
 
   // UseCase
-  sl.registerLazySingleton<RegisterUsecase>(
-    () => RegisterUsecase(sl()),
-  );
+  sl.registerLazySingleton<RegisterUsecase>(() => RegisterUsecase(sl()));
 
   // Cubit
-  sl.registerFactory<RegisterCubit>(
-    () => RegisterCubit(sl()),
-  );
+  sl.registerFactory<RegisterCubit>(() => RegisterCubit(sl()));
 }

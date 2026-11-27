@@ -1,10 +1,10 @@
 import 'package:task_manager/core/di/injection_container.dart';
-import 'package:task_manager/core/features/auth/data/datasources/forgot_password_remote_data_source.dart';
-import 'package:task_manager/core/features/auth/data/repositories/forgot_password_repository_impl.dart';
-import 'package:task_manager/core/features/auth/domain/repositories/forgot_password_repository.dart';
-import 'package:task_manager/core/features/auth/domain/usecases/forgot_password_usecase.dart';
-import 'package:task_manager/core/features/auth/domain/usecases/reset_password_usecase.dart';
-import 'package:task_manager/core/features/auth/presentation/cubit/forgot_password_cubit.dart';
+import 'package:task_manager/features/auth/data/datasources/auth_remote_data_source.dart';
+import 'package:task_manager/features/auth/data/repositories/auth_repository_impl.dart';
+import 'package:task_manager/features/auth/domain/repositories/auth_repository.dart';
+import 'package:task_manager/features/auth/domain/usecases/forgot_password_usecase.dart';
+import 'package:task_manager/features/auth/domain/usecases/reset_password_usecase.dart';
+import 'package:task_manager/features/auth/presentation/cubit/forgot_password_cubit.dart';
 
 Future<void> initForgotPassword() async {
   // DataSource

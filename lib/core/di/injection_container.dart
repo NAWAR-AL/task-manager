@@ -1,6 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'package:task_manager/core/di/comment_injection.dart';
-import 'package:task_manager/core/di/core_injection.dart';
+import 'package:task_manager/core/network/core_injection.dart';
 import 'package:task_manager/core/di/dashboard_injection.dart';
 import 'package:task_manager/core/di/profile_injection.dart';
 import 'package:task_manager/core/di/project_injection.dart';

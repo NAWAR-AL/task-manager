@@ -1,15 +1,15 @@
 import 'package:task_manager/core/di/injection_container.dart';
-import 'package:task_manager/core/features/tasks/data/datasources/task_remote_datasource.dart';
-import 'package:task_manager/core/features/tasks/data/datasources/task_remote_datasource_impl.dart';
-import 'package:task_manager/core/features/tasks/data/repository/task_repository_impl.dart';
-import 'package:task_manager/core/features/tasks/domain/repositories/task_repository.dart';
-import 'package:task_manager/core/features/tasks/domain/usercases/create_task_usecase.dart';
-import 'package:task_manager/core/features/tasks/domain/usercases/delete_task_usecase.dart';
-import 'package:task_manager/core/features/tasks/domain/usercases/get_tasks_usecase.dart';
-import 'package:task_manager/core/features/tasks/domain/usercases/get_Id_usecase.dart';
-import 'package:task_manager/core/features/tasks/domain/usercases/update_status_usecase.dart';
-import 'package:task_manager/core/features/tasks/domain/usercases/update_task_usecase.dart';
-import 'package:task_manager/core/features/tasks/presentation/task_bloc/task_bloc.dart';
+import 'package:task_manager/features/tasks/data/datasources/task_remote_datasource.dart';
+import 'package:task_manager/features/tasks/data/datasources/task_remote_datasource_impl.dart';
+import 'package:task_manager/features/tasks/data/repository/task_repository_impl.dart';
+import 'package:task_manager/features/tasks/domain/repositories/task_repository.dart';
+import 'package:task_manager/features/tasks/domain/usercases/create_task_usecase.dart';
+import 'package:task_manager/features/tasks/domain/usercases/delete_task_usecase.dart';
+import 'package:task_manager/features/tasks/domain/usercases/get_tasks_usecase.dart';
+import 'package:task_manager/features/tasks/domain/usercases/get_Id_usecase.dart';
+import 'package:task_manager/features/tasks/domain/usercases/update_status_usecase.dart';
+import 'package:task_manager/features/tasks/domain/usercases/update_task_usecase.dart';
+import 'package:task_manager/features/tasks/presentation/task_bloc/task_bloc.dart';
 
 Future<void> initTask() async {
   sl.registerLazySingleton<TaskRemoteDatasource>(

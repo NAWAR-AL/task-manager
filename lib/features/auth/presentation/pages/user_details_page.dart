@@ -1,0 +1,248 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:task_manager/core/app_widgets/app_widgets.dart';
+import 'package:task_manager/core/app_widgets/colors.dart';
+import 'package:task_manager/features/auth/domain/entities/user.dart';
+import 'package:task_manager/features/auth/presentation/cubit/profile_cubit.dart';
+import 'package:task_manager/features/auth/presentation/cubit/profile_state.dart';
+import 'package:task_manager/features/auth/presentation/pages/change_password_page.dart';
+import 'package:task_manager/features/auth/presentation/pages/edit_user_role_page.dart';
+
+class UserDetailsPage extends StatefulWidget {
+  final int userId;
+  final bool isEmbeddInTab;
+  const UserDetailsPage({
+    super.key,
+    required this.userId,
+    required this.isEmbeddInTab,
+  });
+
+  @override
+  State<UserDetailsPage> createState() => _UserDetailsPageState();
+}
+
+class _UserDetailsPageState extends State<UserDetailsPage> {
+  /// id المستخدم الحالي بالجهاز — لنفرّق هل عم بنشوف بروفايلنا
+  int _currentUserId = 0;
+
+  String _formatDate(DateTime? date) {
+    if (date == null) return '—';
+    return DateFormat('dd MMM yyyy • hh:mm a').format(date);
+  }
+
+  Future<void> _loadCurrentUserId() async {
+    final prefs = await SharedPreferences.getInstance();
+    final id = prefs.getInt('user_id') ?? prefs.getInt('id') ?? 0;
+    if (!mounted) return;
+    setState(() => _currentUserId = id);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadCurrentUserId();
+    if (widget.userId > 0) {
+      context.read<ProfileCubit>().fetchUser(widget.userId);
+      //  print('savedId from  details ${widget.userId}.');
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant UserDetailsPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.userId != widget.userId && widget.userId > 0) {
+      context.read<ProfileCubit>().fetchUser(widget.userId);
+    }
+  }
+
+  Widget _buildHeader(User user) {
+    return AppCard(
+      padding: const EdgeInsets.all(20),
+      child: Row(
+        children: [
+          InitialsAvatar(
+            name: user.name,
+            radius: 32,
+            backgroundColor: ColorsApp.primarySoft,
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  user.name,
+                  style: const TextStyle(
+                    fontSize: 19,
+                    fontWeight: FontWeight.w700,
+                    color: ColorsApp.textPrimary,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  user.email,
+                  style: const TextStyle(
+                    fontSize: 13,
+                    color: ColorsApp.textSecondary,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    RoleChip(role: user.role),
+                    if (user.email_verified_at != null)
+                      const AppChip(
+                        label: 'Verified',
+                        color: ColorsApp.success,
+                        icon: Icons.verified_outlined,
+                      )
+                    else
+                      const AppChip(
+                        label: 'Not verified',
+                        color: ColorsApp.warning,
+                        icon: Icons.error_outline,
+                      ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInfo(User user) {
+    return AppCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const AppSectionTitle(text: 'Account', icon: Icons.badge_outlined),
+          const SizedBox(height: 6),
+
+          Column(
+            children: [
+              DetailRow(
+                icon: Icons.tag,
+                label: 'User ID',
+                value: user.id.toString(),
+              ),
+            ],
+          ),
+          const Divider(),
+          DetailRow(
+            icon: Icons.person_outline,
+            label: 'Full name',
+            value: user.name,
+          ),
+          const Divider(),
+          DetailRow(
+            icon: Icons.alternate_email,
+            label: 'Email',
+            value: user.email,
+          ),
+          const Divider(),
+          DetailRow(
+            icon: Icons.shield_outlined,
+            label: 'Role',
+            value: ColorsApp.prettyRole(user.role),
+          ),
+          const Divider(),
+          DetailRow(
+            icon: Icons.calendar_month_outlined,
+            label: 'Joined at',
+            value: _formatDate(user.created_at),
+          ),
+          const Divider(),
+          DetailRow(
+            icon: Icons.update_rounded,
+            label: 'Last updated',
+            value: _formatDate(user.updated_at),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('User Details'),
+        automaticallyImplyLeading: !widget.isEmbeddInTab,
+
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_rounded),
+          onPressed: () => Navigator.pop(context),
+        ),
+        actions: [LogoutButton()],
+      ),
+      body: BlocBuilder<ProfileCubit, ProfileState>(
+        builder: (context, state) {
+          if (state is UserLoading) {
+            return const LoadingView();
+          }
+
+          if (state is SingleUserLoaded) {
+            final user = state.user;
+            return ListView(
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 28),
+              children: [
+                _buildHeader(user),
+                const SizedBox(height: 16),
+                _buildInfo(user),
+                const SizedBox(height: 24),
+                AppButton(
+                  label: 'Change role',
+                  icon: Icons.manage_accounts_outlined,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => EditUserRolePage(user: user),
+                      ),
+                    );
+                  },
+                ),
+
+                // بروفايل المستخدم الحالي → إمكانية تغيير كلمة مروره (لوكل)
+                if (_currentUserId != 0 && user.id == _currentUserId) ...[
+                  const SizedBox(height: 12),
+                  AppButton(
+                    label: 'Reset Password',
+                    icon: Icons.password,
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const ChangePasswordPage(),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ],
+            );
+          }
+
+          if (state is UserErorr) {
+            return EmptyState(
+              icon: Icons.person_off_outlined,
+              title: 'Could not load this user',
+              subtitle: state.message,
+            );
+          }
+
+          return const EmptyState(
+            icon: Icons.person_outline,
+            title: 'No user selected',
+          );
+        },
+      ),
+    );
+  }
+}
